@@ -21,6 +21,8 @@ package org.xwiki.contrib.latex.internal;
 
 import org.junit.runner.RunWith;
 import org.xwiki.rendering.test.integration.RenderingTestSuite;
+import org.xwiki.test.annotation.AllComponents;
+import org.xwiki.test.mockito.MockitoComponentManager;
 
 /**
  * Run all specific tests found in {@code *.test} files located in the classpath. These {@code *.test} files must follow
@@ -31,6 +33,12 @@ import org.xwiki.rendering.test.integration.RenderingTestSuite;
  */
 @RunWith(RenderingTestSuite.class)
 @RenderingTestSuite.Scope(value = "latex10.specific")
+@AllComponents
 public class LaTeXSpecificTest
 {
+    @RenderingTestSuite.Initialized
+    public void initialize(MockitoComponentManager componentManager) throws Exception
+    {
+        MockSetup.setUp(componentManager);
+    }
 }

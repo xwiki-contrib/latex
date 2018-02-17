@@ -64,6 +64,9 @@ public class TemplateProcessor
                 String template = getTemplate(block);
                 if (template != null) {
                     this.engine.evaluate(this.vcontext, this.writer, "LaTeX", template);
+                } else {
+                    // Ignore the template and render children
+                    process(block.getChildren());
                 }
             } catch (Exception e) {
                 LOGGER.warn("Failed to evaluate template for Block [{}]. Reason [{}]. Skipping template",
@@ -75,7 +78,7 @@ public class TemplateProcessor
     private String getTemplate(Block block)
     {
         String key = block.getClass().getName();
-        LOGGER.debug("Loading template for block [{}]", key);
+        LOGGER.info("Loading template for block [{}]", key);
         String result = this.templateCache.get(key);
         if (result == null) {
             try {

@@ -19,26 +19,12 @@
  */
 package org.xwiki.contrib.latex.internal;
 
-import java.io.Writer;
-
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.context.Context;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.xwiki.rendering.test.cts.CompatibilityTestSuite;
 import org.xwiki.rendering.test.cts.Initialized;
 import org.xwiki.rendering.test.cts.Syntax;
 import org.xwiki.test.annotation.AllComponents;
 import org.xwiki.test.mockito.MockitoComponentManager;
-import org.xwiki.text.StringUtils;
-import org.xwiki.velocity.VelocityEngine;
-import org.xwiki.velocity.VelocityManager;
-import org.xwiki.velocity.tools.EscapeTool;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Run all CTS tests for the LaTeX syntax.
@@ -54,28 +40,6 @@ public class LaTeXCompatibilityTest
     @Initialized
     public void initialize(MockitoComponentManager componentManager) throws Exception
     {
-        VelocityManager velocityManager = componentManager.registerMockComponent(VelocityManager.class);
-        VelocityContext vcontext = new VelocityContext();
-        vcontext.put("escapetool", new EscapeTool());
-        vcontext.put("stringtool", new StringUtils());
-        when(velocityManager.getCurrentVelocityContext()).thenReturn(vcontext);
-
-        org.apache.velocity.app.VelocityEngine velocityEngine = new org.apache.velocity.app.VelocityEngine();
-        velocityEngine.init();
-        VelocityEngine xwikiVelocityEngine = mock(VelocityEngine.class);
-        when(velocityManager.getVelocityEngine()).thenReturn(xwikiVelocityEngine);
-        when(xwikiVelocityEngine.evaluate(any(Context.class), any(Writer.class), any(String.class),
-            any(String.class))).thenAnswer(new Answer<Object>()
-        {
-            @Override public Object answer(InvocationOnMock invocation)
-            {
-                Context context = invocation.getArgument(0);
-                Writer writer = invocation.getArgument(1);
-                String templateName = invocation.getArgument(2);
-                String source = invocation.getArgument(3);
-                velocityEngine.evaluate(context, writer, templateName, source);
-                return null;
-            }
-        });
+        MockSetup.setUp(componentManager);
     }
 }

@@ -2,5 +2,4 @@
 ## Since this is a standalone element we separate from the previous block by 2 NL
 
 
-$block.rawContent
-#end
+$block.rawContent#end
