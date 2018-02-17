@@ -1,0 +1,10 @@
+\begin{document}
+
+paragraph\\
+\\
+same paragraph
+
+paragraph\\
+same paragraph
+
+\end{document}

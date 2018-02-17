@@ -1,0 +1,5 @@
+\begin{document}
+
+verify \,\,\,spaces are honored
+
+\end{document}

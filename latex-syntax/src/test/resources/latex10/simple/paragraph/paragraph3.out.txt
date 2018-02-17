@@ -1,0 +1,13 @@
+\begin{document}
+
+paragraph1
+
+paragraph2
+\\[1ex]
+
+paragraph3
+\\[2ex]
+
+paragraph4
+
+\end{document}

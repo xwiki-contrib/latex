@@ -1,0 +1,9 @@
+\begin{document}
+
+hello
+
+\hline
+
+world
+
+\end{document}
