@@ -1,1 +1,5 @@
+\begin{document}
+
 This is \texttt{monospace}
+
+\end{document}
