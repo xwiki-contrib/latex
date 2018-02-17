@@ -1,0 +1,5 @@
+\begin{document}
+
+@ \# \$ * \% ' ( ! ) - \_ \^{} ` ? , ; . / : = + \textless \textbar \textgreater
+
+\end{document}
