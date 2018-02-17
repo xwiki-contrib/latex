@@ -1,0 +1,2 @@
+org.xwiki.contrib.latex.internal.DefaultLaTeXConfiguration
+org.xwiki.contrib.latex.internal.LaTeXBlockRenderer

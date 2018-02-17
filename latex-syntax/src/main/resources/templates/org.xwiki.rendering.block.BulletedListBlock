@@ -1,0 +1,17 @@
+#set ($currentBlock = $block)
+#if ("$!listDepth" == '')
+  #set ($listDepth = 0)
+#else
+  #set ($listDepth = $listDepth + 1)
+#end
+## Since this is a standalone element we separate from the previous block by 2 NL, except when nested in another list.
+#if ($listDepth == 0)
+
+#end
+
+${stringtool.repeat(' ', $listDepth)}\begin{itemize}
+$processor.process($block.getChildren())
+${stringtool.repeat(' ', $listDepth)}\end{itemize}#if ($listDepth > 0)
+
+#end
+#set ($listDepth = $listDepth - 1)

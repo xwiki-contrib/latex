@@ -1,0 +1,8 @@
+#if ($block.isInline())
+## TODO: Need to find a separator not used in text
+\verb|${processor.process($block.getChildren())}|
+#else
+\begin{verbatim}
+$processor.process($block.getChildren())
+\end{verbatim}
+#end

@@ -1,0 +1,5 @@
+\begin{document}
+
+This is \textbf{bold}
+
+\end{document}

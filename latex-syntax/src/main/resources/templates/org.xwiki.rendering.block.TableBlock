@@ -1,0 +1,11 @@
+## Since this is a standalone element we separate from the previous block by 2 NL
+
+
+## Compute the number of columns
+#set ($firstRowBlock = $block.getChildren().get(0))
+#set ($columnSize = $firstRowBlock.getChildren().size() - 1)
+#set ($tableSpec = "${stringtool.repeat('l|', $columnSize)}l")
+\begin{center}
+\begin{tabular}{${tableSpec}}
+$processor.process($block.getChildren())\end{tabular}
+\end{center}
