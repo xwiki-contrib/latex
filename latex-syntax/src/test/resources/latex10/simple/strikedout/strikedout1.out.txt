@@ -1,0 +1,5 @@
+\begin{document}
+
+This is \out{strikedout}
+
+\end{document}
