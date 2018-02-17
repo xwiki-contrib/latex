@@ -1,8 +1,9 @@
-#if ($block.isInline())
 ## TODO: Need to find a separator not used in text
-\verb|${processor.process($block.getChildren())}|
-#else
+#if ($block.isInline())
+\verb|$block.getProtectedString()|#else
+## Since this is a standalone element we separate from the previous block by 2 NL
+
+
 \begin{verbatim}
-$processor.process($block.getChildren())
-\end{verbatim}
-#end
+$block.getProtectedString()
+\end{verbatim}#end

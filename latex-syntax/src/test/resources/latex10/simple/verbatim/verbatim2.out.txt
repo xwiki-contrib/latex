@@ -1,1 +1,7 @@
-\begin{verbatim}verbatim\end{verbatim}
+\begin{document}
+
+\begin{verbatim}
+verbatim
+\end{verbatim}
+
+\end{document}
