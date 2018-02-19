@@ -20,6 +20,7 @@
 package org.xwiki.contrib.latex.internal;
 
 import org.junit.runner.RunWith;
+import org.xwiki.rendering.test.MockWikiModel;
 import org.xwiki.rendering.test.integration.RenderingTestSuite;
 import org.xwiki.test.annotation.AllComponents;
 import org.xwiki.test.mockito.MockitoComponentManager;
@@ -40,5 +41,7 @@ public class LaTeXSpecificTest
     public void initialize(MockitoComponentManager componentManager) throws Exception
     {
         MockSetup.setUp(componentManager);
+
+        componentManager.registerComponent(MockWikiModel.getComponentDescriptor());
     }
 }

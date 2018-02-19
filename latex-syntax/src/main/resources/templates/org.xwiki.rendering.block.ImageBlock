@@ -1,0 +1,13 @@
+#set ($type = $block.reference.type.scheme)
+#if ($type == 'attach')
+\includegraphics{${block.reference.reference}}##
+#elseif ($type == 'url')
+  ## ConTeXt supports this natively using
+  ## \externalfigure[http://www.site.com/path/to/figure.png]
+  ## Since others don't, we don't support it natively.
+  ## Other options (but we can't use that by default since we can't be sure that wget is available):
+  ## \write18{wget http://www.some-site.com/path/to/image.png}
+  ## \includegraphics{image.png}
+  ## Yet another option would be for XWiki to download the image and have the exporter calling the LaTeX Renderer do
+  ## the replacement in the XDOM.
+#end
