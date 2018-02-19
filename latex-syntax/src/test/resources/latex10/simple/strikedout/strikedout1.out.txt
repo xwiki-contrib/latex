@@ -1,5 +1,5 @@
 ${{{regex:.*\\begin\{document\}}}}
 
-This is \out{strikedout}
+This is \sout{strikedout}
 
 \end{document}
