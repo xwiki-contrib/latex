@@ -1,4 +1,4 @@
-\begin{document}
+${{{regex:.*\\begin\{document\}}}}
 
 paragraph\\
 \\

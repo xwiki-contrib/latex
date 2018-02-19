@@ -8,7 +8,7 @@
 #elseif ($format == 'UNDERLINED')
 \underline{${processor.process($block.getChildren())}}##
 #elseif ($format == 'STRIKEDOUT')
-\out{${processor.process($block.getChildren())}}##
+\sout{${processor.process($block.getChildren())}}##
 #elseif ($format == 'SUBSCRIPT')
 \textsubscript{${processor.process($block.getChildren())}}##
 #elseif ($format == 'SUPERSCRIPT')

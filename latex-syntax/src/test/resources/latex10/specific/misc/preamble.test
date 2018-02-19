@@ -1,14 +1,15 @@
-.runTransformations
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Test that a macro can output RawBlock for LaTeX.
+.# Test the generated LaTeX preamble
 .#-----------------------------------------------------
-{{latexmacro/}}
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
-${{{regex:.*\\begin\{document\}}}}
+\documentclass{article}
 
-\texttt{whatever}
+\usepackage[normalem]{ulem}
+\usepackage{graphicx}
+
+\begin{document}
 
 \end{document}

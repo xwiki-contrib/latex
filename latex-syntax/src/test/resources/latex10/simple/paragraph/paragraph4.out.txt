@@ -1,4 +1,4 @@
-\begin{document}
+${{{regex:.*\\begin\{document\}}}}
 
 verify \,\,\,spaces are honored
 

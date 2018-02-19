@@ -1,3 +1,10 @@
+\documentclass{article}
+
+## Used for strike through support
+\usepackage[normalem]{ulem}
+## Used for image support
+\usepackage{graphicx}
+
 \begin{document}$processor.process($block.getChildren())
 
 \end{document}

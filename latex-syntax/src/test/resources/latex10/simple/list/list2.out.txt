@@ -1,4 +1,4 @@
-\begin{document}
+${{{regex:.*\\begin\{document\}}}}
 
 \begin{enumerate}
  \item Item 1
