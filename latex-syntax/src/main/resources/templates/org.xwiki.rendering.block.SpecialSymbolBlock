@@ -1,1 +1,21 @@
-#if ($block.getSymbol() == '#')\\$escapetool.getHash()#elseif ($block.getSymbol() == '$')\\$escapetool.getDollar()#elseif ($block.getSymbol() == '%')\%#elseif ($block.getSymbol() == '_')\_#elseif ($block.getSymbol() == '\')\$\backslash\$#elseif ($block.getSymbol() == '^')\^{}#elseif ($block.getSymbol() == '<')\textless#elseif ($block.getSymbol() == '>')\textgreater#elseif ($block.getSymbol() == '|')\textbar#{else}${block.getSymbol()}#{end}
+#if ($block.getSymbol() == '#')
+\\$escapetool.getHash()##
+#elseif ($block.getSymbol() == '$')
+\\$escapetool.getDollar()##
+#elseif ($block.getSymbol() == '%')
+\%##
+#elseif ($block.getSymbol() == '_')
+\_##
+#elseif ($block.getSymbol() == '\')
+\$\backslash\$##
+#elseif ($block.getSymbol() == '^')
+\^{}##
+#elseif ($block.getSymbol() == '<')
+\textless##
+#elseif ($block.getSymbol() == '>')
+\textgreater##
+#elseif ($block.getSymbol() == '|')
+\textbar##
+#else
+${block.getSymbol()}##
+#end
