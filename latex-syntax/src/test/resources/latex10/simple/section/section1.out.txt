@@ -1,0 +1,21 @@
+\begin{document}
+
+\section{Title level 1}
+
+
+\subsection{Title level 2}
+
+
+\subsubsection{Title level 3}
+
+
+\paragraph{Title level 4}
+
+
+\subparagraph{Title level 5}
+
+
+\subparagraph{Title level 6}
+
+
+\end{document}
