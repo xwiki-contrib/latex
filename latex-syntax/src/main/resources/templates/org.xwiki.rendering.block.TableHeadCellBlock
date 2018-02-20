@@ -1,3 +1,3 @@
 ## If we're not on the last cell of the row then end with a "&&"
 #set ($currentCellBlock = $block)
-\textbf{${processor.process($block.getChildren())}}#if ("$!currentCellBlock.getNextSibling().class.getSimpleName()" == 'TableHeadCellBlock') && #end
+\textbf{${processor.process($block.getChildren())}}#if ("$!currentCellBlock.getNextSibling().class.getSimpleName()" == 'TableHeadCellBlock') & #end
