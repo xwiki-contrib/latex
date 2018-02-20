@@ -1,5 +1,7 @@
 \documentclass{article}
 
+%% Allow UTF8 content
+\usepackage[utf8]{inputenc}
 %% Used for strike through support
 \usepackage[normalem]{ulem}
 %% Used for image support
