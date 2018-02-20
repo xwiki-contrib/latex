@@ -7,11 +7,42 @@
 .#-----------------------------------------------------
 \documentclass{article}
 
+%% Used for strike through support
 \usepackage[normalem]{ulem}
+%% Used for image support
 \usepackage{graphicx}
+%% Used for links
 \usepackage{hyperref}
+%% Use for quotes and to support nested quotes
 \usepackage{csquotes}
+%% For the Code macro
 \usepackage{minted}
+%% For the message macros
+\usepackage{pifont,mdframed}
+
+%% Message macro environments
+
+\newenvironment{xwikimessage}[1]
+  {\par\begin{mdframed}[linewidth=2pt,linecolor=#1]%
+    \begin{list}{}{\leftmargin=1cm
+                   \labelwidth=\leftmargin}\item[\Large\ding{43}]}
+  {\end{list}\end{mdframed}\par}
+
+\newenvironment{xwikierror}
+  {\begin{xwikimessage}{red}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikiwarning}
+  {\begin{xwikimessage}{yellow}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikiinfo}
+  {\begin{xwikimessage}{blue}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikisuccess}
+  {\begin{xwikimessage}{green}}
+  {\end{xwikimessage}}
 
 \begin{document}
 

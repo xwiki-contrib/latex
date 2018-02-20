@@ -9,6 +9,38 @@
 \begin{minted}{${block.getParameter('language')}}
 $block.content
 \end{minted}##
+#elseif ($block.id == 'info')
+#if (!$block.isInline())
+
+
+#end
+\begin{xwikiinfo}
+$block.content
+\end{xwikiinfo}##
+#elseif ($block.id == 'warning')
+#if (!$block.isInline())
+
+
+#end
+\begin{xwikiwarning}
+$block.content
+\end{xwikiwarning}##
+#elseif ($block.id == 'error')
+#if (!$block.isInline())
+
+
+#end
+\begin{xwikierror}
+$block.content
+\end{xwikierror}##
+#elseif ($block.id == 'success')
+#if (!$block.isInline())
+
+
+#end
+\begin{xwikisuccess}
+$block.content
+\end{xwikisuccess}##
 #else
 $processor.process($block.getChildren())##
 #end
