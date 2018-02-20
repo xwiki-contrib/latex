@@ -22,7 +22,7 @@
 #else
 \href{mailto:${reference}}{${processor.process($block.getChildren())}}##
 #end
-#elseif ($type == 'attach')
+#elseif ($type == 'attach' || $type == 'path')
 ## Link to an attachment. Add a footnote with the attachment name
 ${processor.process($block.getChildren())}\footnote{${reference}}##
 #end
