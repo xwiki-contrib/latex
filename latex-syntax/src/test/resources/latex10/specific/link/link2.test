@@ -1,13 +1,13 @@
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Link to an anchor on the same page
+.# Link to an attachment
 .#-----------------------------------------------------
-[[label>>||anchor="id" a="b"]]
+[[label>>attach:A.B@file.ext]]
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\hyperref[id]{label}
+label\footnote{A.B@file.ext}
 
 \end{document}
