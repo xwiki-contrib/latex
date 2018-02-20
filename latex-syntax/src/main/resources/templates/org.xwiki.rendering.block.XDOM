@@ -6,6 +6,8 @@
 \usepackage{graphicx}
 ## Used for links
 \usepackage{hyperref}
+## Use for quotes and to support nested quotes
+\usepackage{csquotes}
 
 \begin{document}$processor.process($block.getChildren())
 

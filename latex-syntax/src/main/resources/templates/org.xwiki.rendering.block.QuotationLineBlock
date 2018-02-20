@@ -1,1 +1,2 @@
-$processor.process($block.getChildren())\\
+
+ ${stringtool.repeat(' ', $quoteDepth)}$processor.process($block.getChildren())##

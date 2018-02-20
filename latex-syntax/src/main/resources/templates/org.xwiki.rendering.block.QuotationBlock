@@ -1,5 +1,14 @@
+#if ("$!quoteDepth" == '')
+  #set ($quoteDepth = 0)
+#else
+  #set ($quoteDepth = $quoteDepth + 1)
+#end
+## Since this is a standalone element we separate from the previous block by 2 NL, except when nested in another quote.
+#if ($quoteDepth == 0)
 
+#end
 
-\begin{quotation}
+${stringtool.repeat(' ', $quoteDepth)}\begin{displayquote}##
 $processor.process($block.getChildren())
-\end{quotation}
+${stringtool.repeat(' ', $quoteDepth)}\end{displayquote}##
+#set ($quoteDepth = $quoteDepth - 1)

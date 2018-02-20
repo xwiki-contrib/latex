@@ -10,6 +10,7 @@
 \usepackage[normalem]{ulem}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{csquotes}
 
 \begin{document}
 

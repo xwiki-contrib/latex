@@ -1,4 +1,3 @@
-#set ($currentBlock = $block)
 #if ("$!listDepth" == '')
   #set ($listDepth = 0)
 #else

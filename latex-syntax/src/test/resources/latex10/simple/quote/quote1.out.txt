@@ -1,0 +1,18 @@
+${{{regex:.*\\begin\{document\}}}}
+
+paragraph
+
+\begin{displayquote}
+ line1
+ \begin{displayquote}
+  line2
+  \begin{displayquote}
+   line3
+  \end{displayquote}
+  line4
+ \end{displayquote}
+\end{displayquote}
+
+paragraph
+
+\end{document}
