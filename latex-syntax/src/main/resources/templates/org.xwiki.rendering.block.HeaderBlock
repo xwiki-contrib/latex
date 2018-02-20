@@ -11,3 +11,6 @@
 #elseif ($block.getLevel().ordinal() >= 4)
 \subparagraph{${processor.process($block.getChildren())}}
 #end
+#if ("$!block.getId()" != '')
+\label{${block.getId()}}
+#end

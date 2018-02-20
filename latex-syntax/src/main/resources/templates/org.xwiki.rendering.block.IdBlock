@@ -1,0 +1,11 @@
+## Since there's no info if the IdBlock is inline or not, we need to check if it's inside an inline MacroMarkerBlock
+## or not...
+#if ("$!block.parent.class.simpleName" == 'MacroMarkerBlock')
+#if ($block.parent.isInline())
+\label{${block.name}}##
+#else
+
+
+\label{${block.name}}##
+#end
+#end
