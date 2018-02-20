@@ -41,6 +41,11 @@ $block.content
 \begin{xwikisuccess}
 $block.content
 \end{xwikisuccess}##
+#elseif ($block.id == 'toc')
+
+
+\etocsettocstyle{}{}
+\localtableofcontents##
 #else
 $processor.process($block.getChildren())##
 #end

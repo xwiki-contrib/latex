@@ -1,0 +1,27 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# TOC Macro.
+.#-----------------------------------------------------
+= Heading1 =
+
+{{toc/}}
+
+== Heading2 ==
+
+=== Heading3 ===
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\section{Heading1}
+
+\etocsettocstyle{}{}
+\localtableofcontents
+
+\subsection{Heading2}
+
+\subsubsection{Heading3}
+
+\end{document}

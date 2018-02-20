@@ -21,6 +21,8 @@
 \usepackage{minted}
 %% For the message macros
 \usepackage{pifont,mdframed}
+%% For the TOC macro, to have local tocs
+\usepackage{etoc}
 
 %% Message macro environments
 
