@@ -9,9 +9,7 @@
 
 #end
 
-${stringtool.repeat(' ', $listDepth)}\begin{itemize}
+${stringtool.repeat(' ', $listDepth)}\begin{itemize}##
 $processor.process($block.getChildren())
-${stringtool.repeat(' ', $listDepth)}\end{itemize}#if ($listDepth > 0)
-
-#end
+${stringtool.repeat(' ', $listDepth)}\end{itemize}##
 #set ($listDepth = $listDepth - 1)
