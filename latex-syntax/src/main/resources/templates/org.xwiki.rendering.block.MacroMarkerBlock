@@ -1,5 +1,14 @@
-## TODO: handle Code macro
 ## TODO: handle Formula macro
 ## TODO: handle TOC macro
 ## TODO: handle messages + BoxMacro
+#if ($block.id == 'code')
+#if (!$block.isInline())
+
+
+#end
+\begin{minted}{${block.getParameter('language')}}
+$block.content
+\end{minted}##
+#else
 $processor.process($block.getChildren())##
+#end

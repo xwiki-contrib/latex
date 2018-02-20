@@ -1,0 +1,28 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Code Macro.
+.#-----------------------------------------------------
+{{code language="java"}}
+public class HelloWorld
+{
+	public static void main(String[] args) {
+		System.out.println("Hello World!");
+	}
+}
+{{/code}}
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{minted}{java}
+public class HelloWorld
+{
+	public static void main(String[] args) {
+		System.out.println("Hello World!");
+	}
+}
+\end{minted}
+
+\end{document}

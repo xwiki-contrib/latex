@@ -8,6 +8,8 @@
 \usepackage{hyperref}
 ## Use for quotes and to support nested quotes
 \usepackage{csquotes}
+## For the Code macro
+\usepackage{minted}
 
 \begin{document}$processor.process($block.getChildren())
 
