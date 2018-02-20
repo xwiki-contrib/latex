@@ -1,0 +1,11 @@
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{description}
+ \item[title1] definition1
+ \begin{description}
+  \item[title2] definition2
+ \end{description}
+ \item[title3] definition3
+\end{description}
+
+\end{document}

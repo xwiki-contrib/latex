@@ -1,0 +1,2 @@
+#set ($newLineSentForList = false)
+ ${stringtool.repeat(' ', $listDepth)}\item[${processor.process($block.getChildren())}] ##
