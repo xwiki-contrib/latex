@@ -45,10 +45,15 @@ import org.xwiki.velocity.XWikiVelocityException;
  * @since 1.0
  */
 @Component
-@Named("latex/1.0")
+@Named(LaTeXBlockRenderer.ROLEHINT)
 @Singleton
 public class LaTeXBlockRenderer implements BlockRenderer
 {
+    /**
+     * The role hint of the component.
+     */
+    public static final String ROLEHINT = "latex/1.0";
+
     @Inject
     private Logger logger;
 

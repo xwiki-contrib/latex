@@ -48,8 +48,13 @@
       <id>vmassol</id>
       <name>Vincent Massol</name>
     </developer>
+    <developer>
+      <id>tmortagne</id>
+      <name>Thomas Mortagne</name>
+    </developer>
   </developers>
   <modules>
     <module>latex-syntax</module>
+    <module>latex-filter</module>
   </modules>
 </project>
