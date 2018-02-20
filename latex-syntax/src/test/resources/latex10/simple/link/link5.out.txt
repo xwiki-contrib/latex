@@ -1,0 +1,5 @@
+${{{regex:.*\\begin\{document\}}}}
+
+\href{mailto:john@doe.com}{john@doe.com}
+
+\end{document}

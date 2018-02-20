@@ -1,0 +1,5 @@
+${{{regex:.*\\begin\{document\}}}}
+
+\url{http://xwiki.org}
+
+\end{document}

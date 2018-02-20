@@ -1,0 +1,5 @@
+${{{regex:.*\\begin\{document\}}}}
+
+\url{reference}
+
+\end{document}

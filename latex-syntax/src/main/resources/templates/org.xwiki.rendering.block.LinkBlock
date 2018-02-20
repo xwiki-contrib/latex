@@ -1,0 +1,25 @@
+#set ($type = $block.reference.type.scheme)
+## Consider that we're on a local link when the reference is empty and anchor is not empty
+#set ($reference = $block.reference.reference)
+#set ($anchor = $block.reference.getParameter('anchor'))
+#if ($type == 'doc')
+## Note that we ignore doc links that are not local
+#if ("$!reference" == '' && "$!anchor" != '')
+\hyperref[${anchor}]{${processor.process($block.getChildren())}}##
+#end
+#elseif ($type == 'url')
+## If there's no children, use \url{...}
+#if ($block.getChildren().isEmpty())
+\url{${reference}}##
+#else
+\href{${reference}}{${processor.process($block.getChildren())}}##
+#end
+#elseif ($type == 'mailto')
+#if ($block.getChildren().isEmpty())
+## TODO: Handle escapes required in the reference. For example:
+## \href{mailto:my_address@wikibooks.org}{my\_address@wikibooks.org}
+\href{mailto:${reference}}{${reference}}##
+#else
+\href{mailto:${reference}}{${processor.process($block.getChildren())}}##
+#end
+#end

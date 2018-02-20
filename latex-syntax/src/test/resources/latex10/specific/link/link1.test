@@ -1,16 +1,12 @@
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Test the generated LaTeX preamble
 .#-----------------------------------------------------
+[[label>>||anchor="id" a="b"]]
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
-\documentclass{article}
+${{{regex:.*\\begin\{document\}}}}
 
-\usepackage[normalem]{ulem}
-\usepackage{graphicx}
-\usepackage{hyperref}
-
-\begin{document}
+\hyperref[id]{label}
 
 \end{document}

@@ -4,6 +4,8 @@
 \usepackage[normalem]{ulem}
 ## Used for image support
 \usepackage{graphicx}
+## Used for links
+\usepackage{hyperref}
 
 \begin{document}$processor.process($block.getChildren())
 
