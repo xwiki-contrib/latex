@@ -26,17 +26,19 @@ import java.util.Collections;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.script.ScriptContext;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.context.Execution;
+import org.xwiki.context.ExecutionContext;
+import org.xwiki.context.ExecutionContextManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
-import org.xwiki.velocity.VelocityEngine;
-import org.xwiki.velocity.VelocityManager;
-import org.xwiki.velocity.XWikiVelocityException;
+import org.xwiki.script.ScriptContextManager;
+import org.xwiki.template.TemplateManager;
 
 /**
  * Generates LaTeX syntax from a {@link org.xwiki.rendering.block.XDOM}.
@@ -58,10 +60,16 @@ public class LaTeXBlockRenderer implements BlockRenderer
     private Logger logger;
 
     @Inject
-    private LaTeXConfiguration configuration;
+    private TemplateManager templateManager;
 
     @Inject
-    private VelocityManager velocityManager;
+    private ExecutionContextManager executionContextManager;
+
+    @Inject
+    private Execution execution;
+
+    @Inject
+    private ScriptContextManager scriptContextManager;
 
     @Override
     public void render(Block block, WikiPrinter printer)
@@ -72,22 +80,22 @@ public class LaTeXBlockRenderer implements BlockRenderer
     @Override
     public void render(Collection<Block> blocks, WikiPrinter printer)
     {
-        // Prepare Velocity Context and Engine to execute the LaTeX templates.
-        VelocityContext vcontext = this.velocityManager.getCurrentVelocityContext();
-
-        // Convenience to explicitly set a space
-        vcontext.put("SP", " ");
-
         try {
-            VelocityEngine engine = this.velocityManager.getVelocityEngine();
-            // TODO: stream the velocity writer directly to the printer
+            // Push a new Execution Context for the template rendering.
+            ExecutionContext context = new ExecutionContext();
+            this.executionContextManager.initialize(context);
+
+            // TODO: stream the template writer directly to the printer
             StringWriter writer = new StringWriter();
-            TemplateProcessor processor = new TemplateProcessor(engine, vcontext, writer, this.configuration);
-            vcontext.put("processor", processor);
+            ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
+            TemplateProcessor processor = new TemplateProcessor(this.templateManager, scriptContext, writer);
+            scriptContext.setAttribute("processor", processor, ScriptContext.ENGINE_SCOPE);
             processor.process(blocks);
             printer.print(writer.toString());
-        } catch (XWikiVelocityException e) {
+        } catch (Exception e) {
             this.logger.warn("Failed to render LaTeX templates. Reason [{}].", ExceptionUtils.getRootCauseMessage(e));
+        } finally {
+            this.execution.popContext();
         }
     }
 }

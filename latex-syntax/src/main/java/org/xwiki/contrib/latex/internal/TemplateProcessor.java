@@ -19,18 +19,17 @@
  */
 package org.xwiki.contrib.latex.internal;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+
+import javax.script.ScriptContext;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.velocity.VelocityEngine;
+import org.xwiki.template.Template;
+import org.xwiki.template.TemplateManager;
 
 /**
  * Locate and evaluate the LaTeX templates.
@@ -42,29 +41,22 @@ public class TemplateProcessor
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(TemplateProcessor.class);
 
-    private VelocityEngine engine;
-
-    private VelocityContext vcontext;
-
     private Writer writer;
 
-    private Map<String, String> templateCache = new HashMap<>();
+    private TemplateManager templateManager;
 
-    private LaTeXConfiguration configuration;
+    private ScriptContext scriptContext;
 
     /**
-     * @param engine the Velocity engine to use for template evaluations
-     * @param vcontext the prepared Velocity Context to use for template evaluations
+     * @param templateManager the template manager used to locate, get and execute template content
+     * @param scriptContext the script context into which we can inject new bindings for the template evaluation
      * @param writer the object into which to write the result of the template evaluations
-     * @param configuration the LaTeX renderer configuration options (used to locate the templates)
      */
-    public TemplateProcessor(VelocityEngine engine, VelocityContext vcontext, Writer writer,
-        LaTeXConfiguration configuration)
+    public TemplateProcessor(TemplateManager templateManager, ScriptContext scriptContext, Writer writer)
     {
-        this.engine = engine;
-        this.vcontext = vcontext;
+        this.templateManager = templateManager;
+        this.scriptContext = scriptContext;
         this.writer = writer;
-        this.configuration = configuration;
     }
 
     /**
@@ -74,13 +66,14 @@ public class TemplateProcessor
      */
     public void process(Collection<Block> blocks)
     {
-        this.vcontext.put("blocks", blocks);
+        this.scriptContext.setAttribute("blocks", blocks, ScriptContext.ENGINE_SCOPE);
         for (Block block : blocks) {
             try {
-                this.vcontext.put("block", block);
-                String template = getTemplate(block);
+                this.scriptContext.setAttribute("block", block, ScriptContext.ENGINE_SCOPE);
+                String templateName = String.format("latex/%s", block.getClass().getName());
+                Template template = this.templateManager.getTemplate(templateName);
                 if (template != null) {
-                    this.engine.evaluate(this.vcontext, this.writer, "LaTeX", template);
+                    this.templateManager.render(template, this.writer);
                 } else {
                     // Ignore the template and render children
                     process(block.getChildren());
@@ -90,24 +83,5 @@ public class TemplateProcessor
                     block.getClass().getName(), ExceptionUtils.getRootCauseMessage(e));
             }
         }
-    }
-
-    private String getTemplate(Block block)
-    {
-        String key = block.getClass().getName();
-        LOGGER.debug("Loading template for block [{}]", key);
-        String result = this.templateCache.get(key);
-        if (result == null) {
-            try {
-                result = this.configuration.getTemplate(block);
-            } catch (IOException e) {
-                // Failed to load template, return null to tell to skip template evaluation
-                LOGGER.warn("Failed to load LaTeX template for block [{}]. Skipping template. Root cause: [{}]",
-                    key, ExceptionUtils.getRootCauseMessage(e));
-                result = null;
-            }
-            this.templateCache.put(key, result);
-        }
-        return result;
     }
 }
