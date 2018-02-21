@@ -3,9 +3,15 @@
 #set ($reference = $block.reference.reference)
 #set ($anchor = $block.reference.getParameter('anchor'))
 #if ($type == 'doc')
-## Note that we ignore doc links that are not local
 #if ("$!reference" == '' && "$!anchor" != '')
 \hyperref[${anchor}]{${processor.process($block.getChildren())}}##
+#else
+## Ignore links that are not local, just display the label if there's one or the reference otherwise
+#if ($block.getChildren().isEmpty())
+${reference}##
+#else
+${processor.process($block.getChildren())}##
+#end
 #end
 #elseif ($type == 'url')
 ## If there's no children, use \url{...}

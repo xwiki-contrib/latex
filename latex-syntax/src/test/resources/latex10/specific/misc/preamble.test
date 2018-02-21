@@ -48,6 +48,9 @@
   {\begin{xwikimessage}{green}}
   {\end{xwikimessage}}
 
+%% Set the style of internal references (hyperref)
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
+
 \begin{document}
 
 \end{document}

@@ -44,8 +44,13 @@ $block.content
 #elseif ($block.id == 'toc')
 
 
+#if ("$!block.getParameter('scope')" == 'local')
 \etocsettocstyle{}{}
 \localtableofcontents##
+#else
+\etocsettocstyle{}{}
+\tableofcontents##
+#end
 #else
 $processor.process($block.getChildren())##
 #end

@@ -5,11 +5,13 @@
 .#-----------------------------------------------------
 = Heading1 =
 
-{{toc/}}
+{{toc scope=local/}}
 
 == Heading2 ==
 
 === Heading3 ===
+
+{{toc/}}
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
@@ -23,5 +25,8 @@ ${{{regex:.*\\begin\{document\}}}}
 \subsection{Heading2}
 
 \subsubsection{Heading3}
+
+\etocsettocstyle{}{}
+\tableofcontents
 
 \end{document}

@@ -78,7 +78,7 @@ public class TemplateProcessor
     private String getTemplate(Block block)
     {
         String key = block.getClass().getName();
-        LOGGER.info("Loading template for block [{}]", key);
+        LOGGER.debug("Loading template for block [{}]", key);
         String result = this.templateCache.get(key);
         if (result == null) {
             try {
