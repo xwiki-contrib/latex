@@ -1,0 +1,22 @@
+.#------------------------------------------------------
+.input|xwiki/2.1
+.# Use a custom template to put a cell content in italic
+.#------------------------------------------------------
+|=Head1|=Head2
+|cell1|(% tex-template="custom/custom1" %)cell2
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Head1} & \textbf{Head2}\\
+\hline
+cell1 & \textit{cell2}\\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}

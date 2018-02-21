@@ -70,9 +70,7 @@ public class TemplateProcessor
         for (Block block : blocks) {
             try {
                 this.scriptContext.setAttribute("block", block, ScriptContext.ENGINE_SCOPE);
-                String templateName = String.format("latex/%s", block.getClass().getSimpleName());
-                LOGGER.debug("Loading template [{}]", templateName);
-                Template template = this.templateManager.getTemplate(templateName);
+                Template template = getTemplate(block);
                 if (template != null) {
                     this.templateManager.render(template, this.writer);
                 } else {
@@ -84,5 +82,17 @@ public class TemplateProcessor
                     block.getClass().getName(), ExceptionUtils.getRootCauseMessage(e));
             }
         }
+    }
+
+    private Template getTemplate(Block block)
+    {
+        // If there's a custom template defined in the Block parameter's, use it!
+        String templateName = block.getParameter("tex-template");
+        if (templateName == null) {
+            templateName = String.format("latex/%s", block.getClass().getSimpleName());
+        }
+        LOGGER.info("Loading template [{}]", templateName);
+        Template template = this.templateManager.getTemplate(templateName);
+        return template;
     }
 }
