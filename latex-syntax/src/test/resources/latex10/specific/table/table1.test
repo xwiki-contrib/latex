@@ -1,0 +1,25 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Table with header rows and columns
+.#-----------------------------------------------------
+|=table header|=table header|=table header
+|=table header|cell|cell
+|=table header|cell|cell
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{table header} & \textbf{table header} & \textbf{table header}\\
+\hline
+\textbf{table header} & cell & cell\\
+\hline
+\textbf{table header} & cell & cell\\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}

@@ -1,6 +1,3 @@
-## If we're not on the last row add a hline too.
 #set ($currentBlock = $block)
-${processor.process($block.getChildren())} \\
-#if("$!currentBlock.getNextSibling().class.getSimpleName()" == 'TableRowBlock')
+${processor.process($block.getChildren())}\\
 \hline
-#end

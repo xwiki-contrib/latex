@@ -1,12 +1,14 @@
 ${{{regex:.*\\begin\{document\}}}}
 
 \begin{center}
-\begin{tabular}{l|l}
-\textbf{col1} & \textbf{col2} \\
+\begin{tabular}{|l|l|}
 \hline
-cell11 & cell12 \\
+\textbf{col1} & \textbf{col2}\\
 \hline
-cell21 & cell22 \\
+cell11 & cell12\\
+\hline
+cell21 & cell22\\
+\hline
 \end{tabular}
 \end{center}
 
