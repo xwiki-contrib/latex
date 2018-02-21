@@ -87,7 +87,7 @@ public class TemplateProcessor
     private Template getTemplate(Block block)
     {
         // If there's a custom template defined in the Block parameter's, use it!
-        String templateName = block.getParameter("tex-template");
+        String templateName = block.getParameter("latex-template");
         if (templateName == null) {
             templateName = String.format("latex/%s", block.getClass().getSimpleName());
         }

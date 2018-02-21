@@ -3,7 +3,7 @@
 .# Use a custom template to put a cell content in italic
 .#------------------------------------------------------
 |=Head1|=Head2
-|cell1|(% tex-template="custom/custom1" %)cell2
+|cell1|(% latex-template="custom/custom1" %)cell2
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
