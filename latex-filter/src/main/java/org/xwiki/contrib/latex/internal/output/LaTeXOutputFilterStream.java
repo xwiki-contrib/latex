@@ -117,14 +117,21 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
             writeln("\\usepackage[utf8]{inputenc}");
             writeln("");
             writeln("\\begin{document}");
-            for (String include : this.includes) {
-                // TODO: escape include
-                write("\\include{", include, "}");
+
+            if (!this.includes.isEmpty()) {
+                for (String include : this.includes) {
+                    // TODO: escape include reference
+                    write("\\include{", include, "}");
+                }
+                writeln("");
             }
+
             writeln("\\end{document}");
         } finally {
             this.zipStream.closeArchiveEntry();
         }
+
+        this.zipStream.close();
 
         this.properties.getTarget().close();
     }

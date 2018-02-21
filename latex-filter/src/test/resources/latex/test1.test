@@ -1,0 +1,18 @@
+.#------------------------------------------------------------------------------
+.input|filter+xml
+.#------------------------------------------------------------------------------
+<wikiSpace name="space">
+  <wikiDocument name="document">
+    <document metadata="">
+      <paragraph>
+        <word>word1</word>
+        <space></space>
+        <word>word2</word>
+      </paragraph>
+    </document>
+  </wikiDocument>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.expect|latex
+.configuration.source=${{{extension.repository}}}/test1-1.0.zip
+.#------------------------------------------------------------------------------

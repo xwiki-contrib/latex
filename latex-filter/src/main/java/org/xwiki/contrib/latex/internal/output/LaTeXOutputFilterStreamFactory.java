@@ -39,17 +39,29 @@ import org.xwiki.filter.type.SystemType;
 public class LaTeXOutputFilterStreamFactory
     extends AbstractBeanOutputFilterStreamFactory<LaTeXOutputProperties, LaTeXOutputFilter>
 {
+    /**
+     * The hint of the component.
+     */
     public static final String ROLEHINT = "latex";
 
-    public static final SystemType SYSTEM_TYPE = new SystemType("latex");
+    /**
+     * The system type of the stream.
+     */
+    public static final SystemType SYSTEM_TYPE = new SystemType(ROLEHINT);
 
+    /**
+     * The type of the stream.
+     */
     public static final FilterStreamType STREAM_TYPE = new FilterStreamType(SYSTEM_TYPE, null);
 
+    /**
+     * Default constructor.
+     */
     public LaTeXOutputFilterStreamFactory()
     {
-        super(FilterStreamType.XWIKI_XAR_CURRENT);
+        super(STREAM_TYPE);
 
-        setName("XAR output stream");
+        setName("Latex output stream");
         setDescription("Write XAR package from wiki events.");
     }
 }

@@ -90,6 +90,10 @@ public class ConverterListener extends WrappingListener
 
     private ZipArchiveOutputStream zipStream;
 
+    /**
+     * @param properties the filter properties
+     * @param zipStream the zip to add entries to
+     */
     public void initialize(LaTeXOutputProperties properties, ZipArchiveOutputStream zipStream)
     {
         this.zipStream = zipStream;
