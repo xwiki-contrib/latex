@@ -33,5 +33,11 @@ import org.xwiki.rendering.block.Block;
 @Role
 public interface LaTeXConfiguration
 {
+    /**
+     * @param block the block for which to find a matching LaTeX template (which will be used to generate the LaTeX
+     *        output)
+     * @return the template content
+     * @throws IOException if the template cannot be found or loaded
+     */
     String getTemplate(Block block)  throws IOException;
 }

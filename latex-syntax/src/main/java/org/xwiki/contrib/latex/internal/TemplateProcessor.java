@@ -32,6 +32,12 @@ import org.slf4j.LoggerFactory;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.velocity.VelocityEngine;
 
+/**
+ * Locate and evaluate the LaTeX templates.
+ *
+ * @version $Id$
+ * @since 1.0
+ */
 public class TemplateProcessor
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(TemplateProcessor.class);
@@ -46,6 +52,12 @@ public class TemplateProcessor
 
     private LaTeXConfiguration configuration;
 
+    /**
+     * @param engine the Velocity engine to use for template evaluations
+     * @param vcontext the prepared Velocity Context to use for template evaluations
+     * @param writer the object into which to write the result of the template evaluations
+     * @param configuration the LaTeX renderer configuration options (used to locate the templates)
+     */
     public TemplateProcessor(VelocityEngine engine, VelocityContext vcontext, Writer writer,
         LaTeXConfiguration configuration)
     {
@@ -55,6 +67,11 @@ public class TemplateProcessor
         this.configuration = configuration;
     }
 
+    /**
+     * Evaluate the passed Blocks by finding matching LaTeX templates and executing Velocity on them.
+     *
+     * @param blocks the rendering blocks to evaluate
+     */
     public void process(Collection<Block> blocks)
     {
         this.vcontext.put("blocks", blocks);
