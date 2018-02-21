@@ -1,6 +1,5 @@
 ## TODO: handle Formula macro
-## TODO: handle TOC macro
-## TODO: handle messages + BoxMacro
+## TODO: handle BoxMacro
 #if ($block.id == 'code')
 #if (!$block.isInline())
 
