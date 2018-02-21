@@ -70,7 +70,7 @@ public class TemplateProcessor
         for (Block block : blocks) {
             try {
                 this.scriptContext.setAttribute("block", block, ScriptContext.ENGINE_SCOPE);
-                String templateName = String.format("latex/%s", block.getClass().getName());
+                String templateName = String.format("latex/%s", block.getClass().getSimpleName());
                 Template template = this.templateManager.getTemplate(templateName);
                 if (template != null) {
                     this.templateManager.render(template, this.writer);
