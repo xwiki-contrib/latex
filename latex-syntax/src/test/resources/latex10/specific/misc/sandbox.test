@@ -135,4 +135,181 @@ This macro automatically generates a table of contents of your wiki page based o
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
+The sandbox is a part of your wiki that you can freely modify. It's meant to let you practice editing. You will discover how page editing works and create new pages. Simply click on \textbf{Edit} to get started!
+
+\begin{xwikiinfo}
+Don't worry about overwriting or losing stuff when editing the page, you can always roll back to the first version of the page from the "History" tab at the bottom of the page.
+\end{xwikiinfo}
+
+If you want to give a look to the underlying XWiki Syntax, you can click on "Wiki code" in the "Show" menu or click on the "Source" tab when editing the page.
+
+Here are a number of test pages you can play with:
+
+\begin{itemize}
+ \item Sandbox Test Page 1
+ \item Sandbox Test Page 2
+ \item Sandbox Test Page 3
+\end{itemize}
+
+Below is a demonstration of the XWiki Syntax you can use in wiki pages (headings, images, tables).
+
+\section{Headings}
+
+XWiki offers 6 levels of headings. You can use them to structure your pages.
+
+\subsection{Level 2 Heading}
+
+\subsubsection{Level 3 Heading}
+
+\paragraph{Level 4 Heading 4}
+
+\subparagraph{Level 5 Heading 5}
+
+\subparagraph{Level 6 Heading 6}
+
+\section{Styles}
+
+Basic styles are supported in XWiki:
+
+\begin{itemize}
+ \item \textbf{Text in Bold}
+ \item \textit{Text in Italics}
+ \item \underline{Text in Underline}
+ \item \sout{Text in Strikethrough}
+ \item Text in \textsubscript{subscript}
+ \item Text in \textsuperscript{superscript}
+\end{itemize}
+
+\section{Lists}
+
+You can create various types of lists in your wiki pages:
+
+\subsection{Unordered list}
+
+\begin{itemize}
+ \item Level 1
+ \begin{itemize}
+  \item Level 2
+  \begin{itemize}
+   \item Level 3
+  \end{itemize}
+  \item Level 2
+ \end{itemize}
+ \item Level 1
+\end{itemize}
+
+\subsection{Numbered list}
+
+\begin{enumerate}
+ \item Item
+ \begin{enumerate}
+  \item Subitem
+  \begin{enumerate}
+   \item Item
+  \end{enumerate}
+ \end{enumerate}
+ \item Subitem
+\end{enumerate}
+
+\subsection{Mixed list}
+
+\begin{enumerate}
+ \item Item 1
+ \begin{enumerate}
+  \item Item 2
+  \begin{itemize}
+   \item Item 3
+   \item Item 4
+  \end{itemize}
+ \end{enumerate}
+ \item Item 5
+\end{enumerate}
+
+\section{Tables}
+
+You can create simple tables right into wiki pages:
+
+\subsection{Simple table}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+ cell 1  &  cell 2  &  cell 3\\
+\hline
+ cell 4  &  cell 5  &  cell 6\\
+\hline
+ cell 7  &  cell 8  &  cell 9\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Table with headers in the top row}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{ table header } & \textbf{ table header } & \textbf{ table header}\\
+\hline
+ cell  &  cell  &  cell\\
+\hline
+ cell  &  cell  &  cell\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Table with headers in the top row and left column}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{ table header } & \textbf{ table header } & \textbf{ table header}\\
+\hline
+\textbf{ table header } &  cell  &  cell\\
+\hline
+\textbf{ table header } &  cell  &  cell\\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Links}
+
+XWiki allows you to create links to other pages in your wiki or on the web:
+
+\begin{itemize}
+ \item WebHome -\textgreater links to the homepage of the current space
+ \item Sandbox Home -\textgreater links can have labels
+ \item Wiki Home -\textgreater a link can use the SpaceName.PageName format to link to a page located in another space
+ \item \url{http://www.xwiki.org} -\textgreater you can link to wiki pages or to external websites
+ \item \href{http://www.xwiki.org}{XWiki.org Website} -\textgreater link labels work for exernal links too
+\end{itemize}
+
+You can also create links to attachments:
+
+XWikiLogo.png
+
+\section{Images}
+
+You can insert images in your wiki pages:
+
+\includegraphics{XWikiLogo.png}
+
+\section{Macros}
+
+Macros allow you to make wiki content look better and to add additional features to your wiki. Here are 2 examples of how macros can be used in wiki pages:
+
+\subsection{Warning Macro}
+
+This macro allows you to draw users' attention to a specific piece of information:
+
+\begin{xwikiwarning}
+Hello World
+\end{xwikiwarning}
+
+\subsection{Table of Contents}
+
+This macro automatically generates a table of contents of your wiki page based on headings:
+
+\etocsettocstyle{}{}
+\tableofcontents
+
 \end{document}

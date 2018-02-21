@@ -3,11 +3,13 @@
 .# Link to an attachment
 .#-----------------------------------------------------
 [[label>>attach:A.B@file.ext]]
+attach:C.D@file2.ext
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-label\footnote{A.B@file.ext}
+label\footnote{A.B@file.ext}\\
+C.D@file2.ext
 
 \end{document}

@@ -30,5 +30,10 @@ ${processor.process($block.getChildren())}##
 #end
 #elseif ($type == 'attach' || $type == 'path')
 ## Link to an attachment. Add a footnote with the attachment name
+## If no label is specified, use the attachment name
+#if ($block.getChildren().isEmpty())
+${reference}##
+#else
 ${processor.process($block.getChildren())}\footnote{${reference}}##
+#end
 #end
