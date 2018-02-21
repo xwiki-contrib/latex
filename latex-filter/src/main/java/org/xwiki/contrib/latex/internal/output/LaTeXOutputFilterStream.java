@@ -165,6 +165,8 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
             this.contentListener.setWrappedListener(this.converterListener);
         }
+
+        this.converterListener.setCurrentReference(this.currentReference);
     }
 
     private void end() throws IOException

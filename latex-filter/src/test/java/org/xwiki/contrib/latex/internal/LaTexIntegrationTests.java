@@ -19,19 +19,26 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Date;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.xwiki.extension.test.ExtensionPackager;
 import org.xwiki.filter.test.integration.FilterTestSuite;
+import org.xwiki.filter.test.integration.FilterTestSuite.Initialized;
 import org.xwiki.filter.test.integration.FilterTestSuite.Scope;
 import org.xwiki.filter.test.internal.FileAssert;
+import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.rendering.wiki.WikiModel;
 import org.xwiki.test.annotation.AllComponents;
+import org.xwiki.test.mockito.MockitoComponentManager;
 
-import com.xpn.xwiki.test.MockitoOldcoreRule;
+import com.xpn.xwiki.doc.XWikiDocument;
+import com.xpn.xwiki.test.MockitoOldcore;
 
 /**
  * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in
@@ -57,6 +64,45 @@ public class LaTexIntegrationTests
         FileAssert.setStringComparator("tex");
     }
 
-    @Rule
-    public MockitoOldcoreRule oldcore = new MockitoOldcoreRule();
+    public MockitoOldcore oldcore;
+
+    @Initialized
+    public void initialize(MockitoComponentManager componentManager) throws Exception
+    {
+        this.oldcore = new MockitoOldcore(componentManager);
+    }
+
+    @Before
+    public void before() throws Exception
+    {
+        this.oldcore.before(this.getClass());
+
+        XWikiDocument document =
+            new XWikiDocument(new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "space", "document"));
+
+        document.setAttachment("attachment.txt", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+            this.oldcore.getXWikiContext());
+        document.setAttachment("image.png", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+            this.oldcore.getXWikiContext());
+
+        this.oldcore.getSpyXWiki().saveDocument(document, this.oldcore.getXWikiContext());
+
+        XWikiDocument otherdocument = new XWikiDocument(
+            new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "otherspace", "otherdocument"));
+
+        otherdocument.setAttachment("otherattachment.txt", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+            this.oldcore.getXWikiContext());
+        otherdocument.setAttachment("otherimage.png", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+            this.oldcore.getXWikiContext());
+
+        this.oldcore.getSpyXWiki().saveDocument(otherdocument, this.oldcore.getXWikiContext());
+
+        this.oldcore.getMocker().registerMockComponent(WikiModel.class);
+    }
+
+    @After
+    public void after() throws Exception
+    {
+        this.oldcore.after();
+    }
 }

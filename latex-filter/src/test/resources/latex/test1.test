@@ -5,9 +5,12 @@
   <wikiDocument name="document">
     <document metadata="">
       <paragraph>
-        <word>word1</word>
-        <space></space>
-        <word>word2</word>
+        <word>word</word>
+        <space/>
+        <link reference="attach:attachment.txt"><word>label</word></link>
+        <link reference="attach:otherspace.otherdocument@otherattachment.txt"><word>otherlabel</word></link>
+        <image reference="attach:image.png"/>
+        <image reference="attach:otherspace.otherdocument@otherimage.png"/>
       </paragraph>
     </document>
   </wikiDocument>

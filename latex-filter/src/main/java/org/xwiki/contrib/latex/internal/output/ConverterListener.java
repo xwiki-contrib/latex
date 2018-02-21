@@ -46,6 +46,7 @@ import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.rendering.listener.WrappingListener;
@@ -90,6 +91,8 @@ public class ConverterListener extends WrappingListener
 
     private ZipArchiveOutputStream zipStream;
 
+    private EntityReference baseEntityReference;
+
     /**
      * @param properties the filter properties
      * @param zipStream the zip to add entries to
@@ -98,6 +101,11 @@ public class ConverterListener extends WrappingListener
     {
         this.zipStream = zipStream;
         this.properties = properties;
+    }
+
+    public void setCurrentReference(EntityReference entityReference)
+    {
+        this.baseEntityReference = entityReference;
     }
 
     private ResourceReference convertReference(ResourceReference reference, boolean forceDownload)
@@ -126,7 +134,7 @@ public class ConverterListener extends WrappingListener
     {
         // Convert reference
         AttachmentReference attachmentReference =
-            (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT);
+            (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, this.baseEntityReference);
 
         String serializedReference = this.fsPathSerializer.serialize(attachmentReference);
         String path = "files/attachments/" + serializedReference;
