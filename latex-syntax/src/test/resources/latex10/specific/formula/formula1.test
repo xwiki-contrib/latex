@@ -1,0 +1,21 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.#-----------------------------------------------------
+Hello {{formula}}\sum_{n=1}^\infty\frac{1}{n^2} = \frac{\pi^2}{6}{{/formula}}
+
+{{formula}}
+\sum_{n=1}^\infty\frac{1}{n^2} = \frac{\pi^2}{6}
+{{/formula}}
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+Hello $\sum_{n=1}^\infty\frac{1}{n^2} = \frac{\pi^2}{6}$
+
+\begin{equation}
+\sum_{n=1}^\infty\frac{1}{n^2} = \frac{\pi^2}{6}
+\end{equation}
+
+\end{document}

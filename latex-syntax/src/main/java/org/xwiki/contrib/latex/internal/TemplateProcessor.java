@@ -71,6 +71,7 @@ public class TemplateProcessor
             try {
                 this.scriptContext.setAttribute("block", block, ScriptContext.ENGINE_SCOPE);
                 String templateName = String.format("latex/%s", block.getClass().getSimpleName());
+                LOGGER.debug("Loading template [{}]", templateName);
                 Template template = this.templateManager.getTemplate(templateName);
                 if (template != null) {
                     this.templateManager.render(template, this.writer);

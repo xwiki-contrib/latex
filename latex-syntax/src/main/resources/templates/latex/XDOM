@@ -16,6 +16,8 @@
 \usepackage{pifont,mdframed}
 %% For the TOC macro, to have local tocs
 \usepackage{etoc}
+%% For the Formula macro
+\usepackage{amsmath}
 
 %% Message macro environments
 
