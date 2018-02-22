@@ -35,7 +35,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.latex.internal.LaTeXBlockRenderer;
-import org.xwiki.contrib.latex.internal.LaTeXUtils;
+import org.xwiki.contrib.latex.internal.LaTeXTool;
 import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.filter.FilterDescriptorManager;
 import org.xwiki.filter.FilterEventParameters;
@@ -75,6 +75,9 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     @Inject
     @Named(LaTeXBlockRenderer.ROLEHINT)
     private BlockRenderer renderer;
+
+    @Inject
+    private LaTeXTool latexTool;
 
     private WrappingListener contentListener = new WrappingListener();
 
@@ -121,7 +124,7 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
             if (!this.includes.isEmpty()) {
                 for (String include : this.includes) {
-                    write("\\include{", LaTeXUtils.escape(include), "}");
+                    write("\\include{", this.latexTool.escape(include), "}");
                 }
                 writeln("");
             }
