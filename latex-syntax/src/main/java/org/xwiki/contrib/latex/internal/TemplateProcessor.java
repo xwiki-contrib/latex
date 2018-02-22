@@ -84,6 +84,11 @@ public class TemplateProcessor
         }
     }
 
+    /**
+     * @param block the block for which to find a template
+     * @return the template for the passed block
+     * @throws Exception if the template cannot be found
+     */
     public Template getTemplate(Block block) throws Exception
     {
         Template result;
@@ -104,6 +109,11 @@ public class TemplateProcessor
         return result;
     }
 
+    /**
+     * @param templateName the template to locate and load
+     * @return the corresponding template
+     * @throws Exception if the template cannot be found
+     */
     public Template getTemplate(String templateName) throws Exception
     {
         LOGGER.debug("Loading template [{}]", templateName);
@@ -114,6 +124,10 @@ public class TemplateProcessor
         return template;
     }
 
+    /**
+     * @param template the template to render
+     * @throws Exception if the template fails to render
+     */
     public void render(Template template) throws Exception
     {
         if (template != null) {
@@ -121,6 +135,10 @@ public class TemplateProcessor
         }
     }
 
+    /**
+     * @param templateName the name of the template to render
+     * @throws Exception if the template fails to render
+     */
     public void render(String templateName) throws Exception
     {
         render(getTemplate(templateName));
