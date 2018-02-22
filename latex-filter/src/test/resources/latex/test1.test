@@ -6,11 +6,15 @@
     <document metadata="">
       <paragraph>
         <word>word</word>
-        <space/>
-        <link reference="attach:attachment.txt"><word>label</word></link>
-        <link reference="attach:otherspace.otherdocument@otherattachment.txt"><word>otherlabel</word></link>
+
+        <link reference="attach:attachment.txt"><word>attachmentlabel</word></link>
+        <link reference="attach:otherspace.otherdocument@otherattachment.txt"><word>otherattachmentlabel</word></link>
+
         <image reference="attach:image.png"/>
         <image reference="attach:otherspace.otherdocument@otherimage.png"/>
+
+        <link reference="doc:OtherSpace.OtherDocument"><word>otherdocumentlink</word></link>
+        <link reference="doc:"><word>emptylink</word></link>
       </paragraph>
     </document>
   </wikiDocument>

@@ -19,20 +19,26 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
- * Escapes special characters in LaTeX.
- *
+ * Various LaTex related tools.
+ * 
  * @version $Id$
- * @since 1.0
  */
-public class LaTeXEscaper
+public final class LaTeXUtils
 {
+    private static final String[] SEARCH_STRINGS = { "\\", "{", "}", "#", "$", "%", "&", "^", "_", "~" };
+
+    private static final String[] REPLACE_STRINGS =
+        { "\\textbackslash{}", "\\{", "\\}", "\\#", "\\$", "\\%", "\\&", "\\^{}", "\\_", "\\~{}" };
+
     /**
      * @param input the string to escape
      * @return the escaped string
      */
-    public String escape(String input)
+    public static String escape(String input)
     {
-        return LaTeXUtils.escape(input);
+        return StringUtils.replaceEach(input, SEARCH_STRINGS, REPLACE_STRINGS);
     }
 }

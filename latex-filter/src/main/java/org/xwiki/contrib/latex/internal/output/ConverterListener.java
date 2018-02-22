@@ -206,17 +206,20 @@ public class ConverterListener extends WrappingListener
     {
         ResourceReference convertedReference = reference;
 
-        DocumentReference documentReference = (DocumentReference) this.resolver.resolve(reference, EntityType.DOCUMENT);
+        if (StringUtils.isNotEmpty(reference.getReference())) {
+            DocumentReference documentReference =
+                (DocumentReference) this.resolver.resolve(reference, EntityType.DOCUMENT);
 
-        if (this.properties.getEntities() != null && this.properties.getEntities().matches(documentReference)) {
-            // TODO: ?
-        } else {
-            // External URL
-            String url = this.bridge.getDocumentURL(new DocumentReference(documentReference), "view",
-                reference.getParameter(DocumentResourceReference.QUERY_STRING),
-                reference.getParameter(DocumentResourceReference.ANCHOR), true);
+            if (this.properties.getEntities() != null && this.properties.getEntities().matches(documentReference)) {
+                // TODO: ?
+            } else {
+                // External URL
+                String url = this.bridge.getDocumentURL(new DocumentReference(documentReference), "view",
+                    reference.getParameter(DocumentResourceReference.QUERY_STRING),
+                    reference.getParameter(DocumentResourceReference.ANCHOR), true);
 
-            convertedReference = new ResourceReference(url, ResourceType.URL);
+                convertedReference = new ResourceReference(url, ResourceType.URL);
+            }
         }
 
         return convertedReference;

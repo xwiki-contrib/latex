@@ -21,6 +21,7 @@ package org.xwiki.contrib.latex.internal;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.net.URL;
 import java.util.Date;
 
 import org.junit.After;
@@ -39,6 +40,11 @@ import org.xwiki.test.mockito.MockitoComponentManager;
 
 import com.xpn.xwiki.doc.XWikiDocument;
 import com.xpn.xwiki.test.MockitoOldcore;
+import com.xpn.xwiki.web.XWikiServletRequest;
+import com.xpn.xwiki.web.XWikiServletRequestStub;
+import com.xpn.xwiki.web.XWikiServletResponse;
+import com.xpn.xwiki.web.XWikiServletResponseStub;
+import com.xpn.xwiki.web.XWikiServletURLFactory;
 
 /**
  * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in
@@ -98,6 +104,19 @@ public class LaTexIntegrationTests
         this.oldcore.getSpyXWiki().saveDocument(otherdocument, this.oldcore.getXWikiContext());
 
         this.oldcore.getMocker().registerMockComponent(WikiModel.class);
+
+        this.oldcore.getXWikiContext().setURL(new URL("https", "test", ""));
+        XWikiServletRequestStub initialRequest = new XWikiServletRequestStub();
+        initialRequest.setHost("test");
+        initialRequest.setScheme("http");
+        XWikiServletRequest request = new XWikiServletRequest(initialRequest);
+        this.oldcore.getXWikiContext().setRequest(request);
+        XWikiServletURLFactory urlFactory = new XWikiServletURLFactory(this.oldcore.getXWikiContext());
+        this.oldcore.getXWikiContext().setURLFactory(urlFactory);
+
+        XWikiServletResponseStub initialResponse = new XWikiServletResponseStub();
+        XWikiServletResponse response = new XWikiServletResponse(initialResponse);
+        this.oldcore.getXWikiContext().setResponse(response);
     }
 
     @After
