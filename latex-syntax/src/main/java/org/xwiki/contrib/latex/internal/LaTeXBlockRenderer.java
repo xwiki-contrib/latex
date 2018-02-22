@@ -87,6 +87,7 @@ public class LaTeXBlockRenderer implements BlockRenderer
             // Push a new Execution Context for the template rendering.
             ExecutionContext context = new ExecutionContext();
             this.executionContextManager.initialize(context);
+            this.execution.pushContext(context);
 
             // TODO: stream the template writer directly to the printer
             StringWriter writer = new StringWriter();
