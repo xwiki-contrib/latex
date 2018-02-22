@@ -2,10 +2,10 @@
 ## or not...
 #if ("$!block.parent.class.simpleName" == 'MacroMarkerBlock')
 #if ($block.parent.isInline())
-\label{${block.name}}##
+\label{$latex.escape($block.name)}##
 #else
 
 
-\label{${block.name}}##
+\label{$latex.escape($block.name)}##
 #end
 #end

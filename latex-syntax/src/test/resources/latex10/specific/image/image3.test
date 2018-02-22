@@ -1,0 +1,16 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Verify escapes in image captions
+.#-----------------------------------------------------
+[[image:whatever||caption='Escape # $ % & \ ^ _ { } ~~']]
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{figure}[h]
+\includegraphics{whatever}
+\caption{Escape \# \$ \% \& \textbackslash{} \^{} \_ \{ \} \~{}}
+\end{figure}
+
+\end{document}

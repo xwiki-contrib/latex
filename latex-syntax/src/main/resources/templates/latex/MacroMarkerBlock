@@ -14,7 +14,7 @@ $block.content
 
 #end
 \begin{xwikiinfo}
-$block.content
+$latex.escape($block.content)
 \end{xwikiinfo}##
 #elseif ($block.id == 'warning')
 #if (!$block.isInline())
@@ -22,7 +22,7 @@ $block.content
 
 #end
 \begin{xwikiwarning}
-$block.content
+$latex.escape($block.content)
 \end{xwikiwarning}##
 #elseif ($block.id == 'error')
 #if (!$block.isInline())
@@ -30,7 +30,7 @@ $block.content
 
 #end
 \begin{xwikierror}
-$block.content
+$latex.escape($block.content)
 \end{xwikierror}##
 #elseif ($block.id == 'success')
 #if (!$block.isInline())
@@ -38,7 +38,7 @@ $block.content
 
 #end
 \begin{xwikisuccess}
-$block.content
+$latex.escape($block.content)
 \end{xwikisuccess}##
 #elseif ($block.id == 'toc')
 

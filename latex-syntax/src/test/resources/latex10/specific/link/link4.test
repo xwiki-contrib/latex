@@ -1,0 +1,13 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Link to a mailto with special chars
+.#-----------------------------------------------------
+mailto:my_address@wikibooks.org
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\href{mailto:my_address@wikibooks.org}{my\_address@wikibooks.org}
+
+\end{document}

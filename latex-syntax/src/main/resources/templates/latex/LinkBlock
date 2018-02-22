@@ -8,7 +8,7 @@
 #else
 ## Ignore links that are not local, just display the label if there's one or the reference otherwise
 #if ($block.getChildren().isEmpty())
-${reference}##
+$latex.escape($reference)##
 #else
 ${processor.process($block.getChildren())}##
 #end
@@ -22,9 +22,7 @@ ${processor.process($block.getChildren())}##
 #end
 #elseif ($type == 'mailto')
 #if ($block.getChildren().isEmpty())
-## TODO: Handle escapes required in the reference. For example:
-## \href{mailto:my_address@wikibooks.org}{my\_address@wikibooks.org}
-\href{mailto:${reference}}{${reference}}##
+\href{mailto:${reference}}{$latex.escape($reference)}##
 #else
 \href{mailto:${reference}}{${processor.process($block.getChildren())}}##
 #end
@@ -32,8 +30,8 @@ ${processor.process($block.getChildren())}##
 ## Link to an attachment. Add a footnote with the attachment name
 ## If no label is specified, use the attachment name
 #if ($block.getChildren().isEmpty())
-${reference}##
+$latex.escape($reference)##
 #else
-${processor.process($block.getChildren())}\footnote{${reference}}##
+${processor.process($block.getChildren())}\footnote{$latex.escape($reference)}##
 #end
 #end
