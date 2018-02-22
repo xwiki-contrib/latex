@@ -19,26 +19,42 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import java.util.Locale;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang3.StringUtils;
+import org.xwiki.component.annotation.Component;
+import org.xwiki.localization.LocalizationContext;
 
 /**
- * Various LaTex related tools.
- * 
+ * Provides useful tools for use in the LaTeX templates.
+ *
  * @version $Id$
+ * @since 1.0
  */
-public final class LaTeXUtils
+@Component
+@Singleton
+public class DefaultLaTeXTool implements LaTeXTool
 {
     private static final String[] SEARCH_STRINGS = { "\\", "{", "}", "#", "$", "%", "&", "^", "_", "~" };
 
     private static final String[] REPLACE_STRINGS =
         { "\\textbackslash{}", "\\{", "\\}", "\\#", "\\$", "\\%", "\\&", "\\^{}", "\\_", "\\~{}" };
 
-    /**
-     * @param input the string to escape
-     * @return the escaped string
-     */
-    public static String escape(String input)
+    @Inject
+    private LocalizationContext localizationContext;
+
+    @Override
+    public String escape(String input)
     {
         return StringUtils.replaceEach(input, SEARCH_STRINGS, REPLACE_STRINGS);
+    }
+
+    @Override
+    public String getLanguage()
+    {
+        return this.localizationContext.getCurrentLocale().getDisplayLanguage(Locale.ENGLISH).toLowerCase();
     }
 }

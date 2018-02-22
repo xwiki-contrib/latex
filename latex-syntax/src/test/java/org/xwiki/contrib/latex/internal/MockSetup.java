@@ -21,6 +21,7 @@ package org.xwiki.contrib.latex.internal;
 
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.Locale;
 
 import javax.script.ScriptContext;
 
@@ -28,6 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.velocity.VelocityContext;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.xwiki.localization.LocalizationContext;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.Template;
 import org.xwiki.template.TemplateContent;
@@ -43,7 +45,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Mock the TemplateManager in order to not depend on oldcore. We implement a TemplateManager using a Velocity Engine.
+ * Mocks for the tests.
  *
  * @version $Id$
  * @since 1.0
@@ -52,6 +54,8 @@ public class MockSetup
 {
     public static void setUp(MockitoComponentManager componentManager) throws Exception
     {
+        // Mock the TemplateManager in order to not depend on oldcore. We implement a TemplateManager
+        // using a Velocity Engine.
         TemplateManager templateManager = componentManager.registerMockComponent(TemplateManager.class);
         when(templateManager.getTemplate(any(String.class))).thenAnswer(new Answer<Object>()
         {
@@ -104,5 +108,9 @@ public class MockSetup
                 return null;
             }
         }).when(templateManager).render(any(Template.class), any(Writer.class));
+
+        // Mock to get the current locale
+        LocalizationContext lc = componentManager.registerMockComponent(LocalizationContext.class);
+        when(lc.getCurrentLocale()).thenReturn(Locale.ENGLISH);
     }
 }

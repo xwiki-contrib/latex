@@ -19,20 +19,27 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import org.xwiki.component.annotation.Role;
+
 /**
- * Escapes special characters in LaTeX.
+ * Provides useful tools for use in the LaTeX templates.
  *
  * @version $Id$
  * @since 1.0
  */
-public class LaTeXEscaper
+@Role
+public interface LaTeXTool
 {
     /**
+     * Escapes special characters in LaTeX.
+     *
      * @param input the string to escape
      * @return the escaped string
      */
-    public String escape(String input)
-    {
-        return LaTeXUtils.escape(input);
-    }
+    String escape(String input);
+
+    /**
+     * @return the LaTeX language name to use for the content
+     */
+    String getLanguage();
 }

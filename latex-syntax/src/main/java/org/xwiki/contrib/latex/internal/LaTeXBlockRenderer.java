@@ -71,6 +71,9 @@ public class LaTeXBlockRenderer implements BlockRenderer
     @Inject
     private ScriptContextManager scriptContextManager;
 
+    @Inject
+    private LaTeXTool latexTool;
+
     @Override
     public void render(Block block, WikiPrinter printer)
     {
@@ -90,7 +93,7 @@ public class LaTeXBlockRenderer implements BlockRenderer
             ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
             TemplateProcessor processor = new TemplateProcessor(this.templateManager, scriptContext, writer);
             scriptContext.setAttribute("processor", processor, ScriptContext.ENGINE_SCOPE);
-            scriptContext.setAttribute("latex", new LaTeXEscaper(), ScriptContext.ENGINE_SCOPE);
+            scriptContext.setAttribute("latex", this.latexTool, ScriptContext.ENGINE_SCOPE);
             processor.process(blocks);
             printer.print(writer.toString());
         } catch (Exception e) {

@@ -7,8 +7,10 @@
 .#-----------------------------------------------------
 \documentclass{article}
 
-%% Allow UTF8 content
+%% Language and font encodings
+\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 %% Used for strike through support
 \usepackage[normalem]{ulem}
 %% Used for image support
