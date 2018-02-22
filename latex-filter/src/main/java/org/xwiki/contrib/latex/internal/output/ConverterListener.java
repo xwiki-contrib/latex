@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -37,6 +36,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.xwiki.bridge.DocumentAccessBridge;
 import org.xwiki.component.annotation.Component;
@@ -82,8 +82,6 @@ public class ConverterListener extends WrappingListener
     private Logger logger;
 
     private Set<String> stored = new HashSet<>();
-
-    private Map<String, ResourceReference> convertedReferences = new HashMap<>();
 
     private Deque<ResourceReference> currentReference = new LinkedList<>();
 
@@ -132,21 +130,19 @@ public class ConverterListener extends WrappingListener
 
     private ResourceReference convertATTACHMENTReference(ResourceReference reference)
     {
+        StringBuilder builder = new StringBuilder();
+        builder.append("files/attachments/");
         // Convert reference
         AttachmentReference attachmentReference =
             (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, this.baseEntityReference);
+        builder.append(this.fsPathSerializer.serialize(attachmentReference));
 
-        String serializedReference = this.fsPathSerializer.serialize(attachmentReference);
-        String path = "files/attachments/" + serializedReference;
+        String path = builder.toString();
 
-        ResourceReference convertedReference = this.convertedReferences.get(path);
+        ResourceReference convertedReference = toPathReference(reference, path);
 
-        if (convertedReference == null) {
-            convertedReference = toPathReference(reference, path);
-
-            this.convertedReferences.put(path, convertedReference);
-
-            // Store attachment content
+        // Store attachment content
+        if (!this.stored.contains(path)) {
             try {
                 XWikiContext xcontext = this.xcontextProvider.get();
                 XWikiDocument document =
@@ -190,14 +186,10 @@ public class ConverterListener extends WrappingListener
                 String path =
                     "files/downloaded/" + url.getHost() + '/' + reference.getReference().hashCode() + '/' + filename;
 
-                convertedReference = this.convertedReferences.get(path);
+                // Convert the reference
+                convertedReference = toPathReference(reference, path);
 
-                if (convertedReference == null) {
-                    // Convert the reference
-                    convertedReference = toPathReference(reference, path);
-
-                    this.convertedReferences.put(path, convertedReference);
-
+                if (!this.stored.contains(path)) {
                     try (InputStream stream = url.openStream()) {
                         store(path, stream);
                     }
@@ -232,7 +224,8 @@ public class ConverterListener extends WrappingListener
 
     private ResourceReference toPathReference(ResourceReference reference, String path)
     {
-        ResourceReference convertedReference = new ResourceReference(path, ResourceType.PATH);
+        ResourceReference convertedReference =
+            new ResourceReference(StringUtils.repeat("../", this.baseEntityReference.size()) + path, ResourceType.PATH);
         convertedReference.setParameters(reference.getParameters());
 
         return convertedReference;

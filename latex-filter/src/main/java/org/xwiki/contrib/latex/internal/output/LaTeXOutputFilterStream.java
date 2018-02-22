@@ -182,7 +182,7 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
             String path = this.fsPathSerializer.serialize(this.currentReference);
 
-            ZipArchiveEntry entry = new ZipArchiveEntry(path + ".tex");
+            ZipArchiveEntry entry = new ZipArchiveEntry("pages/" + path + ".tex");
 
             try {
                 this.zipStream.putArchiveEntry(entry);
