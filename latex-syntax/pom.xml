@@ -29,7 +29,7 @@
   </parent>
   <artifactId>latex-syntax</artifactId>
   <name>LaTeX - Syntax</name>
-  <description>LaTeX Renderer</description>
+  <description>LaTeX 1.0 Syntax Renderer</description>
   <properties>
     <xwiki.jacoco.instructionRatio>0.84</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
