@@ -72,7 +72,7 @@ public class TemplateProcessor
                 this.scriptContext.setAttribute("block", block, ScriptContext.ENGINE_SCOPE);
                 Template template = getTemplate(block);
                 if (template != null) {
-                    this.templateManager.render(template, this.writer);
+                    render(template);
                 } else {
                     // Ignore the template and render children
                     process(block.getChildren());
@@ -84,15 +84,45 @@ public class TemplateProcessor
         }
     }
 
-    private Template getTemplate(Block block)
+    public Template getTemplate(Block block) throws Exception
     {
+        Template result;
+
         // If there's a custom template defined in the Block parameter's, use it!
         String templateName = block.getParameter("latex-template");
         if (templateName == null) {
             templateName = String.format("latex/%s", block.getClass().getSimpleName());
+            result = getTemplate(templateName);
+            if (result == null) {
+                // Try to find a default template.
+                templateName = String.format("latex/default/%s", block.getClass().getSimpleName());
+                result = getTemplate(templateName);
+            }
+        } else {
+            result = getTemplate(templateName);
         }
+        return result;
+    }
+
+    public Template getTemplate(String templateName) throws Exception
+    {
         LOGGER.debug("Loading template [{}]", templateName);
         Template template = this.templateManager.getTemplate(templateName);
+        if (template != null) {
+            template = new ModifiableTemplate(template);
+        }
         return template;
+    }
+
+    public void render(Template template) throws Exception
+    {
+        if (template != null) {
+            this.templateManager.render(template, this.writer);
+        }
+    }
+
+    public void render(String templateName) throws Exception
+    {
+        render(getTemplate(templateName));
     }
 }

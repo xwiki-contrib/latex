@@ -26,7 +26,7 @@
 %% For the TOC macro, to have local tocs
 \usepackage{etoc}
 %% For the Formula macro
-\usepackage{amsmath}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
 
 %% Message macro environments
 

@@ -1,0 +1,9 @@
+## This is testing an override showing how to replace some default content with some other content
+## Step 1: Get the default template
+#set ($template = $processor.getTemplate('latex/default/XDOM'))
+## Step 2: Compute the new content
+#set ($newContent = $template.content.content.replace('\usepackage{amsmath}', '\usepackage{amsmath, amsthm, amssymb, amsfonts}'))
+## Step 3: Set the new content
+#set ($discard = $template.content.setContent($newContent))
+## Step 4: Render the modified template
+$processor.render($template)##
