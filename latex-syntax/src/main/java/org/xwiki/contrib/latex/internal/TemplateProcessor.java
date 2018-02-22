@@ -91,7 +91,7 @@ public class TemplateProcessor
         if (templateName == null) {
             templateName = String.format("latex/%s", block.getClass().getSimpleName());
         }
-        LOGGER.info("Loading template [{}]", templateName);
+        LOGGER.debug("Loading template [{}]", templateName);
         Template template = this.templateManager.getTemplate(templateName);
         return template;
     }

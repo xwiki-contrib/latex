@@ -2,7 +2,15 @@
 ## TODO: Add support for "width", "height", "style" and possibly "keepAspectRatio"
 ## For example by using "\includegraphics[width=largeur]{filename}"
 #if ($type == 'attach')
+#if ("$!block.getParameter('caption')" != '')
+\begin{figure}[h]
+#end
 \includegraphics{${block.reference.reference}}##
+#if ("$!block.getParameter('caption')" != '')
+
+\caption{${block.getParameter('caption')}}
+\end{figure}##
+#end
 #elseif ($type == 'url')
   ## ConTeXt supports this natively using
   ## \externalfigure[http://www.site.com/path/to/figure.png]

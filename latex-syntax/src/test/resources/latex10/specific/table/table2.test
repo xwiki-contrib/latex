@@ -1,0 +1,29 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Floating Table with caption
+.#-----------------------------------------------------
+(% caption='Floating Table Example' %)
+|=table header|=table header
+|cell|cell
+|cell|cell
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{table header} & \textbf{table header}\\
+\hline
+cell & cell\\
+\hline
+cell & cell\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Floating Table Example}
+\end{table}
+
+\end{document}

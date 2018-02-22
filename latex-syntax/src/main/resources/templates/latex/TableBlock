@@ -1,3 +1,4 @@
+#set ($tableBlock = $block)
 ## Since this is a standalone element we separate from the previous block by 2 NL
 
 
@@ -5,8 +6,17 @@
 #set ($firstRowBlock = $block.getChildren().get(0))
 #set ($columnSize = $firstRowBlock.getChildren().size() - 1)
 #set ($tableSpec = "|${stringtool.repeat('l|', $columnSize)}l|")
+#if ("$!tableBlock.getParameter('caption')" != '')
+\begin{table}[h]
+#end
 \begin{center}
 \begin{tabular}{${tableSpec}}
 \hline
-$processor.process($block.getChildren())\end{tabular}
-\end{center}
+$processor.process($block.getChildren())##
+\end{tabular}
+\end{center}##
+#if ("$!tableBlock.getParameter('caption')" != '')
+
+\caption{${tableBlock.getParameter('caption')}}
+\end{table}##
+#end
