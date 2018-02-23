@@ -18,6 +18,9 @@
 \usepackage{etoc}
 %% For the Formula macro
 \usepackage{amsmath}
+%% For links to attachments (we embed the attachments and link to them)
+\usepackage{embedfile}
+\usepackage{hypgotoe}
 
 %% Message macro environments
 

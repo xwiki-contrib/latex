@@ -26,7 +26,23 @@ ${processor.process($block.getChildren())}##
 #else
 \href{mailto:${reference}}{${processor.process($block.getChildren())}}##
 #end
-#elseif ($type == 'attach' || $type == 'path')
+#elseif ($type == 'path')
+## Link to an attachment.
+## We embed the attachment and link to it.
+#if ("$!attachmentCache" == '')
+  #set ($attachmentCache = {})
+#end
+#set ($escapedReference = $latex.escape($reference))
+#if ("$!attachmentCache.get($escapedReference)" == '')
+\embedfile{${escapedReference}}
+#set ($discard = $attachmentCache.put($escapedReference, true))
+#end
+#if ($block.getChildren().isEmpty())
+\href{gotoe:embedded=${escapedReference}}{$escapedReference}##
+#else
+\href{gotoe:embedded=${escapedReference}}{${processor.process($block.getChildren())}}##
+#end
+#elseif ($type == 'attach')
 ## Link to an attachment. Add a footnote with the attachment name
 ## If no label is specified, use the attachment name
 #if ($block.getChildren().isEmpty())
