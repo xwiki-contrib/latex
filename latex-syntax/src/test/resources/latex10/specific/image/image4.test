@@ -1,0 +1,13 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Verify images passed as PATH (used by the export).
+.#-----------------------------------------------------
+image:path:whatever
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\includegraphics{whatever}
+
+\end{document}

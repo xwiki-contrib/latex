@@ -1,7 +1,7 @@
 #set ($type = $block.reference.type.scheme)
 ## TODO: Add support for "width", "height", "style" and possibly "keepAspectRatio"
-## For example by using "\includegraphics[width=largeur]{filename}"
-#if ($type == 'attach')
+## For example by using "\includegraphics[width=...]{filename}"
+#if ($type == 'path' || $type == 'attach')
 #if ("$!block.getParameter('caption')" != '')
 \begin{figure}[h]
 #end
