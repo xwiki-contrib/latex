@@ -91,33 +91,29 @@ public class TemplateProcessor
      */
     public Template getTemplate(Block block) throws Exception
     {
-        Template result;
-
         // If there's a custom template defined in the Block parameter's, use it!
         String templateName = block.getParameter("latex-template");
         if (templateName == null) {
-            templateName = String.format("latex/%s", block.getClass().getSimpleName());
-            result = getTemplate(templateName);
-            if (result == null) {
-                // Try to find a default template.
-                templateName = String.format("latex/default/%s", block.getClass().getSimpleName());
-                result = getTemplate(templateName);
-            }
-        } else {
-            result = getTemplate(templateName);
+            templateName = block.getClass().getSimpleName();
         }
-        return result;
+        return getTemplate(templateName);
     }
 
     /**
-     * @param templateName the template to locate and load
+     * @param relativeTemplateName the template to locate and load (relative to {@code latex/})
      * @return the corresponding template
      * @throws Exception if the template cannot be found
      */
-    public Template getTemplate(String templateName) throws Exception
+    public Template getTemplate(String relativeTemplateName) throws Exception
     {
-        LOGGER.debug("Loading template [{}]", templateName);
-        Template template = this.templateManager.getTemplate(templateName);
+        LOGGER.debug("Loading template [{}]", relativeTemplateName);
+        String fullTemplateName = String.format("latex/%s", relativeTemplateName);
+        Template template = this.templateManager.getTemplate(fullTemplateName);
+        if (template == null) {
+            // Try to find a default template.
+            fullTemplateName = String.format("latex/default/%s", relativeTemplateName);
+            template = this.templateManager.getTemplate(fullTemplateName);
+        }
         if (template != null) {
             template = new ModifiableTemplate(template);
         }

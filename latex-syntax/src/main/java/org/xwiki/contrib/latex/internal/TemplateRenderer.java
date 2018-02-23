@@ -20,45 +20,31 @@
 package org.xwiki.contrib.latex.internal;
 
 import java.util.Collection;
-import java.util.Collections;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.xwiki.component.annotation.Component;
+import org.xwiki.component.annotation.Role;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
 
 /**
- * Generates LaTeX syntax from a {@link org.xwiki.rendering.block.XDOM}.
+ * Render LaTeX templates.
  *
  * @version $Id$
  * @since 1.0
  */
-@Component
-@Named(LaTeXBlockRenderer.ROLEHINT)
-@Singleton
-public class LaTeXBlockRenderer implements BlockRenderer
+@Role
+public interface TemplateRenderer
 {
     /**
-     * The role hint of the component.
+     * @param blocks the blocks to render as LaTeX templates
+     * @param printer the result of the rendering
      */
-    public static final String ROLEHINT = "latex/1.0";
+    void render(Collection<Block> blocks, WikiPrinter printer);
 
-    @Inject
-    private TemplateRenderer templateRenderer;
-
-    @Override
-    public void render(Block block, WikiPrinter printer)
-    {
-        render(Collections.singletonList(block), printer);
-    }
-
-    @Override
-    public void render(Collection<Block> blocks, WikiPrinter printer)
-    {
-        this.templateRenderer.render(blocks, printer);
-    }
+    /**
+     * @param relativeTemplateName the name of an explicit template to call (note that if the template requires some
+     *        special bindings, you'll need to make sure they are available before calling this method, by putting
+     *        them in the ScriptContext for example)
+     * @param printer the result of the rendering
+     */
+    void render(String relativeTemplateName, WikiPrinter printer);
 }
