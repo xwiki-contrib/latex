@@ -183,9 +183,9 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
             String latexContent = printer.toString();
 
-            String path = this.fsPathSerializer.serialize(this.currentReference);
+            String path = "pages/" + this.fsPathSerializer.serialize(this.currentReference);
 
-            ZipArchiveEntry entry = new ZipArchiveEntry("pages/" + path + ".tex");
+            ZipArchiveEntry entry = new ZipArchiveEntry(path + ".tex");
 
             try {
                 this.zipStream.putArchiveEntry(entry);
