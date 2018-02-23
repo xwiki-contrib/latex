@@ -35,8 +35,6 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.latex.internal.LaTeXBlockRenderer;
-import org.xwiki.contrib.latex.internal.LaTeXTool;
-import org.xwiki.contrib.latex.internal.TemplateRenderer;
 import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.filter.FilterDescriptorManager;
 import org.xwiki.filter.FilterEventParameters;
@@ -53,7 +51,6 @@ import org.xwiki.rendering.internal.parser.XDOMGeneratorListener;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
-import org.xwiki.rendering.renderer.printer.WikiPrinter;
 
 /**
  * @version $Id: 29443af498e773a330ccb0420285b030967f40c8 $
@@ -79,10 +76,7 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     private BlockRenderer renderer;
 
     @Inject
-    private TemplateRenderer templateRenderer;
-
-    @Inject
-    private LaTeXTool latexTool;
+    private IndexSerializer indexSerializer;
 
     private WrappingListener contentListener = new WrappingListener();
 
@@ -122,25 +116,7 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
         try {
             this.zipStream.putArchiveEntry(entry);
 
-            writeln("\\documentclass{article}");
-            writeln("\\usepackage[utf8]{inputenc}");
-            writeln("\\usepackage{standalone}");
-
-            WikiPrinter wikiprinter = new DefaultWikiPrinter();
-            this.templateRenderer.render("Preamble", wikiprinter);
-            writeln(wikiprinter.toString());
-
-            writeln("");
-            writeln("\\begin{document}");
-
-            if (!this.includes.isEmpty()) {
-                for (String include : this.includes) {
-                    write("\\include{", this.latexTool.escape(include), "}");
-                }
-                writeln("");
-            }
-
-            writeln("\\end{document}");
+            indexSerializer.serialize(this.includes, this.zipStream);
         } finally {
             this.zipStream.closeArchiveEntry();
         }
@@ -148,18 +124,6 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
         this.zipStream.close();
 
         this.properties.getTarget().close();
-    }
-
-    private void writeln(String txt) throws IOException
-    {
-        write(txt, "\n");
-    }
-
-    private void write(String... strs) throws IOException
-    {
-        for (String str : strs) {
-            IOUtils.write(str, this.zipStream, StandardCharsets.UTF_8);
-        }
     }
 
     @Override
