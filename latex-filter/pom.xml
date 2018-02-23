@@ -32,6 +32,11 @@
   <description>LaTeX Output Filter</description>
   <properties>
     <xwiki.jacoco.instructionRatio>1.00</xwiki.jacoco.instructionRatio>
+
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>LaTeX Output Filter</xwiki.extension.name>
+    <!-- List it as a module containing a filter -->
+    <xwiki.extension.category>filter</xwiki.extension.category>
   </properties>
   <dependencies>
     <dependency>

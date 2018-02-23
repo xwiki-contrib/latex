@@ -32,6 +32,9 @@
   <description>Entry point to export a LaTex</description>
   <properties>
     <xwiki.jacoco.instructionRatio>1.00</xwiki.jacoco.instructionRatio>
+
+    <!-- Name to display by the Extension Manager -->
+    <xwiki.extension.name>LaTeX Exporter</xwiki.extension.name>
   </properties>
   <dependencies>
     <dependency>
