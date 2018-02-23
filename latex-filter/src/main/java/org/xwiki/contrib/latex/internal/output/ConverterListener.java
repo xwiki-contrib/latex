@@ -230,8 +230,7 @@ public class ConverterListener extends WrappingListener
 
     private ResourceReference toPathReference(ResourceReference reference, String path)
     {
-        ResourceReference convertedReference =
-            new ResourceReference(StringUtils.repeat("../", this.baseEntityReference.size()) + path, ResourceType.PATH);
+        ResourceReference convertedReference = new ResourceReference(path, ResourceType.PATH);
         convertedReference.setParameters(reference.getParameters());
 
         return convertedReference;

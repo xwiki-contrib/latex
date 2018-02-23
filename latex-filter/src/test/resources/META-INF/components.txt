@@ -1,1 +1,2 @@
 500:org.xwiki.contrib.latex.internal.TestLaTeXBlockRenderer
+500:org.xwiki.contrib.latex.internal.TestTemplateRenderer

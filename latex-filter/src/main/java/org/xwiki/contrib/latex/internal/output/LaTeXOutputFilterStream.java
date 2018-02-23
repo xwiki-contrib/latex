@@ -36,6 +36,7 @@ import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.latex.internal.LaTeXBlockRenderer;
 import org.xwiki.contrib.latex.internal.LaTeXTool;
+import org.xwiki.contrib.latex.internal.TemplateRenderer;
 import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.filter.FilterDescriptorManager;
 import org.xwiki.filter.FilterEventParameters;
@@ -52,6 +53,7 @@ import org.xwiki.rendering.internal.parser.XDOMGeneratorListener;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
+import org.xwiki.rendering.renderer.printer.WikiPrinter;
 
 /**
  * @version $Id: 29443af498e773a330ccb0420285b030967f40c8 $
@@ -75,6 +77,9 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     @Inject
     @Named(LaTeXBlockRenderer.ROLEHINT)
     private BlockRenderer renderer;
+
+    @Inject
+    private TemplateRenderer templateRenderer;
 
     @Inject
     private LaTeXTool latexTool;
@@ -119,6 +124,12 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
             writeln("\\documentclass{article}");
             writeln("\\usepackage[utf8]{inputenc}");
+            writeln("\\usepackage{standalone}");
+
+            WikiPrinter wikiprinter = new DefaultWikiPrinter();
+            this.templateRenderer.render("Preamble", wikiprinter);
+            writeln(wikiprinter.toString());
+
             writeln("");
             writeln("\\begin{document}");
 

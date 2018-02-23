@@ -20,7 +20,6 @@
 package org.xwiki.contrib.latex.internal;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,30 +31,31 @@ import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
 
 /**
- * Mock of the latex renderer.
+ * Mock template renderer.
  * 
  * @version $Id$
  */
 @Component
-@Named(LaTeXBlockRenderer.ROLEHINT)
 @Singleton
-public class TestLaTeXBlockRenderer implements BlockRenderer
+public class TestTemplateRenderer implements TemplateRenderer
 {
     @Inject
     @Named("event/1.0")
     private BlockRenderer eventRenderer;
 
     @Override
-    public void render(Block block, WikiPrinter printer)
+    public void render(Collection<Block> blocks, WikiPrinter printer)
     {
-        render(Collections.singletonList(block), printer);
+        printer.println("/********** latex result for the following events **********");
+
+        this.eventRenderer.render(blocks, printer);
+
+        printer.print("********** blocks " + blocks + "**********/");
     }
 
     @Override
-    public void render(Collection<Block> blocks, WikiPrinter printer)
+    public void render(String relativeTemplateName, WikiPrinter printer)
     {
-        printer.println("********** latex result for the following events **********");
-
-        this.eventRenderer.render(blocks, printer);
+        printer.print("********** template " + relativeTemplateName + "**********");
     }
 }
