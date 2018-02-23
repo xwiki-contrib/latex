@@ -34,7 +34,10 @@
   <description>Parent POM for LaTeX modules</description>
   <packaging>pom</packaging>
   <properties>
-    <!-- <commons.version>9.11.3-SNAPSHOT</commons.version> -->
+    <commons.version>9.11.3-SNAPSHOT</commons.version>
+
+    <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
+    <xwiki.issueManagement.jira.id>LATEX</xwiki.issueManagement.jira.id>
   </properties>
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/latex.git</connection>
@@ -42,10 +45,6 @@
     <url>https://github.com/xwiki-contrib/latex/tree/master</url>
     <tag>HEAD</tag>
   </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>http://jira.xwiki.org/browse/LATEX</url>
-  </issueManagement>
   <developers>
     <developer>
       <id>vmassol</id>
