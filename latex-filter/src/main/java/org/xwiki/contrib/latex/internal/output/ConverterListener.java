@@ -101,6 +101,9 @@ public class ConverterListener extends WrappingListener
         this.properties = properties;
     }
 
+    /**
+     * @param entityReference the current reference
+     */
     public void setCurrentReference(EntityReference entityReference)
     {
         this.baseEntityReference = entityReference;
