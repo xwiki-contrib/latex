@@ -19,6 +19,8 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -27,6 +29,7 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.LocalizationContext;
+import org.xwiki.rendering.block.Block;
 
 /**
  * Provides useful tools for use in the LaTeX templates.
@@ -56,5 +59,17 @@ public class DefaultLaTeXTool implements LaTeXTool
     public String getLanguage()
     {
         return this.localizationContext.getCurrentLocale().getDisplayLanguage(Locale.ENGLISH).toLowerCase();
+    }
+
+    @Override
+    public List<Block> getSiblings(Block currentBlock)
+    {
+        List<Block> results = new ArrayList<>();
+        Block block = currentBlock.getNextSibling();
+        while (block != null) {
+            results.add(block);
+            block = block.getNextSibling();
+        }
+        return results;
     }
 }

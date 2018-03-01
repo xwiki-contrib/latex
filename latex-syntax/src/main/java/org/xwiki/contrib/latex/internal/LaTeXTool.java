@@ -19,7 +19,10 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import java.util.List;
+
 import org.xwiki.component.annotation.Role;
+import org.xwiki.rendering.block.Block;
 
 /**
  * Provides useful tools for use in the LaTeX templates.
@@ -42,4 +45,10 @@ public interface LaTeXTool
      * @return the LaTeX language name to use for the content
      */
     String getLanguage();
+
+    /**
+     * @param currentBlock the current block for which to find all following siblings
+     * @return all the siblings of the current block
+     */
+    List<Block> getSiblings(Block currentBlock);
 }

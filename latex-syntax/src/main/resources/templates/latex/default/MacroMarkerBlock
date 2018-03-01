@@ -1,69 +1,7 @@
-## TODO: handle Formula macro
-## TODO: handle BoxMacro
-#if ($block.id == 'code')
-#if (!$block.isInline())
-
-
-#end
-\begin{minted}{${block.getParameter('language')}}
-$block.content
-\end{minted}##
-#elseif ($block.id == 'info')
-#if (!$block.isInline())
-
-
-#end
-\begin{xwikiinfo}
-$latex.escape($block.content)
-\end{xwikiinfo}##
-#elseif ($block.id == 'warning')
-#if (!$block.isInline())
-
-
-#end
-\begin{xwikiwarning}
-$latex.escape($block.content)
-\end{xwikiwarning}##
-#elseif ($block.id == 'error')
-#if (!$block.isInline())
-
-
-#end
-\begin{xwikierror}
-$latex.escape($block.content)
-\end{xwikierror}##
-#elseif ($block.id == 'success')
-#if (!$block.isInline())
-
-
-#end
-\begin{xwikisuccess}
-$latex.escape($block.content)
-\end{xwikisuccess}##
-#elseif ($block.id == 'toc')
-
-
-#if ("$!block.getParameter('scope')" == 'local')
-\etocsettocstyle{}{}
-\localtableofcontents##
-#else
-\etocsettocstyle{}{}
-\tableofcontents##
-#end
-#elseif ($block.id == 'formula')
-#if (!$block.isInline())
-
-
-\begin{equation}
-${block.content}
-\end{equation}##
-#else
-$${block.content}$##
-#end
-#elseif ($block.id == 'footnote')
-\footnote{${block.content}}##
-#elseif ($block.id == 'putFootnotes')
-## This is handled automatically by LaTeX
-#else
+#set ($template = '')
+#set ($template = $processor.getTemplate("macros/${block.id}"))
+#if ("$!template" == '')
 $processor.process($block.getChildren())##
+#else
+$processor.render($template)##
 #end

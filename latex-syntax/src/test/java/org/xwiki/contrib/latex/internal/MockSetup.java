@@ -29,6 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.velocity.VelocityContext;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.Template;
@@ -36,6 +37,9 @@ import org.xwiki.template.TemplateContent;
 import org.xwiki.template.TemplateManager;
 import org.xwiki.test.mockito.MockitoComponentManager;
 import org.xwiki.text.StringUtils;
+import org.xwiki.velocity.introspection.DeprecatedCheckUberspector;
+import org.xwiki.velocity.introspection.MethodArgumentsUberspector;
+import org.xwiki.velocity.introspection.SecureUberspector;
 import org.xwiki.velocity.tools.EscapeTool;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -77,6 +81,13 @@ public class MockSetup
         });
 
         org.apache.velocity.app.VelocityEngine velocityEngine = new org.apache.velocity.app.VelocityEngine();
+
+        // This is required so that Velocity templates can find the right method to call. For example for:
+        //   $block.root.getBlocks('class:MacroMarkerBlock', 'DESCENDANT')
+        velocityEngine.setApplicationAttribute(ComponentManager.class.getName(), componentManager);
+        velocityEngine.setProperty("runtime.introspector.uberspect", StringUtils.join(
+            new String[] { SecureUberspector.class.getName(), DeprecatedCheckUberspector.class.getName(),
+                MethodArgumentsUberspector.class.getName() }, ','));
         velocityEngine.init();
 
         VelocityContext vcontext = new VelocityContext();

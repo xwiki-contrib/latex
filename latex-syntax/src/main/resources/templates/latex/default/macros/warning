@@ -1,0 +1,7 @@
+#if (!$block.isInline())
+
+
+#end
+\begin{xwikiwarning}
+$latex.escape($block.content)
+\end{xwikiwarning}##

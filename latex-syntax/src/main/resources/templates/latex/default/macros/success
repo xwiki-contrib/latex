@@ -1,0 +1,7 @@
+#if (!$block.isInline())
+
+
+#end
+\begin{xwikisuccess}
+$latex.escape($block.content)
+\end{xwikisuccess}##
