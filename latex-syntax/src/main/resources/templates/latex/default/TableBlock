@@ -7,7 +7,7 @@
 #set ($columnSize = $firstRowBlock.getChildren().size() - 1)
 #set ($tableSpec = "|${stringtool.repeat('l|', $columnSize)}l|")
 #if ("$!tableBlock.getParameter('caption')" != '')
-\begin{table}[h]
+  \begin{table}[h]
 #end
 \begin{center}
 \begin{tabular}{${tableSpec}}
@@ -17,6 +17,6 @@ $processor.process($block.getChildren())##
 \end{center}##
 #if ("$!tableBlock.getParameter('caption')" != '')
 
-\caption{$latex.escape($tableBlock.getParameter('caption'))}
-\end{table}##
+  \caption{$latex.escape($tableBlock.getParameter('caption'))}
+  \end{table}##
 #end

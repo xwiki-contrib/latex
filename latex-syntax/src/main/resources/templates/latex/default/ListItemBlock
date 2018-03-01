@@ -1,2 +1,2 @@
 
- ${stringtool.repeat(' ', $listDepth)}\item $processor.process($block.getChildren())
+${SP}${stringtool.repeat(' ', $listDepth)}\item $processor.process($block.getChildren())

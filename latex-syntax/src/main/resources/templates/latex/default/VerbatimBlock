@@ -1,19 +1,19 @@
 #if ($block.isInline())
-## Try to find a verbatim delimiter char that's not used in the string to protect
-#set ($separators = ['|', '%', '$', '^', '&', '/', ':', '!', '-', '_', '?', ';', ',', '=', '+', '.', '{', '}'])
-#foreach ($separator in $separators)
-#if (!$block.getProtectedString().contains($separator))
-\verb${separator}$block.getProtectedString()${separator}##
-#break
-#elseif (!$foreach.hasNext)
-## TODO: Find a good fallback...
-#end
-#end
+  ## Try to find a verbatim delimiter char that's not used in the string to protect
+  #set ($separators = ['|', '%', '$', '^', '&', '/', ':', '!', '-', '_', '?', ';', ',', '=', '+', '.', '{', '}'])
+  #foreach ($separator in $separators)
+    #if (!$block.getProtectedString().contains($separator))
+      \verb${separator}$block.getProtectedString()${separator}##
+      #break
+    #elseif (!$foreach.hasNext)
+      ## TODO: Find a good fallback...
+    #end
+  #end
 #else
-## Since this is a standalone element we separate from the previous block by 2 NL
+  ## Since this is a standalone element we separate from the previous block by 2 NL
 
 
-\begin{verbatim}
-$block.getProtectedString()
-\end{verbatim}##
+  \begin{verbatim}
+  $block.getProtectedString()
+  \end{verbatim}##
 #end

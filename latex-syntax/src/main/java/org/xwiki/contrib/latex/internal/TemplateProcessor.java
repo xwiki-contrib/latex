@@ -28,6 +28,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.macro.velocity.filter.VelocityMacroFilter;
 import org.xwiki.template.Template;
 import org.xwiki.template.TemplateManager;
 
@@ -47,16 +48,21 @@ public class TemplateProcessor
 
     private ScriptContext scriptContext;
 
+    private VelocityMacroFilter filter;
+
     /**
      * @param templateManager the template manager used to locate, get and execute template content
      * @param scriptContext the script context into which we can inject new bindings for the template evaluation
      * @param writer the object into which to write the result of the template evaluations
+     * @param filter the Velocity filter to apply to the template content if the source is written in Velocity
      */
-    public TemplateProcessor(TemplateManager templateManager, ScriptContext scriptContext, Writer writer)
+    public TemplateProcessor(TemplateManager templateManager, ScriptContext scriptContext, Writer writer,
+        VelocityMacroFilter filter)
     {
         this.templateManager = templateManager;
         this.scriptContext = scriptContext;
         this.writer = writer;
+        this.filter = filter;
     }
 
     /**
@@ -115,7 +121,7 @@ public class TemplateProcessor
             template = this.templateManager.getTemplate(fullTemplateName);
         }
         if (template != null) {
-            template = new ModifiableTemplate(template);
+            template = new ModifiableTemplate(template, this.filter);
         }
         return template;
     }

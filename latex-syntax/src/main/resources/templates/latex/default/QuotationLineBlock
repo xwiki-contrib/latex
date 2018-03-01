@@ -1,2 +1,2 @@
 
- ${stringtool.repeat(' ', $quoteDepth)}$processor.process($block.getChildren())##
+${SP}${stringtool.repeat(' ', $quoteDepth)}$processor.process($block.getChildren())##

@@ -1,16 +1,16 @@
 
 
 #if ($block.getLevel().ordinal() == 0)
-\section{${processor.process($block.getChildren())}}##
+  \section{${processor.process($block.getChildren())}}##
 #elseif ($block.getLevel().ordinal() == 1)
-\subsection{${processor.process($block.getChildren())}}##
+  \subsection{${processor.process($block.getChildren())}}##
 #elseif ($block.getLevel().ordinal() == 2)
-\subsubsection{${processor.process($block.getChildren())}}##
+  \subsubsection{${processor.process($block.getChildren())}}##
 #elseif ($block.getLevel().ordinal() == 3)
-\paragraph{${processor.process($block.getChildren())}}##
+  \paragraph{${processor.process($block.getChildren())}}##
 #elseif ($block.getLevel().ordinal() >= 4)
-\subparagraph{${processor.process($block.getChildren())}}##
+  \subparagraph{${processor.process($block.getChildren())}}##
 #end
 #if ("$!block.getId()" != '')
-\label{${block.getId()}}##
+  \label{${block.getId()}}##
 #end

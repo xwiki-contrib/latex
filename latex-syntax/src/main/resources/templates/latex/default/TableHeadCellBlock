@@ -2,5 +2,5 @@
 #set ($currentCellBlock = $block)
 \textbf{${processor.process($block.getChildren())}}##
 #if ("$!currentCellBlock.getNextSibling().class.getSimpleName()" == 'TableHeadCellBlock' || "$!currentCellBlock.getNextSibling().class.getSimpleName()" == 'TableCellBlock')
- & ##
+  ${SP}&${SP}##
 #end

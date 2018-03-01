@@ -1,21 +1,21 @@
 #if ($block.getSymbol() == '#')
-\\$escapetool.getHash()##
+  \\$escapetool.getHash()##
 #elseif ($block.getSymbol() == '$')
-\\$escapetool.getDollar()##
+  \\$escapetool.getDollar()##
 #elseif ($block.getSymbol() == '%')
-\%##
+  \%##
 #elseif ($block.getSymbol() == '_')
-\_##
+  \_##
 #elseif ($block.getSymbol() == '\')
-\$\backslash\$##
+  \$\backslash\$##
 #elseif ($block.getSymbol() == '^')
-\^{}##
+  \^{}##
 #elseif ($block.getSymbol() == '<')
-\textless##
+  \textless##
 #elseif ($block.getSymbol() == '>')
-\textgreater##
+  \textgreater##
 #elseif ($block.getSymbol() == '|')
-\textbar##
+  \textbar##
 #else
-${block.getSymbol()}##
+  ${block.getSymbol()}##
 #end

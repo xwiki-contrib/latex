@@ -1,17 +1,18 @@
 #set ($format = $block.getFormat().toString())
 #if ($format == 'BOLD')
-\textbf{${processor.process($block.getChildren())}}##
+  \textbf{${processor.process($block.getChildren())}}##
 #elseif ($format == 'ITALIC')
-\textit{${processor.process($block.getChildren())}}##
+  \textit{${processor.process($block.getChildren())}}##
 #elseif ($format == 'MONOSPACE')
-\texttt{${processor.process($block.getChildren())}}##
+  \texttt{${processor.process($block.getChildren())}}##
 #elseif ($format == 'UNDERLINED')
-\underline{${processor.process($block.getChildren())}}##
+  \underline{${processor.process($block.getChildren())}}##
 #elseif ($format == 'STRIKEDOUT')
-\sout{${processor.process($block.getChildren())}}##
+  \sout{${processor.process($block.getChildren())}}##
 #elseif ($format == 'SUBSCRIPT')
-\textsubscript{${processor.process($block.getChildren())}}##
+  \textsubscript{${processor.process($block.getChildren())}}##
 #elseif ($format == 'SUPERSCRIPT')
-\textsuperscript{${processor.process($block.getChildren())}}##
-#{else}$processor.process($block.getChildren())
+  \textsuperscript{${processor.process($block.getChildren())}}##
+#else
+  $processor.process($block.getChildren())
 #end

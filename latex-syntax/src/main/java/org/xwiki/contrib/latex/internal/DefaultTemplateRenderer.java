@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.util.Collection;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.script.ScriptContext;
 
@@ -34,6 +35,7 @@ import org.xwiki.context.ExecutionContext;
 import org.xwiki.context.ExecutionContextException;
 import org.xwiki.context.ExecutionContextManager;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.macro.velocity.filter.VelocityMacroFilter;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.TemplateManager;
@@ -65,6 +67,10 @@ public class DefaultTemplateRenderer implements TemplateRenderer
 
     @Inject
     private LaTeXTool latexTool;
+
+    @Inject
+    @Named("indent")
+    private VelocityMacroFilter filter;
 
     @Override
     public void render(Collection<Block> blocks, WikiPrinter printer)
@@ -106,9 +112,10 @@ public class DefaultTemplateRenderer implements TemplateRenderer
         this.execution.pushContext(context);
 
         ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
-        TemplateProcessor processor = new TemplateProcessor(this.templateManager, scriptContext, writer);
+        TemplateProcessor processor = new TemplateProcessor(this.templateManager, scriptContext, writer, this.filter);
         scriptContext.setAttribute("processor", processor, ScriptContext.ENGINE_SCOPE);
         scriptContext.setAttribute("latex", this.latexTool, ScriptContext.ENGINE_SCOPE);
+        scriptContext.setAttribute("SP", " ", ScriptContext.ENGINE_SCOPE);
         return processor;
     }
 }

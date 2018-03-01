@@ -1,9 +1,9 @@
 
 
 #if ("$!block.getParameter('scope')" == 'local')
-\etocsettocstyle{}{}
-\localtableofcontents##
+  \etocsettocstyle{}{}
+  \localtableofcontents##
 #else
-\etocsettocstyle{}{}
-\tableofcontents##
+  \etocsettocstyle{}{}
+  \tableofcontents##
 #end

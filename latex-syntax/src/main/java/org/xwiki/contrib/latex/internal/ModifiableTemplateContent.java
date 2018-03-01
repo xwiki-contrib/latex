@@ -21,7 +21,9 @@ package org.xwiki.contrib.latex.internal;
 
 import java.lang.reflect.Type;
 
+import org.apache.velocity.VelocityContext;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.rendering.macro.velocity.filter.VelocityMacroFilter;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.template.TemplateContent;
 
@@ -37,22 +39,37 @@ public class ModifiableTemplateContent implements TemplateContent
 
     private String content;
 
+    private VelocityMacroFilter filter;
+
+    private VelocityContext velocityContext = new VelocityContext();
+
     /**
      * @param wrappedTemplateContent the original TemplateContent object we're wrapping
+     * @param filter the Velocity filter to apply to the template content if the source is written in Velocity
      */
-    public ModifiableTemplateContent(TemplateContent wrappedTemplateContent)
+    public ModifiableTemplateContent(TemplateContent wrappedTemplateContent, VelocityMacroFilter filter)
     {
         this.wrappedTemplateContent = wrappedTemplateContent;
+        this.filter = filter;
     }
 
     @Override
     public String getContent()
     {
+        String rawContent;
+
         if (this.content == null) {
-            return this.wrappedTemplateContent.getContent();
+            rawContent = this.wrappedTemplateContent.getContent();
         } else {
-            return this.content;
+            rawContent = this.content;
         }
+
+        // If we're in Velocity, remove all leading spaces and New lines to make the templates more readable.
+        if (getSourceSyntax() == null) {
+            rawContent = this.filter.before(rawContent, this.velocityContext);
+        }
+
+        return rawContent;
     }
 
     /**

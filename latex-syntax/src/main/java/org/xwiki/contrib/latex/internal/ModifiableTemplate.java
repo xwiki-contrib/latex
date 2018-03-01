@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import org.xwiki.rendering.macro.velocity.filter.VelocityMacroFilter;
 import org.xwiki.template.Template;
 import org.xwiki.template.TemplateContent;
 
@@ -36,12 +37,13 @@ public class ModifiableTemplate implements Template
 
     /**
      * @param wrappedTemplate the original Template object we're wrapping
+     * @param filter the Velocity filter to apply to the template content if the source is written in Velocity
      * @throws Exception in case of an error getting the content
      */
-    public ModifiableTemplate(Template wrappedTemplate) throws Exception
+    public ModifiableTemplate(Template wrappedTemplate, VelocityMacroFilter filter) throws Exception
     {
         this.wrappedTemplate = wrappedTemplate;
-        this.content = new ModifiableTemplateContent(wrappedTemplate.getContent());
+        this.content = new ModifiableTemplateContent(wrappedTemplate.getContent(), filter);
     }
 
     @Override

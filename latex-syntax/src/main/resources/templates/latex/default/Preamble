@@ -25,26 +25,26 @@
 %% Message macro environments
 
 \newenvironment{xwikimessage}[1]
-  {\par\begin{mdframed}[linewidth=2pt,linecolor=#1]%
-    \begin{list}{}{\leftmargin=1cm
-                   \labelwidth=\leftmargin}\item[\Large\ding{43}]}
-  {\end{list}\end{mdframed}\par}
+${SP}${SP}{\par\begin{mdframed}[linewidth=2pt,linecolor=#1]%
+${SP}${SP}${SP}${SP}\begin{list}{}{\leftmargin=1cm
+#foreach ($i in [1..19])${SP}#end\labelwidth=\leftmargin}\item[\Large\ding{43}]}
+${SP}${SP}{\end{list}\end{mdframed}\par}
 
 \newenvironment{xwikierror}
-  {\begin{xwikimessage}{red}}
-  {\end{xwikimessage}}
+${SP}${SP}{\begin{xwikimessage}{red}}
+${SP}${SP}{\end{xwikimessage}}
 
 \newenvironment{xwikiwarning}
-  {\begin{xwikimessage}{yellow}}
-  {\end{xwikimessage}}
+${SP}${SP}{\begin{xwikimessage}{yellow}}
+${SP}${SP}{\end{xwikimessage}}
 
 \newenvironment{xwikiinfo}
-  {\begin{xwikimessage}{blue}}
-  {\end{xwikimessage}}
+${SP}${SP}{\begin{xwikimessage}{blue}}
+${SP}${SP}{\end{xwikimessage}}
 
 \newenvironment{xwikisuccess}
-  {\begin{xwikimessage}{green}}
-  {\end{xwikimessage}}
+${SP}${SP}{\begin{xwikimessage}{green}}
+${SP}${SP}{\end{xwikimessage}}
 
 %% Set the style of internal references (hyperref)
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}

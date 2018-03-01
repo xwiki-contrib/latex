@@ -3,55 +3,55 @@
 #set ($reference = $block.reference.reference)
 #set ($anchor = $block.reference.getParameter('anchor'))
 #if ($type == 'doc')
-#if ("$!reference" == '' && "$!anchor" != '')
-#if ($block.getChildren().isEmpty())
-\ref{${anchor}}##
-#else
-\hyperref[${anchor}]{${processor.process($block.getChildren())}}##
-#end
-#else
-## Ignore links that are not local, just display the label if there's one or the reference otherwise
-#if ($block.getChildren().isEmpty())
-$latex.escape($reference)##
-#else
-${processor.process($block.getChildren())}##
-#end
-#end
+  #if ("$!reference" == '' && "$!anchor" != '')
+    #if ($block.getChildren().isEmpty())
+      \ref{${anchor}}##
+    #else
+      \hyperref[${anchor}]{${processor.process($block.getChildren())}}##
+    #end
+  #else
+    ## Ignore links that are not local, just display the label if there's one or the reference otherwise
+    #if ($block.getChildren().isEmpty())
+      $latex.escape($reference)##
+    #else
+      ${processor.process($block.getChildren())}##
+    #end
+  #end
 #elseif ($type == 'url')
-## If there's no children, use \url{...}
-#if ($block.getChildren().isEmpty())
-\url{${reference}}##
-#else
-\href{${reference}}{${processor.process($block.getChildren())}}##
-#end
+  ## If there's no children, use \url{...}
+  #if ($block.getChildren().isEmpty())
+    \url{${reference}}##
+  #else
+    \href{${reference}}{${processor.process($block.getChildren())}}##
+  #end
 #elseif ($type == 'mailto')
-#if ($block.getChildren().isEmpty())
-\href{mailto:${reference}}{$latex.escape($reference)}##
-#else
-\href{mailto:${reference}}{${processor.process($block.getChildren())}}##
-#end
+  #if ($block.getChildren().isEmpty())
+    \href{mailto:${reference}}{$latex.escape($reference)}##
+  #else
+    \href{mailto:${reference}}{${processor.process($block.getChildren())}}##
+  #end
 #elseif ($type == 'path')
-## Link to an attachment.
-## We embed the attachment and link to it.
-#if ("$!attachmentCache" == '')
-  #set ($attachmentCache = {})
-#end
-#set ($escapedReference = $latex.escape($reference))
-#if ("$!attachmentCache.get($escapedReference)" == '')
-\embedfile{${escapedReference}}
-#set ($discard = $attachmentCache.put($escapedReference, true))
-#end
-#if ($block.getChildren().isEmpty())
-\href{gotoe:embedded=${escapedReference}}{$escapedReference}##
-#else
-\href{gotoe:embedded=${escapedReference}}{${processor.process($block.getChildren())}}##
-#end
+  ## Link to an attachment.
+  ## We embed the attachment and link to it.
+  #if ("$!attachmentCache" == '')
+    #set ($attachmentCache = {})
+  #end
+  #set ($escapedReference = $latex.escape($reference))
+  #if ("$!attachmentCache.get($escapedReference)" == '')
+    \embedfile{${escapedReference}}
+    #set ($discard = $attachmentCache.put($escapedReference, true))
+  #end
+  #if ($block.getChildren().isEmpty())
+    \href{gotoe:embedded=${escapedReference}}{$escapedReference}##
+  #else
+    \href{gotoe:embedded=${escapedReference}}{${processor.process($block.getChildren())}}##
+  #end
 #elseif ($type == 'attach')
-## Link to an attachment. Add a footnote with the attachment name
-## If no label is specified, use the attachment name
-#if ($block.getChildren().isEmpty())
-$latex.escape($reference)##
-#else
-${processor.process($block.getChildren())}\footnote{$latex.escape($reference)}##
-#end
+  ## Link to an attachment. Add a footnote with the attachment name
+  ## If no label is specified, use the attachment name
+  #if ($block.getChildren().isEmpty())
+    $latex.escape($reference)##
+  #else
+    ${processor.process($block.getChildren())}\footnote{$latex.escape($reference)}##
+  #end
 #end
