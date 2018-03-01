@@ -4,7 +4,11 @@
 #set ($anchor = $block.reference.getParameter('anchor'))
 #if ($type == 'doc')
 #if ("$!reference" == '' && "$!anchor" != '')
+#if ($block.getChildren().isEmpty())
+\ref{${anchor}}##
+#else
 \hyperref[${anchor}]{${processor.process($block.getChildren())}}##
+#end
 #else
 ## Ignore links that are not local, just display the label if there's one or the reference otherwise
 #if ($block.getChildren().isEmpty())
