@@ -9,12 +9,15 @@
 
         <link reference="attach:attachment.txt"><word>attachmentlabel</word></link>
         <link reference="attach:otherspace.otherdocument@otherattachment.txt"><word>otherattachmentlabel</word></link>
+        <link reference="attach:space.document@attachment.txt"><word>currentattachmentlabel</word></link>
 
         <image reference="attach:image.png"/>
         <image reference="attach:otherspace.otherdocument@otherimage.png"/>
+        <image reference="attach:space.document@image.png"/>
 
         <link reference="doc:OtherSpace.OtherDocument"><word>otherdocumentlink</word></link>
         <link reference="doc:"><word>emptylink</word></link>
+        <link reference="doc:space.document"><word>currentdocument</word></link>
       </paragraph>
     </document>
   </wikiDocument>

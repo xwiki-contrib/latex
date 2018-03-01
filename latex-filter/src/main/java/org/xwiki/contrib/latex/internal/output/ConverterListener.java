@@ -46,6 +46,7 @@ import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.model.reference.EntityReferenceSerializer;
@@ -72,6 +73,10 @@ public class ConverterListener extends WrappingListener
     private EntityReferenceResolver<ResourceReference> resolver;
 
     @Inject
+    @Named("current")
+    private DocumentReferenceResolver<EntityReference> currentDocumentResolver;
+
+    @Inject
     @Named("fspath")
     private EntityReferenceSerializer<String> fsPathSerializer;
 
@@ -91,6 +96,8 @@ public class ConverterListener extends WrappingListener
 
     private EntityReference baseEntityReference;
 
+    private DocumentReference currentDocumentReference;
+
     /**
      * @param properties the filter properties
      * @param zipStream the zip to add entries to
@@ -107,6 +114,7 @@ public class ConverterListener extends WrappingListener
     public void setCurrentReference(EntityReference entityReference)
     {
         this.baseEntityReference = entityReference;
+        this.currentDocumentReference = null;
     }
 
     private ResourceReference convertReference(ResourceReference reference, boolean forceDownload)
@@ -213,19 +221,38 @@ public class ConverterListener extends WrappingListener
             DocumentReference documentReference =
                 (DocumentReference) this.resolver.resolve(reference, EntityType.DOCUMENT);
 
-            if (this.properties.getEntities() != null && this.properties.getEntities().matches(documentReference)) {
-                // TODO: ?
+            if (isCurrentDocument(documentReference)) {
+                convertedReference = new DocumentResourceReference("");
+                convertedReference.setParameters(reference.getParameters());
             } else {
-                // External URL
-                String url = this.bridge.getDocumentURL(new DocumentReference(documentReference), "view",
-                    reference.getParameter(DocumentResourceReference.QUERY_STRING),
-                    reference.getParameter(DocumentResourceReference.ANCHOR), true);
+                if (this.properties.getEntities() != null && this.properties.getEntities().matches(documentReference)) {
+                    // TODO: ?
+                } else {
+                    // External URL
+                    String url = this.bridge.getDocumentURL(new DocumentReference(documentReference), "view",
+                        reference.getParameter(DocumentResourceReference.QUERY_STRING),
+                        reference.getParameter(DocumentResourceReference.ANCHOR), true);
 
-                convertedReference = new ResourceReference(url, ResourceType.URL);
+                    convertedReference = new ResourceReference(url, ResourceType.URL);
+                }
             }
         }
 
         return convertedReference;
+    }
+
+    private DocumentReference getCurrentDocumentReference()
+    {
+        if (this.currentDocumentReference == null) {
+            this.currentDocumentReference = this.currentDocumentResolver.resolve(this.baseEntityReference);
+        }
+
+        return this.currentDocumentReference;
+    }
+
+    private boolean isCurrentDocument(DocumentReference documentReference)
+    {
+        return getCurrentDocumentReference().equals(documentReference);
     }
 
     private ResourceReference toPathReference(ResourceReference reference, String path)
