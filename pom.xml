@@ -29,12 +29,12 @@
   </parent>
   <groupId>org.xwiki.contrib.latex</groupId>
   <artifactId>latex</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <name>LaTeX - Parent POM</name>
   <description>Parent POM for LaTeX modules</description>
   <packaging>pom</packaging>
   <properties>
-    <commons.version>9.11.3-SNAPSHOT</commons.version>
+    <commons.version>9.11.3</commons.version>
 
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
     <xwiki.issueManagement.jira.id>LATEX</xwiki.issueManagement.jira.id>
@@ -43,7 +43,7 @@
     <connection>scm:git:git://github.com/xwiki-contrib/latex.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/latex.git</developerConnection>
     <url>https://github.com/xwiki-contrib/latex/tree/master</url>
-    <tag>HEAD</tag>
+    <tag>latex-1.1</tag>
   </scm>
   <developers>
     <developer>
