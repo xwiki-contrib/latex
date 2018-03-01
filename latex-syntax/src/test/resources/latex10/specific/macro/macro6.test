@@ -1,0 +1,14 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Footnotes
+.#-----------------------------------------------------
+Creating a footnote is easy.{{footnote}}An example footnote.{{/footnote}}
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+Creating a footnote is easy.\footnote{An example footnote.}
+
+\end{document}

@@ -60,6 +60,10 @@ ${block.content}
 #else
 $${block.content}$##
 #end
+#elseif ($block.id == 'footnote')
+\footnote{${block.content}}##
+#elseif ($block.id == 'putFootnotes')
+## This is handled automatically by LaTeX
 #else
 $processor.process($block.getChildren())##
 #end
