@@ -3,34 +3,32 @@
 .input|xwiki/2.1
 .# Message Macros.
 .#-----------------------------------------------------
-{{info}}info{{/info}}
+{{info}}hello **world**{{/info}}
 
-{{warning}}info{{/warning}}
+{{warning}}hello **world**{{/warning}}
 
-{{error}}info{{/error}}
+{{error}}hello **world**{{/error}}
 
-{{success}}info{{/success}}
-
-
+{{success}}hello **world**{{/success}}
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
 \begin{xwikiinfo}
-info
+hello \textbf{world}
 \end{xwikiinfo}
 
 \begin{xwikiwarning}
-info
+hello \textbf{world}
 \end{xwikiwarning}
 
 \begin{xwikierror}
-info
+hello \textbf{world}
 \end{xwikierror}
 
 \begin{xwikisuccess}
-info
+hello \textbf{world}
 \end{xwikisuccess}
 
 \end{document}

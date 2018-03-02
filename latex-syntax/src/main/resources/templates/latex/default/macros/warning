@@ -3,5 +3,5 @@
 
 #end
 \begin{xwikiwarning}
-$latex.escape($block.content)
+$latex.escape($processor.process($block.getChildren()))
 \end{xwikiwarning}##
