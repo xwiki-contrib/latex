@@ -58,6 +58,15 @@
 %% Set the style of internal references (hyperref)
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
 
+%% Ensure that images have a max width of 95% of the line width
+\makatletter
+\setkeys{Gin}{width=\ifdim\Gin@nat@width>\linewidth
+  0.95\linewidth
+\else
+  \Gin@nat@width
+\fi}
+\makeatother
+
 \begin{document}
 
 \end{document}
