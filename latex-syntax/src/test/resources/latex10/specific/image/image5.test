@@ -1,0 +1,19 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Floating image with caption and label
+.#-----------------------------------------------------
+[[image:whatever||caption='Floating image Example' label='label']]
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{whatever}
+\end{center}
+\caption{Floating image Example}
+\label{label}
+\end{figure}
+
+\end{document}

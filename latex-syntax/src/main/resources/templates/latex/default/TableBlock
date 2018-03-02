@@ -18,5 +18,8 @@ $processor.process($block.getChildren())##
 #if ("$!tableBlock.getParameter('caption')" != '')
 
   \caption{$latex.escape($tableBlock.getParameter('caption'))}
+  #if ("$!tableBlock.getParameter('label')" != '')
+    \label{$tableBlock.getParameter('label')}
+  #end
   \end{table}##
 #end

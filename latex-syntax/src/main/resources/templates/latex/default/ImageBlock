@@ -11,6 +11,9 @@
   #if ("$!block.getParameter('caption')" != '')
 
     \caption{$latex.escape($block.getParameter('caption'))}
+    #if ("$!block.getParameter('label')" != '')
+      \label{$block.getParameter('label')}
+    #end
     \end{figure}##
   #end
 #elseif ($type == 'url')
