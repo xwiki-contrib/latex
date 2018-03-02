@@ -59,7 +59,7 @@
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
 
 %% Ensure that images have a max width of 95% of the line width
-\makatletter
+\makeatletter
 \setkeys{Gin}{width=\ifdim\Gin@nat@width>\linewidth
   0.95\linewidth
 \else
