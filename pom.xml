@@ -34,8 +34,9 @@
   <description>Parent POM for LaTeX modules</description>
   <packaging>pom</packaging>
   <properties>
+    <!-- We force the version to use since we need to use changes from the Rendering Test framework that were done in
+         9.11.3/10.2RC1 -->
     <commons.version>9.11.3</commons.version>
-
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
     <xwiki.issueManagement.jira.id>LATEX</xwiki.issueManagement.jira.id>
   </properties>
