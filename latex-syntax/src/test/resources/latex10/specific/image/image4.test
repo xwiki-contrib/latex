@@ -8,6 +8,8 @@ image:path:whatever
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
+\begin{center}
 \includegraphics{whatever}
+\end{center}
 
 \end{document}

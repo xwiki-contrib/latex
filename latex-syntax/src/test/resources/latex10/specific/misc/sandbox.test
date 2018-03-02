@@ -291,7 +291,9 @@ XWikiLogo.png
 
 You can insert images in your wiki pages:
 
+\begin{center}
 \includegraphics{XWikiLogo.png}
+\end{center}
 
 \section{Macros}
 

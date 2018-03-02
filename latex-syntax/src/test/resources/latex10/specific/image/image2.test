@@ -8,9 +8,11 @@
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
+\begin{center}
 \begin{figure}[h]
 \includegraphics{whatever}
 \caption{Floating image Example}
 \end{figure}
+\end{center}
 
 \end{document}

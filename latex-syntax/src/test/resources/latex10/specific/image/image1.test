@@ -8,7 +8,11 @@ image:whatever
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\includegraphics{whatever}\\
+\begin{center}
 \includegraphics{whatever}
+\end{center}\\
+\begin{center}
+\includegraphics{whatever}
+\end{center}
 
 \end{document}
