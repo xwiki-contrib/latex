@@ -1,14 +1,51 @@
 #set ($type = $block.reference.type.scheme)
-## TODO: Add support for "width", "height", "style" and possibly "keepAspectRatio"
-## For example by using "\includegraphics[width=...]{filename}"
 #if ($type == 'path' || $type == 'attach')
-  #if ("$!block.getParameter('caption')" != '')
+  ## Only center if the image is the only block in the parent since it only makes sense in this case.
+  ## Only use a floating image if the image is the only block in the parent since it only makes sense in this case.
+  #set ($isImageStandalone = false)
+  #if ($block.parent.children.size() == 1)
+    #set ($isImageStandalone = true)
+  #end
+  #if ($isImageStandalone && "$!block.getParameter('caption')" != '')
     \begin{figure}[h]
   #end
-  \begin{center}
-  \includegraphics{${block.reference.reference}}
-  \end{center}##
-  #if ("$!block.getParameter('caption')" != '')
+  #if ($isImageStandalone)
+    \begin{center}
+  #end
+  ## Handle width and height
+  #set ($imageDimensions = [])
+  #if ("$!block.getParameter('width')" != '')
+    #set ($width = $block.getParameter('width'))
+    #if ($width.endsWith('%'))
+      #set ($imageNumber = $numbertool.toNumber($width).floatValue() / 100)
+      #set ($percent = $mathtool.roundTo(1, $imageNumber))
+      #set ($discard = $imageDimensions.add("width=${percent}\linewidth"))
+    #else
+      #set ($imageNumber = $numbertool.toNumber($width))
+      #set ($discard = $imageDimensions.add("width=${imageNumber}px"))
+    #end
+  #end
+  #if ("$!block.getParameter('height')" != '')
+    #set ($height = $block.getParameter('height'))
+    #if ($height.endsWith('%'))
+      #set ($imageNumber = $numbertool.toNumber($height).floatValue() / 100)
+      #set ($percent = $mathtool.roundTo(1, $imageNumber))
+      #set ($discard = $imageDimensions.add("height=${percent}\textheight"))
+    #else
+      #set ($imageNumber = $numbertool.toNumber($height))
+      #set ($discard = $imageDimensions.add("height=${imageNumber}px"))
+    #end
+  #end
+  #if ($imageDimensions.isEmpty())
+    \includegraphics{${block.reference.reference}}##
+  #else
+    \includegraphics[$stringtool.join($imageDimensions, ',')]{${block.reference.reference}}##
+  #end
+  #if ($isImageStandalone)
+
+    \end{center}##
+  #end
+  #if ($isImageStandalone && "$!block.getParameter('caption')" != '')
 
     \caption{$latex.escape($block.getParameter('caption'))}
     #if ("$!block.getParameter('label')" != '')

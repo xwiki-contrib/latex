@@ -1,20 +1,15 @@
 .#-----------------------------------------------------
 .input|xwiki/2.1
+.# Inline images
 .#-----------------------------------------------------
 image:whatever
-
 [[image:whatever]]
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\begin{center}
+\includegraphics{whatever}\\
 \includegraphics{whatever}
-\end{center}
-
-\begin{center}
-\includegraphics{whatever}
-\end{center}
 
 \end{document}

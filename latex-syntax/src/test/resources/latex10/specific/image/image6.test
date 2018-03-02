@@ -1,0 +1,21 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Specify image sizes
+.#-----------------------------------------------------
+[[image:whatever||width="100"]]
+[[image:whatever||width="50%"]]
+[[image:whatever||width="100" height="200"]]
+[[image:whatever||height="100"]]
+[[image:whatever||height="50%"]]
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\includegraphics[width=100px]{whatever}\\
+\includegraphics[width=0.5\linewidth]{whatever}\\
+\includegraphics[width=100px,height=200px]{whatever}\\
+\includegraphics[height=100px]{whatever}\\
+\includegraphics[height=0.5\textheight]{whatever}
+
+\end{document}

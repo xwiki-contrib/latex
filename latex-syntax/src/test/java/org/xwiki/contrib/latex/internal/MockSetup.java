@@ -27,6 +27,8 @@ import javax.script.ScriptContext;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.tools.generic.MathTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.xwiki.component.manager.ComponentManager;
@@ -93,6 +95,8 @@ public class MockSetup
         VelocityContext vcontext = new VelocityContext();
         vcontext.put("escapetool", new EscapeTool());
         vcontext.put("stringtool", new StringUtils());
+        vcontext.put("mathtool", new MathTool());
+        vcontext.put("numbertool", new NumberTool());
 
         // Bridge the Script Context bindings into the Velocity Context
         ScriptContextManager scriptContextManager = componentManager.registerMockComponent(ScriptContextManager.class);
