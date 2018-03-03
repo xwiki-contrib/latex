@@ -1,0 +1,3 @@
+\begin{varwidth}[t]{\linewidth}
+${processor.process($block.getChildren())}
+\end{varwidth}##

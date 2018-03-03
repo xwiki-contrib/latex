@@ -1,0 +1,30 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Table with list in cell
+.#-----------------------------------------------------
+|cell1|cell2
+|(((
+* item 1
+* item 2
+)))|cell
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+cell1 & cell2\\
+\hline
+\begin{varwidth}[t]{\linewidth}
+\begin{itemize}
+ \item item 1
+ \item item 2
+\end{itemize}
+\end{varwidth} & cell\\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}

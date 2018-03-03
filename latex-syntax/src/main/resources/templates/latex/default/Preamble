@@ -21,6 +21,8 @@
 %% For links to attachments (we embed the attachments and link to them)
 \usepackage{embedfile}
 \usepackage{hypgotoe}
+%% For putting standalone blocks inside table cells and keeping table cells to a minimal width
+\usepackage{varwidth}
 
 %% Message macro environments
 

@@ -1,7 +1,9 @@
 #set ($tableBlock = $block)
-## Since this is a standalone element we separate from the previous block by 2 NL
+## If not inside a Group block then we separate from the previous block by 2 NL
+#if ("$!block.parent.class.simpleName" != 'GroupBlock')
 
 
+#end
 ## Compute the number of columns
 #set ($firstRowBlock = $block.getChildren().get(0))
 #set ($columnSize = $firstRowBlock.getChildren().size() - 1)

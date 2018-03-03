@@ -3,5 +3,6 @@
 
 #end
 \begin{xwikiwarning}
-$latex.escape($processor.process($block.getChildren()))
+## We skip the GroupBlock to make the output nicer since it's not needed to output a varwidth env
+$latex.escape($processor.process($block.children.get(0).children))
 \end{xwikiwarning}##
