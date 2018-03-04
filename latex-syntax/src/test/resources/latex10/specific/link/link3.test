@@ -2,13 +2,14 @@
 .input|xwiki/2.1
 .# Link to a path
 .#-----------------------------------------------------
+[[path:what/ever%]]
 [[label>>path:what/ever%]]
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\embedfile{what/ever\%}
-\href{gotoe:embedded=what/ever\%}{label}
+\attachfile{what/ever\%}\\
+\textattachfile{what/ever\%}{label}
 
 \end{document}
