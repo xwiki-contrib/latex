@@ -6,12 +6,11 @@
 \usepackage[normalem]{ulem}
 %% Used for image support
 \usepackage{graphicx}
-%% Used for links
-\usepackage{hyperref}
+%% For the Code macro
+%% Note: Needs to be loaded before csquotes
+\usepackage{minted}
 %% Use for quotes and to support nested quotes
 \usepackage{csquotes}
-%% For the Code macro
-\usepackage{minted}
 %% For the message macros
 \usepackage{pifont,mdframed}
 %% For the TOC macro, to have local tocs
@@ -23,6 +22,9 @@
 \usepackage{hypgotoe}
 %% For putting standalone blocks inside table cells and keeping table cells to a minimal width
 \usepackage{varwidth}
+%% Used for links
+%% Note: Should be loaded last
+\usepackage{hyperref}
 
 %% Message macro environments
 
