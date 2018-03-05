@@ -11,4 +11,4 @@ LaTeX Renderer and Exporter.
 * License: LGPL 2.1
 * Translations: N/A
 * Sonar Dashboard: N/A
-* Continuous Integration Status: [![Build Status](http://ci.xwiki.org/buildStatus/icon?job=XWiki Contrib/latex/master)](http://ci.xwiki.org/job/XWiki%20Contrib/job/latex/job/master/)
+* Continuous Integration Status: [![Build Status](http://ci.xwiki.org/job/XWiki%20Contrib/job/latex/job/master/badge/icon)](http://ci.xwiki.org/job/XWiki%20Contrib/job/latex/job/master/)
