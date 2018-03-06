@@ -1,18 +1,18 @@
-.runTransformations:macro
+.runTransformations:macro,numberedheadings
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# id Macro.
+.# Reference macro support
 .#-----------------------------------------------------
-{{id name="anchor"/}}
+See section {{reference section="A"/}}
 
-Hello{{id name="world"/}}
+= {{id name="A"/}}headingA =
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\label{anchor}
+See section \ref{A}
 
-Hello\label{world}
+\section{1 \label{A}headingA}
 
 \end{document}

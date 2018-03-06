@@ -1,4 +1,4 @@
-.runTransformations
+.runTransformations:macro
 .#-----------------------------------------------------
 .input|xwiki/2.1
 .# Test that a macro can output RawBlock for LaTeX.

@@ -21,23 +21,24 @@ package org.xwiki.contrib.latex.internal;
 
 import org.junit.runner.RunWith;
 import org.xwiki.rendering.test.MockWikiModel;
-import org.xwiki.rendering.test.integration.RenderingTestSuite;
+import org.xwiki.rendering.test.integration.ExtendedTestDataParser;
+import org.xwiki.rendering.test.integration.ExtendedRenderingTestSuite;
 import org.xwiki.test.annotation.AllComponents;
 import org.xwiki.test.mockito.MockitoComponentManager;
 
 /**
  * Run all specific tests found in {@code *.test} files located in the classpath. These {@code *.test} files must follow
- * the conventions described in {@link org.xwiki.rendering.test.integration.TestDataParser}.
+ * the conventions described in {@link ExtendedTestDataParser}.
  *
  * @version $Id: a4b49961bb701fdc376e677e0358fbe16ba1c1ee $
  * @since 10.1RC1
  */
-@RunWith(RenderingTestSuite.class)
-@RenderingTestSuite.Scope(value = "latex10.specific")
+@RunWith(ExtendedRenderingTestSuite.class)
+@ExtendedRenderingTestSuite.Scope(value = "latex10.specific")
 @AllComponents
 public class LaTeXSpecificTest
 {
-    @RenderingTestSuite.Initialized
+    @ExtendedRenderingTestSuite.Initialized
     public void initialize(MockitoComponentManager componentManager) throws Exception
     {
         MockSetup.setUp(componentManager);
