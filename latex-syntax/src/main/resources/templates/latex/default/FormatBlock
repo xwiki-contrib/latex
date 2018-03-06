@@ -14,5 +14,5 @@
 #elseif ($format == 'SUPERSCRIPT')
   \textsuperscript{${processor.process($block.getChildren())}}##
 #else
-  $processor.process($block.getChildren())
+  $processor.process($block.getChildren())##
 #end
