@@ -1,0 +1,28 @@
+.runTransformations:macro
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.#-----------------------------------------------------
+{{figure}}
+{{figureCaption}}
+Table **caption**
+{{/figureCaption}}
+
+|a|b
+{{/figure}}
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{table}[h]
+\caption{Table \textbf{caption}}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+a & b\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\end{document}

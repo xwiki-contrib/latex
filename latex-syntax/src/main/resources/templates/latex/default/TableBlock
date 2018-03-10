@@ -1,6 +1,7 @@
 #set ($tableBlock = $block)
-## If not inside a Group block then we separate from the previous block by 2 NL
-#if ("$!block.parent.class.simpleName" != 'GroupBlock')
+## If not inside a Container block that accepts standalone elements (Group block, etc then we separate from the
+## previous block by 2 NL.
+#if ($latex.getStack('isInContainerAcceptingStandalone').empty())
 
 
 #end

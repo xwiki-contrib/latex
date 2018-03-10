@@ -21,7 +21,6 @@ package org.xwiki.contrib.latex.internal;
 
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.Locale;
 
 import javax.script.ScriptContext;
@@ -34,12 +33,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.localization.LocalizationContext;
-import org.xwiki.rendering.configuration.RenderingConfiguration;
-import org.xwiki.rendering.internal.configuration.DefaultRenderingConfiguration;
-import org.xwiki.rendering.internal.transformation.DefaultTransformationManager;
-import org.xwiki.rendering.internal.transformation.macro.MacroTransformation;
-import org.xwiki.rendering.transformation.Transformation;
-import org.xwiki.rendering.transformation.TransformationManager;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.Template;
 import org.xwiki.template.TemplateContent;
@@ -55,7 +48,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 /**
@@ -120,6 +112,15 @@ public class MockSetup
                 return null;
             }
         }).when(scriptContext).setAttribute(any(String.class), any(Object.class), anyInt());
+        doAnswer(new Answer<Object>()
+        {
+            @Override public Object answer(InvocationOnMock invocation) throws Exception
+            {
+                String key = invocation.getArgument(0);
+                return vcontext.get(key);
+            }
+        }).when(scriptContext).getAttribute(any(String.class));
+
 
         doAnswer(new Answer<Object>()
         {

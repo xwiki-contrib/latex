@@ -31,7 +31,7 @@
   <name>LaTeX - Syntax</name>
   <description>LaTeX 1.0 Syntax Renderer</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.76</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.81</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX Syntax 1.0</xwiki.extension.name>
     <!-- List it as a rendering syntax related module -->
@@ -63,6 +63,11 @@
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-rendering-macro-velocity</artifactId>
       <version>${platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-macro-figure</artifactId>
+      <version>${rendering.version}</version>
     </dependency>
     <!-- Test Dependencies -->
     <dependency>

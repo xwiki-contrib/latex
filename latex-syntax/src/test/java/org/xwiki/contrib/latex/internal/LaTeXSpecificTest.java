@@ -34,7 +34,7 @@ import org.xwiki.test.mockito.MockitoComponentManager;
  * @since 10.1RC1
  */
 @RunWith(ExtendedRenderingTestSuite.class)
-@ExtendedRenderingTestSuite.Scope(value = "latex10.specific")
+@ExtendedRenderingTestSuite.Scope(value = "latex10.specific", pattern=".*figure2.*")
 @AllComponents
 public class LaTeXSpecificTest
 {

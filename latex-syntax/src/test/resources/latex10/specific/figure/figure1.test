@@ -1,0 +1,24 @@
+.runTransformations:macro
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.#-----------------------------------------------------
+{{figure}}
+image:image.png
+
+{{figureCaption}}
+Image **caption**
+{{/figureCaption}}
+{{/figure}}
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{image.png}
+\end{center}
+\caption{Image \textbf{caption}}
+\end{figure}
+
+\end{document}

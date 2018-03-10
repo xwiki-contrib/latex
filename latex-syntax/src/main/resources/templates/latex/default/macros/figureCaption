@@ -1,0 +1,10 @@
+#set ($figureCaptionBlock = $block)
+## If the caption is last then add a NL before the caption so that the caption is on a new line
+#if ("$!figureCaptionBlock.nextSibling" == '')
+
+#end
+\caption{$processor.process($figureCaptionBlock.getChildren())}##
+## If the caption is first then add a NL after the caption so that next element is on a new line
+#if ("$!figureCaptionBlock.previousSibling" == '')
+
+#end

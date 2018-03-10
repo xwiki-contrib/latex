@@ -22,14 +22,19 @@ package org.xwiki.contrib.latex.internal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.script.ScriptContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.FigureBlock;
+import org.xwiki.rendering.marcro.figure.FigureTypeRecognizer;
+import org.xwiki.script.ScriptContextManager;
 
 /**
  * Provides useful tools for use in the LaTeX templates.
@@ -48,6 +53,12 @@ public class DefaultLaTeXTool implements LaTeXTool
 
     @Inject
     private LocalizationContext localizationContext;
+
+    @Inject
+    private ScriptContextManager scriptContextManager;
+
+    @Inject
+    private FigureTypeRecognizer figureTypeRecognizer;
 
     @Override
     public String escape(String input)
@@ -71,5 +82,24 @@ public class DefaultLaTeXTool implements LaTeXTool
             block = block.getNextSibling();
         }
         return results;
+    }
+
+    @Override
+    public Stack<?> getStack(String id)
+    {
+        Stack<?> result;
+        ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
+        result = (Stack<?>) scriptContext.getAttribute(id);
+        if (result == null) {
+            result = new Stack<>();
+            scriptContext.setAttribute(id, result, ScriptContext.ENGINE_SCOPE);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isTable(FigureBlock figureBlock)
+    {
+        return this.figureTypeRecognizer.isTable(figureBlock);
     }
 }

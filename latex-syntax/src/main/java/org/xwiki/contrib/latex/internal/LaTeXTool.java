@@ -20,9 +20,11 @@
 package org.xwiki.contrib.latex.internal;
 
 import java.util.List;
+import java.util.Stack;
 
 import org.xwiki.component.annotation.Role;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.FigureBlock;
 
 /**
  * Provides useful tools for use in the LaTeX templates.
@@ -51,4 +53,19 @@ public interface LaTeXTool
      * @return all the siblings of the current block
      */
     List<Block> getSiblings(Block currentBlock);
+
+    /**
+     * @param figureBlock the figure block that needs to be checked to verify if it contains only a table (should be a
+     *        FigureBlock)
+     * @return true if it contains only a table or false otherwise
+     */
+    boolean isTable(FigureBlock figureBlock);
+
+    /**
+     * Retrieve and create a Stack if it doesn't exist.
+     *
+     * @param id the name of the stack to create
+     * @return the stack
+     */
+    Stack<?> getStack(String id);
 }

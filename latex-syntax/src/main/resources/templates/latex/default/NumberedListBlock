@@ -4,8 +4,9 @@
   #set ($listDepth = $listDepth + 1)
 #end
 ## Since this is a standalone element we separate from the previous block by 2 NL, except when nested in another list.
-## If not inside a Group block then we separate from the previous block by 2 NL
-#if ("$!block.parent.class.simpleName" != 'GroupBlock')
+## If not inside a Container block that accepts standalone elements (Group block, etc then we separate from the
+## previous block by 2 NL.
+#if ($latex.getStack('isInContainerAcceptingStandalone').empty())
   #if ($listDepth == 0)
 
   #end
