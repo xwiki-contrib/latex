@@ -1,29 +1,30 @@
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Floating Table with caption
+.# Table with list in cell
 .#-----------------------------------------------------
-(% caption='Floating Table Example' %)
-|=table header|=table header
-|cell|cell
-|cell|cell
+|cell1|cell2
+|(((
+* item 1
+* item 2
+)))|cell
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\begin{table}[h]
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline
-\textbf{table header} & \textbf{table header}\\
+cell1 & cell2\\
 \hline
-cell & cell\\
-\hline
-cell & cell\\
+\begin{varwidth}[t]{\linewidth}
+\begin{itemize}
+ \item item 1
+ \item item 2
+\end{itemize}
+\end{varwidth} & cell\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Floating Table Example}
-\end{table}
 
 \end{document}

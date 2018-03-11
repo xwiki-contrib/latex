@@ -1,15 +1,15 @@
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Verify images passed as PATH (used by the export).
+.# Inline images
 .#-----------------------------------------------------
-image:path:whatever
+image:whatever
+[[image:whatever]]
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\begin{center}
+\includegraphics{whatever}\\
 \includegraphics{whatever}
-\end{center}
 
 \end{document}

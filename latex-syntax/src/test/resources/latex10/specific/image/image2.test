@@ -1,18 +1,15 @@
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Floating image with caption
+.# Verify images passed as PATH (used by the export).
 .#-----------------------------------------------------
-[[image:whatever||caption='Floating image Example']]
+image:path:whatever
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\begin{figure}[h]
 \begin{center}
 \includegraphics{whatever}
 \end{center}
-\caption{Floating image Example}
-\end{figure}
 
 \end{document}

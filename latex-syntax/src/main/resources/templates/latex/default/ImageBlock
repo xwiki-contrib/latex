@@ -6,9 +6,6 @@
   #if ($block.parent.children.size() == 1)
     #set ($isImageStandalone = true)
   #end
-  #if ($isImageStandalone && "$!block.getParameter('caption')" != '')
-    \begin{figure}[h]
-  #end
   #if ($isImageStandalone)
     \begin{center}
   #end
@@ -44,14 +41,6 @@
   #if ($isImageStandalone)
 
     \end{center}##
-  #end
-  #if ($isImageStandalone && "$!block.getParameter('caption')" != '')
-
-    \caption{$latex.escape($block.getParameter('caption'))}
-    #if ("$!block.getParameter('label')" != '')
-      \label{$block.getParameter('label')}
-    #end
-    \end{figure}##
   #end
 #elseif ($type == 'url')
   ## ConTeXt supports this natively using

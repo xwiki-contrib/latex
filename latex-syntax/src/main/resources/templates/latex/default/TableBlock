@@ -9,20 +9,9 @@
 #set ($firstRowBlock = $block.getChildren().get(0))
 #set ($columnSize = $firstRowBlock.getChildren().size() - 1)
 #set ($tableSpec = "|${stringtool.repeat('l|', $columnSize)}l|")
-#if ("$!tableBlock.getParameter('caption')" != '')
-  \begin{table}[h]
-#end
 \begin{center}
 \begin{tabular}{${tableSpec}}
 \hline
 $processor.process($block.getChildren())##
 \end{tabular}
 \end{center}##
-#if ("$!tableBlock.getParameter('caption')" != '')
-
-  \caption{$latex.escape($tableBlock.getParameter('caption'))}
-  #if ("$!tableBlock.getParameter('label')" != '')
-    \label{$tableBlock.getParameter('label')}
-  #end
-  \end{table}##
-#end
