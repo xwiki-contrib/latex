@@ -1,3 +1,8 @@
+## Ignore generated numebred headings/figures/tables
+#set ($class = $block.getParameter('class'))
+#if ($class.contains('wikigeneratedfigurenumber') || $class.contains('wikigeneratedtablenumber'))
+  #break
+#end
 #set ($format = $block.getFormat().toString())
 #if ($format == 'BOLD')
   \textbf{${processor.process($block.getChildren())}}##

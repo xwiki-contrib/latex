@@ -1,0 +1,42 @@
+.runTransformations:macro
+.#-------------------------------------------------------
+.input|xwiki/2.1
+.# Ignore generated numbered captions by transformations.
+.#-------------------------------------------------------
+{{figure}}
+{{figureCaption}}
+(% class="wikigeneratedfigurenumber" %)Figure 1: (%%)caption
+{{/figureCaption}}
+
+whatever
+{{/figure}}
+
+{{figure}}
+{{figureCaption}}
+(% class="wikigeneratedtablenumber" %)Table 1: (%%)caption
+{{/figureCaption}}
+
+|a|b
+{{/figure}}
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{figure}[h]
+\caption{caption}
+whatever
+\end{figure}
+
+\begin{table}[h]
+\caption{caption}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+a & b\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\end{document}
