@@ -2,4 +2,4 @@
 
 
 #end
-\ref{$block.getParameter('section')}##
+\ref{$block.getParameters().values().iterator().next()}##
