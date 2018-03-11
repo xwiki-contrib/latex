@@ -1,0 +1,13 @@
+.#-------------------------------------------------------
+.input|xwiki/2.1
+.# Ignore generated numbered headings by transformations.
+.#-------------------------------------------------------
+= (% class="wikigeneratedheadingnumber" %)1 (%%)heading =
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\section{heading}
+
+\end{document}

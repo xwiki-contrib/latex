@@ -1,6 +1,6 @@
 ## Ignore generated numebred headings/figures/tables
 #set ($class = $block.getParameter('class'))
-#if ($class.contains('wikigeneratedfigurenumber') || $class.contains('wikigeneratedtablenumber'))
+#if ($class.contains('wikigeneratedfigurenumber') || $class.contains('wikigeneratedtablenumber') || $class.contains('wikigeneratedheadingnumber'))
   #break
 #end
 #set ($format = $block.getFormat().toString())
