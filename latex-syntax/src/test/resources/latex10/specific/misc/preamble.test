@@ -33,6 +33,8 @@
 %% Used for links
 %% Note: Should be loaded last
 \usepackage{hyperref}
+%% For the container macro
+\usepackage{multicol}
 
 %% Message macro environments
 

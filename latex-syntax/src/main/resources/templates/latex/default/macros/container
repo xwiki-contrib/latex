@@ -1,0 +1,21 @@
+
+
+## Compute number of columns: it's the number of Group Blocks inside the first GroupBlock
+#if ("$!block.getParameter('layoutStyle')" == 'columns')
+  #set ($columnGroupBlocks = $block.children.get(0).children)
+  #set ($containerColumns = $columnGroupBlocks.size())
+  \begin{multicols}{$containerColumns}
+  #foreach ($groupBlock in $columnGroupBlocks)
+    #set ($discard = $latex.getStack('isInContainerAcceptingStandalone').push(true))
+    $processor.process($groupBlock.children)
+    #if ($foreach.hasNext)
+
+      \columnbreak
+
+    #end
+    #set ($discard = $latex.getStack('isInContainerAcceptingStandalone').pop())
+  #end
+  \end{multicols}##
+#else
+  $processor.process($block.getChildren())##
+#end
