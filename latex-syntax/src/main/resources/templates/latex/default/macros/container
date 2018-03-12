@@ -6,11 +6,11 @@
   ## last one which is used for some internal stuff see ColumnsLayoutManager. In order to be generic and work even
   ## if the ColumnsLayoutManager is not available, we discard the last group if it's empty).
   #set ($containerGroupBlocks = $block.children.get(0).children)
-  #set ($containerColumns = $containerGroupBlocks.size())
   #set ($containerLastGroupIndex = $containerGroupBlocks.size() - 1)
   #if ($containerGroupBlocks.get($containerLastGroupIndex).children.isEmpty())
-    #set ($containerColumns = $containerColumns - 1)
+    #set ($discard = $containerGroupBlocks.remove($containerLastGroupIndex))
   #end
+  #set ($containerColumns = $containerGroupBlocks.size())
   \begin{multicols}{$containerColumns}
   #foreach ($groupBlock in $containerGroupBlocks)
     #set ($discard = $latex.getStack('isInContainerAcceptingStandalone').push(true))
