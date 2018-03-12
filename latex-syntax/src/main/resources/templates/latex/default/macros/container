@@ -1,11 +1,18 @@
 
 
-## Compute number of columns: it's the number of Group Blocks inside the first GroupBlock
+## Only handle "columns" layout FTM.
 #if ("$!block.getParameter('layoutStyle')" == '' || "$!block.getParameter('layoutStyle')" == 'columns')
-  #set ($columnGroupBlocks = $block.children.get(0).children)
-  #set ($containerColumns = $columnGroupBlocks.size())
+  ## Compute number of columns: it's the number of Group Blocks inside the first GroupBlock except potentially the
+  ## last one which is used for some internal stuff see ColumnsLayoutManager. In order to be generic and work even
+  ## if the ColumnsLayoutManager is not available, we discard the last group if it's empty).
+  #set ($containerGroupBlocks = $block.children.get(0).children)
+  #set ($containerColumns = $containerGroupBlocks.size())
+  #set ($containerLastGroupIndex = $containerGroupBlocks.size() - 1)
+  #if ($containerGroupBlocks.get($containerLastGroupIndex).children.isEmpty())
+    #set ($containerColumns = $containerColumns - 1)
+  #end
   \begin{multicols}{$containerColumns}
-  #foreach ($groupBlock in $columnGroupBlocks)
+  #foreach ($groupBlock in $containerGroupBlocks)
     #set ($discard = $latex.getStack('isInContainerAcceptingStandalone').push(true))
     $processor.process($groupBlock.children)
     #if ($foreach.hasNext)
