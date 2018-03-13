@@ -8,6 +8,7 @@
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\section{heading}
+\label{H1heading}
+\heading{1}{heading}
 
 \end{document}

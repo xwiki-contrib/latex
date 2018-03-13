@@ -17,14 +17,17 @@
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\section{Heading1}
+\label{HHeading1}
+\heading{1}{Heading1}
 
 \etocsettocstyle{}{}
 \localtableofcontents
 
-\subsection{Heading2}
+\label{HHeading2}
+\heading{2}{Heading2}
 
-\subsubsection{Heading3}
+\label{HHeading3}
+\heading{3}{Heading3}
 
 \etocsettocstyle{}{}
 \tableofcontents

@@ -153,21 +153,28 @@ Here are a number of test pages you can play with:
 
 Below is a demonstration of the XWiki Syntax you can use in wiki pages (headings, images, tables).
 
-\section{Headings}
+\label{HHeadings}
+\heading{1}{Headings}
 
 XWiki offers 6 levels of headings. You can use them to structure your pages.
 
-\subsection{Level 2 Heading}
+\label{HLevel2Heading}
+\heading{2}{Level 2 Heading}
 
-\subsubsection{Level 3 Heading}
+\label{HLevel3Heading}
+\heading{3}{Level 3 Heading}
 
-\paragraph{Level 4 Heading 4}
+\label{HLevel4Heading4}
+\heading{4}{Level 4 Heading 4}
 
-\subparagraph{Level 5 Heading 5}
+\label{HLevel5Heading5}
+\heading{5}{Level 5 Heading 5}
 
-\subparagraph{Level 6 Heading 6}
+\label{HLevel6Heading6}
+\heading{6}{Level 6 Heading 6}
 
-\section{Styles}
+\label{HStyles}
+\heading{1}{Styles}
 
 Basic styles are supported in XWiki:
 
@@ -180,11 +187,13 @@ Basic styles are supported in XWiki:
  \item Text in \textsuperscript{superscript}
 \end{itemize}
 
-\section{Lists}
+\label{HLists}
+\heading{1}{Lists}
 
 You can create various types of lists in your wiki pages:
 
-\subsection{Unordered list}
+\label{HUnorderedlist}
+\heading{2}{Unordered list}
 
 \begin{itemize}
  \item Level 1
@@ -198,7 +207,8 @@ You can create various types of lists in your wiki pages:
  \item Level 1
 \end{itemize}
 
-\subsection{Numbered list}
+\label{HNumberedlist}
+\heading{2}{Numbered list}
 
 \begin{enumerate}
  \item Item
@@ -211,7 +221,8 @@ You can create various types of lists in your wiki pages:
  \item Subitem
 \end{enumerate}
 
-\subsection{Mixed list}
+\label{HMixedlist}
+\heading{2}{Mixed list}
 
 \begin{enumerate}
  \item Item 1
@@ -225,11 +236,13 @@ You can create various types of lists in your wiki pages:
  \item Item 5
 \end{enumerate}
 
-\section{Tables}
+\label{HTables}
+\heading{1}{Tables}
 
 You can create simple tables right into wiki pages:
 
-\subsection{Simple table}
+\label{HSimpletable}
+\heading{2}{Simple table}
 
 \begin{center}
 \begin{tabular}{|l|l|l|}
@@ -243,7 +256,8 @@ You can create simple tables right into wiki pages:
 \end{tabular}
 \end{center}
 
-\subsection{Table with headers in the top row}
+\label{HTablewithheadersinthetoprow}
+\heading{2}{Table with headers in the top row}
 
 \begin{center}
 \begin{tabular}{|l|l|l|}
@@ -257,7 +271,8 @@ You can create simple tables right into wiki pages:
 \end{tabular}
 \end{center}
 
-\subsection{Table with headers in the top row and left column}
+\label{HTablewithheadersinthetoprowandleftcolumn}
+\heading{2}{Table with headers in the top row and left column}
 
 \begin{center}
 \begin{tabular}{|l|l|l|}
@@ -271,7 +286,8 @@ You can create simple tables right into wiki pages:
 \end{tabular}
 \end{center}
 
-\section{Links}
+\label{HLinks}
+\heading{1}{Links}
 
 XWiki allows you to create links to other pages in your wiki or on the web:
 
@@ -287,7 +303,8 @@ You can also create links to attachments:
 
 XWikiLogo.png
 
-\section{Images}
+\label{HImages}
+\heading{1}{Images}
 
 You can insert images in your wiki pages:
 
@@ -295,11 +312,13 @@ You can insert images in your wiki pages:
 \includegraphics{XWikiLogo.png}
 \end{center}
 
-\section{Macros}
+\label{HMacros}
+\heading{1}{Macros}
 
 Macros allow you to make wiki content look better and to add additional features to your wiki. Here are 2 examples of how macros can be used in wiki pages:
 
-\subsection{Warning Macro}
+\label{HWarningMacro}
+\heading{2}{Warning Macro}
 
 This macro allows you to draw users' attention to a specific piece of information:
 
@@ -307,7 +326,8 @@ This macro allows you to draw users' attention to a specific piece of informatio
 Hello World
 \end{xwikiwarning}
 
-\subsection{Table of Contents}
+\label{HTableofContents}
+\heading{2}{Table of Contents}
 
 This macro automatically generates a table of contents of your wiki page based on headings:
 

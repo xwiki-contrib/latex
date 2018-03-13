@@ -62,3 +62,38 @@ ${SP}${SP}0.95\linewidth
 ${SP}${SP}\Gin@nat@width
 \fi}
 \makeatother
+
+%% Define heading command so that this can be overridden easily
+#if ("$!latexDocumentType" == 'book')
+  #set ($isBook = true)
+#else
+  #set ($isBook = false)
+#end
+\newcommand{\heading}[2]{
+${SP}${SP}\ifx#11
+${SP}${SP}${SP}${SP}#if ($isBook)\chapter{#2}#else\section{#2}#end
+
+${SP}${SP}\else
+${SP}${SP}\ifx#12
+${SP}${SP}${SP}${SP}#if ($isBook)\section{#2}#else\subsection{#2}#end
+
+${SP}${SP}\else
+${SP}${SP}\ifx#13
+${SP}${SP}${SP}${SP}#if ($isBook)\subsection{#2}#else\subsubsection{#2}#end
+
+${SP}${SP}\else
+${SP}${SP}\ifx#14
+${SP}${SP}${SP}${SP}#if ($isBook)\subsubsection{#2}#else\paragraph{#2}#end
+
+${SP}${SP}\else
+${SP}${SP}\ifx#15
+${SP}${SP}${SP}${SP}#if ($isBook)\paragraph{#2}#else\subparagraph{#2}#end
+
+${SP}${SP}\ifnum#1>5
+${SP}${SP}${SP}${SP}\subparagraph{#2}
+${SP}${SP}\fi
+${SP}${SP}\fi
+${SP}${SP}\fi
+${SP}${SP}\fi
+${SP}${SP}\fi
+${SP}${SP}\fi}

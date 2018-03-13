@@ -1,16 +1,7 @@
 
 
-#if ($block.getLevel().ordinal() == 0)
-  \section{${processor.process($block.getChildren())}}##
-#elseif ($block.getLevel().ordinal() == 1)
-  \subsection{${processor.process($block.getChildren())}}##
-#elseif ($block.getLevel().ordinal() == 2)
-  \subsubsection{${processor.process($block.getChildren())}}##
-#elseif ($block.getLevel().ordinal() == 3)
-  \paragraph{${processor.process($block.getChildren())}}##
-#elseif ($block.getLevel().ordinal() >= 4)
-  \subparagraph{${processor.process($block.getChildren())}}##
-#end
+#set ($headingLevel = $block.getLevel().ordinal() + 1)
 #if ("$!block.getId()" != '')
-  \label{${block.getId()}}##
+  \label{${block.getId()}}
 #end
+\heading{$headingLevel}{${processor.process($block.getChildren())}}##

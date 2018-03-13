@@ -46,6 +46,8 @@ public class IndexSerializer
 {
     private static final String SC_INCLUDES_KEY = "latexPageIncludes";
 
+    private static final String SC_DOCTYPE_KEY = "latexDocumentType";
+
     @Inject
     private TemplateRenderer templateRenderer;
 
@@ -62,23 +64,29 @@ public class IndexSerializer
         // Add an includes binding in the ScriptContext (SC) so that they are accessible from the index template.
         // To be clean we save and restore any pre-existing property with the same name in the SC.
         // For performance reasons we don't initialize new Contexts and only remove the property we added.
-        Object originalValue = null;
-        int originalValueScope = -1;
+        Object[] originalValues = new Object[2];
+        Integer[] originalValueScopes = new Integer[2];
         ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
         try {
-            originalValue = scriptContext.getAttribute(SC_INCLUDES_KEY);
-            originalValueScope = scriptContext.getAttributesScope(SC_INCLUDES_KEY);
+            originalValues[0] = scriptContext.getAttribute(SC_INCLUDES_KEY);
+            originalValueScopes[0] = scriptContext.getAttributesScope(SC_INCLUDES_KEY);
             scriptContext.setAttribute(SC_INCLUDES_KEY, includes, ScriptContext.ENGINE_SCOPE);
+
+            originalValues[1] = scriptContext.getAttribute(SC_DOCTYPE_KEY);
+            originalValueScopes[1] = scriptContext.getAttributesScope(SC_DOCTYPE_KEY);
+            scriptContext.setAttribute(SC_DOCTYPE_KEY, "article", ScriptContext.ENGINE_SCOPE);
 
             // Get and execute the index template
             WikiPrinter wikiprinter = new DefaultWikiPrinter();
             this.templateRenderer.render("Index", wikiprinter);
             writeln(stream, wikiprinter.toString());
         } finally {
-            if (originalValue != null && originalValueScope != -1) {
-                scriptContext.setAttribute(SC_INCLUDES_KEY, originalValue, originalValueScope);
-            } else {
-                scriptContext.removeAttribute(SC_INCLUDES_KEY, ScriptContext.ENGINE_SCOPE);
+            for (int i = 0; i < 2; i++) {
+                if (originalValues[i] != null && originalValueScopes[i] != null) {
+                    scriptContext.setAttribute(SC_INCLUDES_KEY, originalValues[i], originalValueScopes[i]);
+                } else {
+                    scriptContext.removeAttribute(SC_INCLUDES_KEY, ScriptContext.ENGINE_SCOPE);
+                }
             }
         }
     }

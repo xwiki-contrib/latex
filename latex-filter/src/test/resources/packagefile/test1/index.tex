@@ -66,6 +66,31 @@
 \fi}
 \makeatother
 
+%% Define heading command so that this can be overridden easily
+\newcommand{\heading}[2]{
+  \ifx#11
+    \section{#2}
+  \else
+  \ifx#12
+    \subsection{#2}
+  \else
+  \ifx#13
+    \subsubsection{#2}
+  \else
+  \ifx#14
+    \paragraph{#2}
+  \else
+  \ifx#15
+    \subparagraph{#2}
+  \ifnum#1>5
+    \subparagraph{#2}
+  \fi
+  \fi
+  \fi
+  \fi
+  \fi
+  \fi}
+
 \begin{document}
 
 \include{pages/space/document}
