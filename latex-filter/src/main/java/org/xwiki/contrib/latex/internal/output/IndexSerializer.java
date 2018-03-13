@@ -44,8 +44,16 @@ import org.xwiki.script.ScriptContextManager;
 @Singleton
 public class IndexSerializer
 {
+    /**
+     * Script Context binding used to tell the Index template the list and location of pages that are being exported.
+     */
     private static final String SC_INCLUDES_KEY = "latexPageIncludes";
 
+    /**
+     * Script Context binding used to tell templates what type of LaTeX document is being generated. Valid values
+     * are values that are valid in LaTeX in the {@code \documentclass{... value here...}} command. For example:
+     * {@code article} or {@code book}.
+     */
     private static final String SC_DOCTYPE_KEY = "latexDocumentType";
 
     @Inject
