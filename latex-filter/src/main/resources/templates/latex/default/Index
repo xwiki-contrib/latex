@@ -1,12 +1,12 @@
 \documentclass{$latexDocumentType}
 \usepackage{standalone}
 
-$processor.render('Preamble')
+$latex.processor.render('Preamble')
 
 \begin{document}
 
 #foreach ($latexPageInclude in $latexPageIncludes)
-  \include{$latex.escape($latexPageInclude)}
+  \include{$latex.tool.escape($latexPageInclude)}
 #end
 
 \end{document}
