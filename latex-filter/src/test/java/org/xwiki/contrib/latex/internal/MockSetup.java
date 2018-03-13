@@ -51,10 +51,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Mocks for the tests.
+ * Mocks for the LaTeX Renderer.
+ *
+ * @todo This is a copy of the MockSetup from latex-syntax. Ideally this should be shared between the latex-syntax and
+ * latex-filter modules but if we create a tets-jar in latex-syntax and depend on it then we also get the other
+ * integration tests from latex-syntax and this makes {@link LaTexIntegrationTests} fail. We need to fix this.
  *
  * @version $Id$
- * @since 1.0
  */
 public class MockSetup
 {
@@ -120,7 +123,6 @@ public class MockSetup
                 return vcontext.get(key);
             }
         }).when(scriptContext).getAttribute(any(String.class));
-
 
         doAnswer(new Answer<Object>()
         {

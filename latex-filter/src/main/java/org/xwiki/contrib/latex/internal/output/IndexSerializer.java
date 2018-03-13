@@ -26,16 +26,17 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.script.ScriptContext;
 
 import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.latex.internal.LaTeXTool;
 import org.xwiki.contrib.latex.internal.TemplateRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
+import org.xwiki.script.ScriptContextManager;
 
 /**
- * Serialize the index file.
+ * Create the index file.
  * 
  * @version $Id$
  */
@@ -43,38 +44,43 @@ import org.xwiki.rendering.renderer.printer.WikiPrinter;
 @Singleton
 public class IndexSerializer
 {
+    private static final String SC_INCLUDES_KEY = "latexPageIncludes";
+
     @Inject
     private TemplateRenderer templateRenderer;
 
     @Inject
-    private LaTeXTool latexTool;
+    private ScriptContextManager scriptContextManager;
 
     /**
      * @param includes the references of the documents to include
      * @param stream the stream to write to
-     * @throws IOException when failing to write in the stream
+     * @throws IOException when failing to create the index file
      */
     public void serialize(Set<String> includes, OutputStream stream) throws IOException
     {
-        writeln(stream, "\\documentclass{article}");
-        writeln(stream, "\\usepackage[utf8]{inputenc}");
-        writeln(stream, "\\usepackage{standalone}");
+        // Add an includes binding in the ScriptContext (SC) so that they are accessible from the index template.
+        // To be clean we save and restore any pre-existing property with the same name in the SC.
+        // For performance reasons we don't initialize new Contexts and only remove the property we added.
+        Object originalValue = null;
+        int originalValueScope = -1;
+        ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
+        try {
+            originalValue = scriptContext.getAttribute(SC_INCLUDES_KEY);
+            originalValueScope = scriptContext.getAttributesScope(SC_INCLUDES_KEY);
+            scriptContext.setAttribute(SC_INCLUDES_KEY, includes, ScriptContext.ENGINE_SCOPE);
 
-        WikiPrinter wikiprinter = new DefaultWikiPrinter();
-        this.templateRenderer.render("Preamble", wikiprinter);
-        writeln(stream, wikiprinter.toString());
-
-        writeln(stream, "");
-        writeln(stream, "\\begin{document}");
-
-        if (!includes.isEmpty()) {
-            for (String include : includes) {
-                write(stream, "\\include{", this.latexTool.escape(include), "}");
+            // Get and execute the index template
+            WikiPrinter wikiprinter = new DefaultWikiPrinter();
+            this.templateRenderer.render("Index", wikiprinter);
+            writeln(stream, wikiprinter.toString());
+        } finally {
+            if (originalValue != null && originalValueScope != -1) {
+                scriptContext.setAttribute(SC_INCLUDES_KEY, originalValue, originalValueScope);
+            } else {
+                scriptContext.removeAttribute(SC_INCLUDES_KEY, ScriptContext.ENGINE_SCOPE);
             }
-            writeln(stream, "");
         }
-
-        writeln(stream, "\\end{document}");
     }
 
     private void writeln(OutputStream stream, String txt) throws IOException

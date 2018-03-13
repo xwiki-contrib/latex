@@ -75,6 +75,7 @@ public class LaTexIntegrationTests
     @Initialized
     public void initialize(MockitoComponentManager componentManager) throws Exception
     {
+        MockSetup.setUp(componentManager);
         this.oldcore = new MockitoOldcore(componentManager);
     }
 

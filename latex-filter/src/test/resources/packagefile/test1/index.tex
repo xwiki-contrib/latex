@@ -1,8 +1,73 @@
 \documentclass{article}
-\usepackage[utf8]{inputenc}
 \usepackage{standalone}
-********** template Preamble**********
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%% Used for strike through support
+\usepackage[normalem]{ulem}
+%% Used for image support
+\usepackage{graphicx}
+%% For the Code macro
+%% Note: Needs to be loaded before csquotes
+\usepackage{minted}
+%% Use for quotes and to support nested quotes
+\usepackage{csquotes}
+%% For the message macros
+\usepackage{pifont,mdframed}
+%% For the TOC macro, to have local tocs
+\usepackage{etoc}
+%% For the Formula macro
+\usepackage{amsmath}
+%% For links to attachments (we embed the attachments and link to them)
+\usepackage{attachfile}
+%% For putting standalone blocks inside table cells and keeping table cells to a minimal width
+\usepackage{varwidth}
+%% Used for links
+%% Note: Should be loaded last
+\usepackage{hyperref}
+%% For the container macro
+\usepackage{multicol}
+
+%% Message macro environments
+
+\newenvironment{xwikimessage}[1]
+  {\par\begin{mdframed}[linewidth=2pt,linecolor=#1]%
+    \begin{list}{}{\leftmargin=1cm
+                   \labelwidth=\leftmargin}\item[\Large\ding{43}]}
+  {\end{list}\end{mdframed}\par}
+
+\newenvironment{xwikierror}
+  {\begin{xwikimessage}{red}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikiwarning}
+  {\begin{xwikimessage}{yellow}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikiinfo}
+  {\begin{xwikimessage}{blue}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikisuccess}
+  {\begin{xwikimessage}{green}}
+  {\end{xwikimessage}}
+
+%% Set the style of internal references (hyperref)
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
+
+%% Ensure that images have a max width of 95% of the line width
+\makeatletter
+\setkeys{Gin}{width=\ifdim\Gin@nat@width>\linewidth
+  0.95\linewidth
+\else
+  \Gin@nat@width
+\fi}
+\makeatother
 
 \begin{document}
+
 \include{pages/space/document}
+
 \end{document}

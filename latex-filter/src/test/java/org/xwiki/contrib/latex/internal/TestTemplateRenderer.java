@@ -36,6 +36,7 @@ import org.xwiki.rendering.renderer.printer.WikiPrinter;
  * @version $Id$
  */
 @Component
+@Named("whatever")
 @Singleton
 public class TestTemplateRenderer implements TemplateRenderer
 {
@@ -50,12 +51,12 @@ public class TestTemplateRenderer implements TemplateRenderer
 
         this.eventRenderer.render(blocks, printer);
 
-        printer.print("********** blocks " + blocks + "**********/");
+        printer.print("********** blocks " + blocks + " **********/");
     }
 
     @Override
     public void render(String relativeTemplateName, WikiPrinter printer)
     {
-        printer.print("********** template " + relativeTemplateName + "**********");
+        printer.print("********** template " + relativeTemplateName + " **********");
     }
 }
