@@ -41,7 +41,7 @@ import org.xwiki.uiextension.UIExtension;
  * Inject a button in the standard export menu to leading to the latex handler.
  * 
  * @version $Id$
- * @since 1.4
+ * @since 1.5
  */
 @Component
 @Singleton
