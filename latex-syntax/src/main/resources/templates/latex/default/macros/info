@@ -1,8 +1,8 @@
-#if (!$block.isInline())
+#if (!$latex.block.isInline())
 
 
 #end
 \begin{xwikiinfo}
 ## We skip the GroupBlock to make the output nicer since it's not needed to output a varwidth env
-$latex.escape($processor.process($block.children.get(0).children))
+$latex.tool.escape($latex.processor.process($latex.block.children.get(0).children))
 \end{xwikiinfo}##

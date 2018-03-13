@@ -1,11 +1,11 @@
 ## Since there's no info if the IdBlock is inline or not, we need to check if it's inside an inline MacroMarkerBlock
 ## or not...
-#if ("$!block.parent.class.simpleName" == 'MacroMarkerBlock')
-  #if ($block.parent.isInline())
-    \label{$latex.escape($block.name)}##
+#if ("$!latex.block.parent.class.simpleName" == 'MacroMarkerBlock')
+  #if ($latex.block.parent.isInline())
+    \label{$latex.tool.escape($latex.block.name)}##
   #else
 
 
-    \label{$latex.escape($block.name)}##
+    \label{$latex.tool.escape($latex.block.name)}##
   #end
 #end

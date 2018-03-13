@@ -1,6 +1,6 @@
 
 
-#if ("$!block.getParameter('scope')" == 'local')
+#if ("$!latex.block.getParameter('scope')" == 'local')
   \etocsettocstyle{}{}
   \localtableofcontents##
 #else

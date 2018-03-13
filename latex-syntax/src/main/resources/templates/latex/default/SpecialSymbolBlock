@@ -1,21 +1,21 @@
-#if ($block.getSymbol() == '#')
+#if ($latex.block.getSymbol() == '#')
   \\$escapetool.getHash()##
-#elseif ($block.getSymbol() == '$')
+#elseif ($latex.block.getSymbol() == '$')
   \\$escapetool.getDollar()##
-#elseif ($block.getSymbol() == '%')
+#elseif ($latex.block.getSymbol() == '%')
   \%##
-#elseif ($block.getSymbol() == '_')
+#elseif ($latex.block.getSymbol() == '_')
   \_##
-#elseif ($block.getSymbol() == '\')
+#elseif ($latex.block.getSymbol() == '\')
   \$\backslash\$##
-#elseif ($block.getSymbol() == '^')
+#elseif ($latex.block.getSymbol() == '^')
   \^{}##
-#elseif ($block.getSymbol() == '<')
+#elseif ($latex.block.getSymbol() == '<')
   \textless##
-#elseif ($block.getSymbol() == '>')
+#elseif ($latex.block.getSymbol() == '>')
   \textgreater##
-#elseif ($block.getSymbol() == '|')
+#elseif ($latex.block.getSymbol() == '|')
   \textbar##
 #else
-  ${block.getSymbol()}##
+  ${latex.block.getSymbol()}##
 #end

@@ -1,2 +1,2 @@
 #set ($newLineSentForList = false)
-${SP}${stringtool.repeat(' ', $listDepth)}\item[${processor.process($block.getChildren())}] ##
+${SP}${stringtool.repeat(' ', $listDepth)}\item[${latex.processor.process($latex.block.getChildren())}] ##

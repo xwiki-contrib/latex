@@ -1,48 +1,48 @@
-#set ($type = $block.reference.type.scheme)
+#set ($type = $latex.block.reference.type.scheme)
 ## Consider that we're on a local link when the reference is empty and anchor is not empty
-#set ($reference = $block.reference.reference)
-#set ($anchor = $block.reference.getParameter('anchor'))
+#set ($reference = $latex.block.reference.reference)
+#set ($anchor = $latex.block.reference.getParameter('anchor'))
 #if ($type == 'doc')
   #if ("$!reference" == '' && "$!anchor" != '')
-    #if ($block.getChildren().isEmpty())
+    #if ($latex.block.getChildren().isEmpty())
       \ref{${anchor}}##
     #else
-      \hyperref[${anchor}]{${processor.process($block.getChildren())}}##
+      \hyperref[${anchor}]{${latex.processor.process($latex.block.getChildren())}}##
     #end
   #else
     ## Ignore links that are not local, just display the label if there's one or the reference otherwise
-    #if ($block.getChildren().isEmpty())
-      $latex.escape($reference)##
+    #if ($latex.block.getChildren().isEmpty())
+      $latex.tool.escape($reference)##
     #else
-      ${processor.process($block.getChildren())}##
+      ${latex.processor.process($latex.block.getChildren())}##
     #end
   #end
 #elseif ($type == 'url')
   ## If there's no children, use \url{...}
-  #if ($block.getChildren().isEmpty())
+  #if ($latex.block.getChildren().isEmpty())
     \url{${reference}}##
   #else
-    \href{${reference}}{${processor.process($block.getChildren())}}##
+    \href{${reference}}{${latex.processor.process($latex.block.getChildren())}}##
   #end
 #elseif ($type == 'mailto')
-  #if ($block.getChildren().isEmpty())
-    \href{mailto:${reference}}{$latex.escape($reference)}##
+  #if ($latex.block.getChildren().isEmpty())
+    \href{mailto:${reference}}{$latex.tool.escape($reference)}##
   #else
-    \href{mailto:${reference}}{${processor.process($block.getChildren())}}##
+    \href{mailto:${reference}}{${latex.processor.process($latex.block.getChildren())}}##
   #end
 #elseif ($type == 'path')
-  #set ($escapedReference = $latex.escape($reference))
-  #if ($block.getChildren().isEmpty())
-    \attachfile{$latex.escape($reference)}##
+  #set ($escapedReference = $latex.tool.escape($reference))
+  #if ($latex.block.getChildren().isEmpty())
+    \attachfile{$latex.tool.escape($reference)}##
   #else
-    \textattachfile{$latex.escape($reference)}{${processor.process($block.getChildren())}}##
+    \textattachfile{$latex.tool.escape($reference)}{${latex.processor.process($latex.block.getChildren())}}##
   #end
 #elseif ($type == 'attach')
   ## Link to an attachment. Add a footnote with the attachment name
   ## If no label is specified, use the attachment name
-  #if ($block.getChildren().isEmpty())
-    $latex.escape($reference)##
+  #if ($latex.block.getChildren().isEmpty())
+    $latex.tool.escape($reference)##
   #else
-    ${processor.process($block.getChildren())}\footnote{$latex.escape($reference)}##
+    ${latex.processor.process($latex.block.getChildren())}\footnote{$latex.tool.escape($reference)}##
   #end
 #end

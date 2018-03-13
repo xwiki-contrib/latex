@@ -1,6 +1,6 @@
 ## If we're not on the last cell of the row then end with a "&"
-#set ($currentCellBlock = $block)
-\textit{${processor.process($block.getChildren())}}##
+#set ($currentCellBlock = $latex.block)
+\textit{${latex.processor.process($latex.block.getChildren())}}##
 #if ("$!currentCellBlock.getNextSibling().class.getSimpleName()" == 'TableCellBlock' || "$!currentCellBlock.getNextSibling().class.getSimpleName()" == 'TableHeadCellBlock')
  & ##
 #end

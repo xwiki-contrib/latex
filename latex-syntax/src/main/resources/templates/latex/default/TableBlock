@@ -1,17 +1,17 @@
-#set ($tableBlock = $block)
+#set ($tableBlock = $latex.block)
 ## If not inside a Container block that accepts standalone elements (Group block, etc then we separate from the
 ## previous block by 2 NL.
-#if ($latex.getStack('isInContainerAcceptingStandalone').empty())
+#if ($latex.tool.getStack('isInContainerAcceptingStandalone').empty())
 
 
 #end
 ## Compute the number of columns
-#set ($firstRowBlock = $block.getChildren().get(0))
+#set ($firstRowBlock = $latex.block.getChildren().get(0))
 #set ($columnSize = $firstRowBlock.getChildren().size() - 1)
 #set ($tableSpec = "|${stringtool.repeat('l|', $columnSize)}l|")
 \begin{center}
 \begin{tabular}{${tableSpec}}
 \hline
-$processor.process($block.getChildren())##
+$latex.processor.process($latex.block.getChildren())##
 \end{tabular}
 \end{center}##

@@ -9,6 +9,6 @@
 #end
 
 ${stringtool.repeat(' ', $quoteDepth)}\begin{displayquote}##
-$processor.process($block.getChildren())
+$latex.processor.process($latex.block.getChildren())
 ${stringtool.repeat(' ', $quoteDepth)}\end{displayquote}##
 #set ($quoteDepth = $quoteDepth - 1)

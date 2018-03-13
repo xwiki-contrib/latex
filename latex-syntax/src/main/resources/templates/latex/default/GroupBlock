@@ -1,5 +1,5 @@
-#set ($discard = $latex.getStack('isInContainerAcceptingStandalone').push(true))
+#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
 \begin{varwidth}[t]{\linewidth}
-${processor.process($block.getChildren())}
+${latex.processor.process($latex.block.getChildren())}
 \end{varwidth}##
-#set ($discard = $latex.getStack('isInContainerAcceptingStandalone').pop())
+#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())

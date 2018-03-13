@@ -1,7 +1,7 @@
 \documentclass{article}
 
-$processor.render('Preamble')
+$latex.processor.render('Preamble')
 
-\begin{document}$processor.process($block.getChildren())
+\begin{document}$latex.processor.process($latex.block.getChildren())
 
 \end{document}

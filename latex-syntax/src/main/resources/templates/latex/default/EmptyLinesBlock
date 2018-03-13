@@ -1,2 +1,2 @@
 
-\\[${block.getEmptyLinesCount()}ex]
+\\[${latex.block.getEmptyLinesCount()}ex]

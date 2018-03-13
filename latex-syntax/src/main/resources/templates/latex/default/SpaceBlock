@@ -1,2 +1,2 @@
 ## If the previous block is a space then force a new space with \,
-#if ("$!block.getPreviousSibling()" != '' && $block.getPreviousSibling().class.simpleName == 'SpaceBlock')\,#else #end
+#if ("$!latex.block.getPreviousSibling()" != '' && $latex.block.getPreviousSibling().class.simpleName == 'SpaceBlock')\,#else #end

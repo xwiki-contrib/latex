@@ -1,11 +1,11 @@
 
 
 ## Only handle "columns" layout FTM.
-#if ("$!block.getParameter('layoutStyle')" == '' || "$!block.getParameter('layoutStyle')" == 'columns')
+#if ("$!latex.block.getParameter('layoutStyle')" == '' || "$!latex.block.getParameter('layoutStyle')" == 'columns')
   ## Compute number of columns: it's the number of Group Blocks inside the first GroupBlock except potentially the
   ## last one which is used for some internal stuff see ColumnsLayoutManager. In order to be generic and work even
   ## if the ColumnsLayoutManager is not available, we discard the last group if it's empty).
-  #set ($containerGroupBlocks = $block.children.get(0).children)
+  #set ($containerGroupBlocks = $latex.block.children.get(0).children)
   #set ($containerLastGroupIndex = $containerGroupBlocks.size() - 1)
   #if ($containerGroupBlocks.get($containerLastGroupIndex).children.isEmpty())
     #set ($discard = $containerGroupBlocks.remove($containerLastGroupIndex))
@@ -13,16 +13,16 @@
   #set ($containerColumns = $containerGroupBlocks.size())
   \begin{multicols}{$containerColumns}
   #foreach ($groupBlock in $containerGroupBlocks)
-    #set ($discard = $latex.getStack('isInContainerAcceptingStandalone').push(true))
-    $processor.process($groupBlock.children)
+    #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
+    $latex.processor.process($groupBlock.children)
     #if ($foreach.hasNext)
 
       \columnbreak
 
     #end
-    #set ($discard = $latex.getStack('isInContainerAcceptingStandalone').pop())
+    #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())
   #end
   \end{multicols}##
 #else
-  $processor.process($block.getChildren())##
+  $latex.processor.process($latex.block.getChildren())##
 #end

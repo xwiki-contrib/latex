@@ -1,9 +1,9 @@
-#if ($block.isInline())
+#if ($latex.block.isInline())
   ## Try to find a verbatim delimiter char that's not used in the string to protect
   #set ($separators = ['|', '%', '$', '^', '&', '/', ':', '!', '-', '_', '?', ';', ',', '=', '+', '.', '{', '}'])
   #foreach ($separator in $separators)
-    #if (!$block.getProtectedString().contains($separator))
-      \verb${separator}$block.getProtectedString()${separator}##
+    #if (!$latex.block.getProtectedString().contains($separator))
+      \verb${separator}$latex.block.getProtectedString()${separator}##
       #break
     #elseif (!$foreach.hasNext)
       ## TODO: Find a good fallback...
@@ -14,6 +14,6 @@
 
 
   \begin{verbatim}
-  $block.getProtectedString()
+  $latex.block.getProtectedString()
   \end{verbatim}##
 #end

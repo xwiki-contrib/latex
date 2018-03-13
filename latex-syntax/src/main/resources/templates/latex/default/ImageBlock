@@ -1,9 +1,9 @@
-#set ($type = $block.reference.type.scheme)
+#set ($type = $latex.block.reference.type.scheme)
 #if ($type == 'path' || $type == 'attach')
   ## Only center if the image is the only block in the parent since it only makes sense in this case.
   ## Only use a floating image if the image is the only block in the parent since it only makes sense in this case.
   #set ($isImageStandalone = false)
-  #if ($block.parent.children.size() == 1)
+  #if ($latex.block.parent.children.size() == 1)
     #set ($isImageStandalone = true)
   #end
   #if ($isImageStandalone)
@@ -11,8 +11,8 @@
   #end
   ## Handle width and height
   #set ($imageDimensions = [])
-  #if ("$!block.getParameter('width')" != '')
-    #set ($width = $block.getParameter('width'))
+  #if ("$!latex.block.getParameter('width')" != '')
+    #set ($width = $latex.block.getParameter('width'))
     #if ($width.endsWith('%'))
       #set ($imageNumber = $numbertool.toNumber($width).floatValue() / 100)
       #set ($percent = $mathtool.roundTo(1, $imageNumber))
@@ -22,8 +22,8 @@
       #set ($discard = $imageDimensions.add("width=${imageNumber}px"))
     #end
   #end
-  #if ("$!block.getParameter('height')" != '')
-    #set ($height = $block.getParameter('height'))
+  #if ("$!latex.block.getParameter('height')" != '')
+    #set ($height = $latex.block.getParameter('height'))
     #if ($height.endsWith('%'))
       #set ($imageNumber = $numbertool.toNumber($height).floatValue() / 100)
       #set ($percent = $mathtool.roundTo(1, $imageNumber))
@@ -34,9 +34,9 @@
     #end
   #end
   #if ($imageDimensions.isEmpty())
-    \includegraphics{${block.reference.reference}}##
+    \includegraphics{${latex.block.reference.reference}}##
   #else
-    \includegraphics[$stringtool.join($imageDimensions, ',')]{${block.reference.reference}}##
+    \includegraphics[$stringtool.join($imageDimensions, ',')]{${latex.block.reference.reference}}##
   #end
   #if ($isImageStandalone)
 

@@ -21,8 +21,7 @@ package org.xwiki.contrib.latex.internal;
 
 import java.io.Writer;
 import java.util.Collection;
-
-import javax.script.ScriptContext;
+import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -46,21 +45,22 @@ public class TemplateProcessor
 
     private TemplateManager templateManager;
 
-    private ScriptContext scriptContext;
-
     private VelocityMacroFilter filter;
+
+    private Map<String, Object> latexBinding;
 
     /**
      * @param templateManager the template manager used to locate, get and execute template content
-     * @param scriptContext the script context into which we can inject new bindings for the template evaluation
+     * @param latexBinding the script context "latex" binding into which we can inject new "bindings" for the template
+     *        evaluation
      * @param writer the object into which to write the result of the template evaluations
      * @param filter the Velocity filter to apply to the template content if the source is written in Velocity
      */
-    public TemplateProcessor(TemplateManager templateManager, ScriptContext scriptContext, Writer writer,
+    public TemplateProcessor(TemplateManager templateManager, Map<String, Object> latexBinding, Writer writer,
         VelocityMacroFilter filter)
     {
         this.templateManager = templateManager;
-        this.scriptContext = scriptContext;
+        this.latexBinding = latexBinding;
         this.writer = writer;
         this.filter = filter;
     }
@@ -72,10 +72,9 @@ public class TemplateProcessor
      */
     public void process(Collection<Block> blocks)
     {
-        this.scriptContext.setAttribute("blocks", blocks, ScriptContext.ENGINE_SCOPE);
         for (Block block : blocks) {
             try {
-                this.scriptContext.setAttribute("block", block, ScriptContext.ENGINE_SCOPE);
+                this.latexBinding.put("block", block);
                 Template template = getTemplate(block);
                 if (template != null) {
                     render(template);

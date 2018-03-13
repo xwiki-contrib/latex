@@ -1,7 +1,7 @@
-#if (!$block.isInline())
+#if (!$latex.block.isInline())
 
 
 #end
-\begin{minted}{${block.getParameter('language')}}
-$block.content
+\begin{minted}{${latex.block.getParameter('language')}}
+$latex.block.content
 \end{minted}##

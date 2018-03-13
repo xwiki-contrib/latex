@@ -1,7 +1,7 @@
 
 
-#set ($headingLevel = $block.getLevel().ordinal() + 1)
-#if ("$!block.getId()" != '')
-  \label{${block.getId()}}
+#set ($headingLevel = $latex.block.getLevel().ordinal() + 1)
+#if ("$!latex.block.getId()" != '')
+  \label{${latex.block.getId()}}
 #end
-\heading{$headingLevel}{${processor.process($block.getChildren())}}##
+\heading{$headingLevel}{${latex.processor.process($latex.block.getChildren())}}##

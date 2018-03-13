@@ -1,8 +1,8 @@
 ## Since this is a standalone element we separate from the previous block by 2 NL
 ## If not inside a Container block that accepts standalone elements (Group block, etc then we separate from the
 ## previous block by 2 NL.
-#if ($latex.getStack('isInContainerAcceptingStandalone').empty())
+#if ($latex.tool.getStack('isInContainerAcceptingStandalone').empty())
 
 
 #end
-$processor.process($block.getChildren())
+$latex.processor.process($latex.block.getChildren())

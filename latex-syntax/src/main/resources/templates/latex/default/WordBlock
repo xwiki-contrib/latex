@@ -1,1 +1,1 @@
-$latex.escape($block.getWord())##
+$latex.tool.escape($latex.block.getWord())##

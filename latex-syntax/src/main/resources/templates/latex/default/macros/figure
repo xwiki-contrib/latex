@@ -1,14 +1,14 @@
-#set ($discard = $latex.getStack('isInContainerAcceptingStandalone').push(true))
+#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
 
 
 ## If there content only has a single TableBlock then use the table environment, otherwise use the figure environment
-#if ($latex.isTable($block.children.get(0)))
+#if ($latex.tool.isTable($latex.block.children.get(0)))
 \begin{table}[h]
-$processor.process($block.getChildren())
+$latex.processor.process($latex.block.getChildren())
 \end{table}##
 #else
 \begin{figure}[h]
-$processor.process($block.getChildren())
+$latex.processor.process($latex.block.getChildren())
 \end{figure}##
 #end
-#set ($discard = $latex.getStack('isInContainerAcceptingStandalone').pop())
+#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())

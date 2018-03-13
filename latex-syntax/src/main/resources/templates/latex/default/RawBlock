@@ -1,5 +1,5 @@
-#if ($block.syntax.type.id == 'tex')
+#if ($latex.block.syntax.type.id == 'tex')
   ## Since this is a standalone element we separate from the previous block by 2 NL
 
 
-  $block.rawContent#end
+  $latex.block.rawContent#end

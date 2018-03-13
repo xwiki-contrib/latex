@@ -1,7 +1,7 @@
 #set ($template = '')
-#set ($template = $processor.getTemplate("macros/${block.id}"))
+#set ($template = $latex.processor.getTemplate("macros/${latex.block.id}"))
 #if ("$!template" == '')
-  $processor.process($block.getChildren())##
+  $latex.processor.process($latex.block.getChildren())##
 #else
-  $processor.render($template)##
+  $latex.processor.render($template)##
 #end

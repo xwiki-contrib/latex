@@ -1,23 +1,23 @@
 ## Ignore generated numebred headings/figures/tables
-#set ($class = $block.getParameter('class'))
+#set ($class = $latex.block.getParameter('class'))
 #if ($class.contains('wikigeneratedfigurenumber') || $class.contains('wikigeneratedtablenumber') || $class.contains('wikigeneratedheadingnumber'))
   #break
 #end
-#set ($format = $block.getFormat().toString())
+#set ($format = $latex.block.getFormat().toString())
 #if ($format == 'BOLD')
-  \textbf{${processor.process($block.getChildren())}}##
+  \textbf{${latex.processor.process($latex.block.getChildren())}}##
 #elseif ($format == 'ITALIC')
-  \textit{${processor.process($block.getChildren())}}##
+  \textit{${latex.processor.process($latex.block.getChildren())}}##
 #elseif ($format == 'MONOSPACE')
-  \texttt{${processor.process($block.getChildren())}}##
+  \texttt{${latex.processor.process($latex.block.getChildren())}}##
 #elseif ($format == 'UNDERLINED')
-  \underline{${processor.process($block.getChildren())}}##
+  \underline{${latex.processor.process($latex.block.getChildren())}}##
 #elseif ($format == 'STRIKEDOUT')
-  \sout{${processor.process($block.getChildren())}}##
+  \sout{${latex.processor.process($latex.block.getChildren())}}##
 #elseif ($format == 'SUBSCRIPT')
-  \textsubscript{${processor.process($block.getChildren())}}##
+  \textsubscript{${latex.processor.process($latex.block.getChildren())}}##
 #elseif ($format == 'SUPERSCRIPT')
-  \textsuperscript{${processor.process($block.getChildren())}}##
+  \textsuperscript{${latex.processor.process($latex.block.getChildren())}}##
 #else
-  $processor.process($block.getChildren())##
+  $latex.processor.process($latex.block.getChildren())##
 #end

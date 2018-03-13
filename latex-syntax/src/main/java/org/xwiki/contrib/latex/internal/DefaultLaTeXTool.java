@@ -22,11 +22,11 @@ package org.xwiki.contrib.latex.internal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Stack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.script.ScriptContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
@@ -88,11 +88,12 @@ public class DefaultLaTeXTool implements LaTeXTool
     public Stack<?> getStack(String id)
     {
         Stack<?> result;
-        ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
-        result = (Stack<?>) scriptContext.getAttribute(id);
+        Map<String, Object> latexBinding = (Map<String, Object>) this.scriptContextManager.getCurrentScriptContext()
+            .getAttribute(DefaultTemplateRenderer.SC_LATEX);
+        result = (Stack<?>) latexBinding.get(id);
         if (result == null) {
             result = new Stack<>();
-            scriptContext.setAttribute(id, result, ScriptContext.ENGINE_SCOPE);
+            latexBinding.put(id, result);
         }
         return result;
     }

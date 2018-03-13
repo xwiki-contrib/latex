@@ -21,6 +21,8 @@ package org.xwiki.contrib.latex.internal;
 
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,6 +52,8 @@ import org.xwiki.template.TemplateManager;
 @Singleton
 public class DefaultTemplateRenderer implements TemplateRenderer
 {
+    static final String SC_LATEX = "latex";
+
     @Inject
     private Logger logger;
 
@@ -106,16 +110,33 @@ public class DefaultTemplateRenderer implements TemplateRenderer
 
     private TemplateProcessor initializeProcessor(StringWriter writer) throws ExecutionContextException
     {
-        // Push a new Execution Context for the template rendering.
+        // Push a new Execution Context for the template rendering. Note that we need to copy the "latex" binding if
+        // it exists since this code can be called by the LaTeX exporter for example which sets config options in this
+        // binding.
+        ScriptContext currentScriptContext = this.scriptContextManager.getCurrentScriptContext();
+        Map<String, Object> latexBinding = (Map<String, Object>) currentScriptContext.getAttribute(SC_LATEX);
+
         ExecutionContext context = new ExecutionContext();
         this.executionContextManager.initialize(context);
-        this.execution.pushContext(context);
+        this.execution.pushContext(this.execution.getContext());
 
         ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
-        TemplateProcessor processor = new TemplateProcessor(this.templateManager, scriptContext, writer, this.filter);
-        scriptContext.setAttribute("processor", processor, ScriptContext.ENGINE_SCOPE);
-        scriptContext.setAttribute("latex", this.latexTool, ScriptContext.ENGINE_SCOPE);
+
+        // Create the "latex" binding if it doesn't exist so that we're sure to always have one (this can happen if
+        // this code is called directly without going through the LaTeX exporter for example).
+        if (latexBinding == null) {
+            latexBinding = new HashMap<>();
+            scriptContext.setAttribute(SC_LATEX, latexBinding, ScriptContext.ENGINE_SCOPE);
+        }
+
+        TemplateProcessor processor = new TemplateProcessor(this.templateManager, latexBinding, writer, this.filter);
+        latexBinding.put("processor", processor);
+        latexBinding.put("tool", this.latexTool);
+
+        // Note: we don't put the SP binding inside the latex binding since we want to keep the way we use it as short
+        // as possible. For example in Velocity: $SP vs $latex.SP.
         scriptContext.setAttribute("SP", " ", ScriptContext.ENGINE_SCOPE);
+
         return processor;
     }
 }

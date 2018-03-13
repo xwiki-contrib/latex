@@ -1,9 +1,9 @@
-#if (!$block.isInline())
+#if (!$latex.block.isInline())
 
 
   \begin{equation}
-  ${block.content}
+  ${latex.block.content}
   \end{equation}##
 #else
-  $${block.content}$##
+  $${latex.block.content}$##
 #end

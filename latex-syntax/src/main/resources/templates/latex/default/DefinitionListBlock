@@ -10,7 +10,7 @@
 #end
 
 ${stringtool.repeat(' ', $listDepth)}\begin{description}
-$processor.process($block.getChildren())
+$latex.processor.process($latex.block.getChildren())
 ${stringtool.repeat(' ', $listDepth)}\end{description}#if ($listDepth > 0 && !$newLineSentForList)
 #set ($newLineSentForList = true)
 

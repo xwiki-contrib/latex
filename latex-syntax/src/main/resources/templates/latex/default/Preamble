@@ -1,5 +1,5 @@
 %% Language and font encodings
-\usepackage[$latex.language]{babel}
+\usepackage[$latex.tool.language]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 %% Used for strike through support
