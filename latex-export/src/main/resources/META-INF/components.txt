@@ -1,2 +1,3 @@
 org.xwiki.contrib.latex.internal.export.LaTeXExporter
 org.xwiki.contrib.latex.internal.export.LaTeXExportResourceReferenceHandler
+org.xwiki.contrib.latex.internal.export.LaTeXExportUIExtension

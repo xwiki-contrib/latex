@@ -60,14 +60,19 @@ import org.xwiki.resource.entity.EntityResourceReference;
  * @version $Id: 2e98f0b413b4ae324afc083bad5ff79cc810d83e $
  */
 @Component
-@Named("latexexport")
+@Named(LaTeXExportResourceReferenceHandler.ACTION_STRING)
 @Singleton
 public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferenceHandler<EntityResourceAction>
 {
     /**
+     * The LaTeX export Action as {@link String}.
+     */
+    public static final String ACTION_STRING = "latexexport";
+
+    /**
      * The LaTeX export Action.
      */
-    public static final EntityResourceAction ACTION = new EntityResourceAction("latexexport");
+    public static final EntityResourceAction ACTION = new EntityResourceAction(ACTION_STRING);
 
     @Inject
     private LaTeXExporter exporter;
