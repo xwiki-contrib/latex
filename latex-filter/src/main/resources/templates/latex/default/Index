@@ -1,7 +1,7 @@
 \documentclass{$latexDocumentType}
 \usepackage{standalone}
 
-$processor.render('default/Preamble')
+$processor.render('Preamble')
 
 \begin{document}
 
