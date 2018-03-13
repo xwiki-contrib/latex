@@ -19,6 +19,8 @@
  */
 package org.xwiki.contrib.latex.output;
 
+import java.util.Date;
+
 import org.xwiki.filter.DefaultFilterStreamProperties;
 import org.xwiki.filter.output.OutputTarget;
 import org.xwiki.model.reference.EntityReferenceSet;
@@ -26,8 +28,6 @@ import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyHidden;
 import org.xwiki.properties.annotation.PropertyMandatory;
 import org.xwiki.properties.annotation.PropertyName;
-
-import com.sun.star.bridge.oleautomation.Date;
 
 /**
  * LaTeX output properties.
