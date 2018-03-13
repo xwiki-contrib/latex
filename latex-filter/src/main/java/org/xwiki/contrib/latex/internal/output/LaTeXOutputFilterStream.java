@@ -21,12 +21,15 @@ package org.xwiki.contrib.latex.internal.output;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.script.ScriptContext;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -51,6 +54,7 @@ import org.xwiki.rendering.internal.parser.XDOMGeneratorListener;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
+import org.xwiki.script.ScriptContextManager;
 
 /**
  * @version $Id: 29443af498e773a330ccb0420285b030967f40c8 $
@@ -61,6 +65,18 @@ import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTeXOutputProperties>
     implements LaTeXOutputFilter
 {
+    private static final String LATEX_BINDING = "latex";
+
+    /**
+     * Script Context binding used to tell the Index template the list and location of pages that are being exported.
+     */
+    private static final String SC_INCLUDES_KEY = "includes";
+
+    /**
+     * Script Context binding used to pass templates the filter properties.
+     */
+    private static final String SC_PROPERTIES_KEY = "properties";
+
     @Inject
     private FilterDescriptorManager filterManager;
 
@@ -77,6 +93,15 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
     @Inject
     private IndexSerializer indexSerializer;
+
+    @Inject
+    private ScriptContextManager scriptContextManager;
+
+    private boolean contextInitialized;
+
+    private Object previousLatexBinding;
+
+    private int previousLatexScope;
 
     private WrappingListener contentListener = new WrappingListener();
 
@@ -108,15 +133,59 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
         return this.zipStream;
     }
 
+    /**
+     * Make sure the context contains the right information for the templates.
+     */
+    private void checkPushContext()
+    {
+        if (!this.contextInitialized) {
+            ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
+
+            // Remember current "latex" binding
+            this.previousLatexBinding = scriptContext.getAttribute(LATEX_BINDING);
+            this.previousLatexScope = scriptContext.getAttributesScope(LATEX_BINDING);
+
+            Map<String, Object> latex = new HashMap<>();
+
+            // Provider filter properties
+            latex.put(SC_PROPERTIES_KEY, this.properties);
+
+            // Provider includes
+            latex.put(SC_INCLUDES_KEY, this.includes);
+
+            scriptContext.setAttribute(LATEX_BINDING, latex, ScriptContext.ENGINE_SCOPE);
+
+            this.contextInitialized = true;
+        }
+    }
+
+    /**
+     * Restore to previous state of the context.
+     */
+    private void popContext()
+    {
+        if (this.contextInitialized) {
+            ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
+
+            if (this.previousLatexScope != -1) {
+                scriptContext.setAttribute(LATEX_BINDING, this.previousLatexBinding, this.previousLatexScope);
+            } else {
+                scriptContext.removeAttribute(LATEX_BINDING, ScriptContext.ENGINE_SCOPE);
+            }
+        }
+    }
+
     @Override
     public void close() throws IOException
     {
+        checkPushContext();
+
         ZipArchiveEntry entry = new ZipArchiveEntry("index.tex");
 
         try {
             this.zipStream.putArchiveEntry(entry);
 
-            indexSerializer.serialize(this.includes, this.zipStream);
+            this.indexSerializer.serialize(this.includes, this.zipStream);
         } finally {
             this.zipStream.closeArchiveEntry();
         }
@@ -124,6 +193,8 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
         this.zipStream.close();
 
         this.properties.getTarget().close();
+
+        popContext();
     }
 
     @Override
@@ -150,6 +221,8 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     private void end() throws IOException
     {
         if (this.xdomGenerator != null) {
+            checkPushContext();
+
             XDOM xdom = this.xdomGenerator.getXDOM();
             this.xdomGenerator = null;
 
