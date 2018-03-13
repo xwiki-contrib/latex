@@ -54,7 +54,7 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
 
     private boolean pageNumberEnabled = true;
 
-    private String documentclass = "article";
+    private String documentClass = "article";
 
     private boolean coverPageEnabled = true;
 
@@ -179,17 +179,17 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
      */
     @PropertyName("Document class")
     @PropertyDescription("The value to indicate in the LaTeX \\documentclass")
-    public String getDocumentclass()
+    public String getDocumentClass()
     {
-        return documentclass;
+        return documentClass;
     }
 
     /**
-     * @param documentclass the documentclass to set
+     * @param documentClass the documentclass to set
      */
-    public void setDocumentclass(String documentclass)
+    public void setDocumentClass(String documentClass)
     {
-        this.documentclass = documentclass;
+        this.documentClass = documentClass;
     }
 
     /**

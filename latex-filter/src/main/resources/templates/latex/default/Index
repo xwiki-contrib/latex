@@ -1,11 +1,11 @@
-\documentclass{$latexDocumentType}
+\documentclass{$latex.properties.documentClass}
 \usepackage{standalone}
 
 $latex.processor.render('Preamble')
 
 \begin{document}
 
-#foreach ($latexPageInclude in $latexPageIncludes)
+#foreach ($latexPageInclude in $latex.includes)
   \include{$latex.tool.escape($latexPageInclude)}
 #end
 

@@ -64,7 +64,7 @@ ${SP}${SP}\Gin@nat@width
 \makeatother
 
 %% Define heading command so that this can be overridden easily
-#if ("$!latexDocumentType" == 'book')
+#if ("$!latex.properties.documentClass" == 'book')
   #set ($isBook = true)
 #else
   #set ($isBook = false)

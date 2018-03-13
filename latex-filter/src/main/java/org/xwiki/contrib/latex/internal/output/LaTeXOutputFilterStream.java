@@ -70,12 +70,12 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     /**
      * Script Context binding used to tell the Index template the list and location of pages that are being exported.
      */
-    private static final String SC_INCLUDES_KEY = "includes";
+    private static final String LATEX_BINDING_INCLUDES = "includes";
 
     /**
      * Script Context binding used to pass templates the filter properties.
      */
-    private static final String SC_PROPERTIES_KEY = "properties";
+    private static final String LATEX_BINDING_PROPERTIES = "properties";
 
     @Inject
     private FilterDescriptorManager filterManager;
@@ -148,10 +148,10 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
             Map<String, Object> latex = new HashMap<>();
 
             // Provider filter properties
-            latex.put(SC_PROPERTIES_KEY, this.properties);
+            latex.put(LATEX_BINDING_PROPERTIES, this.properties);
 
             // Provider includes
-            latex.put(SC_INCLUDES_KEY, this.includes);
+            latex.put(LATEX_BINDING_INCLUDES, this.includes);
 
             scriptContext.setAttribute(LATEX_BINDING, latex, ScriptContext.ENGINE_SCOPE);
 
