@@ -118,7 +118,7 @@ public class DefaultTemplateRenderer implements TemplateRenderer
 
         ExecutionContext context = new ExecutionContext();
         this.executionContextManager.initialize(context);
-        this.execution.pushContext(this.execution.getContext());
+        this.execution.pushContext(context);
 
         ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
 
