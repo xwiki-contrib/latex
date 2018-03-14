@@ -22,7 +22,6 @@ package org.xwiki.contrib.latex.internal.output;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,11 +45,10 @@ public class IndexSerializer
     private TemplateRenderer templateRenderer;
 
     /**
-     * @param includes the references of the documents to include
      * @param stream the stream to write to
      * @throws IOException when failing to create the index file
      */
-    public void serialize(Set<String> includes, OutputStream stream) throws IOException
+    public void serialize(OutputStream stream) throws IOException
     {
         // Get and execute the index template
         WikiPrinter wikiprinter = new DefaultWikiPrinter();

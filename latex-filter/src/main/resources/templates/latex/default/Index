@@ -3,10 +3,70 @@
 
 $latex.processor.render('Preamble')
 
+## Needs to be put after the babel package
+#if ("$!latex.properties.date" != '' && $latex.properties.coverPage)
+  % Used to format the date for the cover page
+  \usepackage[useregional]{datetime2}
+
+#end
 \begin{document}
 
-#foreach ($latexPageInclude in $latex.includes)
-  \include{$latex.tool.escape($latexPageInclude)}
+#set ($shouldClearPage = false)
+## Display numbers in TOC and list of tables/figures using the roman style
+#if ($latex.properties.pageNumbering && $latex.properties.coverPage && $latex.properties.toc || $latex.properties.listOfFigures || $latex.properties.listOfTables)
+  \pagenumbering{Roman}
+#elseif (!$latex.properties.pageNumbering)
+  \pagenumbering{gobble}
+#end
+#if ($latex.properties.coverPage && "$!latex.properties.title" != '')
+  #if ("$!latex.properties.title" != '')
+    #if ("$!latex.properties.subtitle" != '')
+      \title{%
+        ${SP}${SP}$latex.properties.title\\
+        ${SP}${SP}\large ${latex.properties.subtitle}}
+    #else
+      \title{$latex.properties.title}
+    #end
+  #end
+  #if ("$!latex.properties.author" != '')
+    \author{$latex.properties.author}
+  #end
+  #if ("$!latex.properties.date" != '')
+    \date{\DTMdate{$datetool.format('yyyy-MM-dd', $latex.properties.date)}}
+  #end
+  \maketitle
+#end
+#if ($latex.properties.toc)
+  \setcounter{tocdepth}{3}
+  \tableofcontents
+  ## Make sure no page numbers are printed in the TOC
+  #if (!$latex.properties.pageNumbering)
+    \addtocontents{toc}{\protect\thispagestyle{empty}}
+  #end
+  #set ($shouldClearPage = true)
+#end
+#if ($latex.properties.listOfFigures)
+  \listoffigures
+  #set ($shouldClearPage = true)
+#end
+#if ($latex.properties.listOfTables)
+  \listoftables
+  #set ($shouldClearPage = true)
+#end
+#if ($shouldClearPage)
+  \clearpage
+#end
+## Reset page counter so that first page of the doc starts at 1
+#if ($latex.properties.pageNumbering && $latex.properties.coverPage && $latex.properties.toc || $latex.properties.listOfFigures || $latex.properties.listOfTables)
+  \setcounter{page}{0}
+  ## Display numbers on pages using the arabic style
+  \pagenumbering{arabic}
+#end
+#if ("$!latex.includes" != '')
+
+  #foreach ($latexPageInclude in $latex.includes)
+    \include{$latex.tool.escape($latexPageInclude)}
+  #end
 #end
 
 \end{document}

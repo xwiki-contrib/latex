@@ -185,7 +185,7 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
         try {
             this.zipStream.putArchiveEntry(entry);
 
-            this.indexSerializer.serialize(this.includes, this.zipStream);
+            this.indexSerializer.serialize(this.zipStream);
         } finally {
             this.zipStream.closeArchiveEntry();
         }

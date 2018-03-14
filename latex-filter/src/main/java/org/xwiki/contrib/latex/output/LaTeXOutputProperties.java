@@ -46,17 +46,17 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
      */
     private EntityReferenceSet entities;
 
-    private boolean tocEnabled = true;
+    private boolean toc = true;
 
-    private boolean figuresEnabled = true;
+    private boolean listOfFigures;
 
-    private boolean tablesEnabled = true;
+    private boolean listOfTables;
 
-    private boolean pageNumberEnabled = true;
+    private boolean pageNumbering = true;
 
     private String documentClass = "article";
 
-    private boolean coverPageEnabled = true;
+    private boolean coverPage = true;
 
     private String title;
 
@@ -64,10 +64,13 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
 
     private String author;
 
-    private Date date = new Date();
+    /**
+     * Date should be null if not defined to leave it to LaTeX to decide how to display it.
+     */
+    private Date date;
 
     /**
-     * @return The target where to save the content
+     * @return The path and name of the ZIP where to save the content
      */
     @PropertyName("Target")
     @PropertyDescription("The target where to save the content")
@@ -78,7 +81,7 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     }
 
     /**
-     * @param target The target where to save the content
+     * @param target see {@link #getTarget()}
      */
     public void setTarget(OutputTarget target)
     {
@@ -86,7 +89,7 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     }
 
     /**
-     * @return The entities to generate events from
+     * @return The list of documents to export
      */
     @PropertyHidden
     public EntityReferenceSet getEntities()
@@ -95,7 +98,7 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     }
 
     /**
-     * @param entities The entities to generate events from
+     * @param entities see {@link #getEntities()}
      */
     public void setEntities(EntityReferenceSet entities)
     {
@@ -105,87 +108,87 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     /**
      * @return the tocEnabled
      */
-    @PropertyName("Toc")
-    @PropertyDescription("Indicate if a toc should be generated")
-    public boolean isTocEnabled()
+    @PropertyName("TOC")
+    @PropertyDescription("Whether a Table of Contents should be generated or not")
+    public boolean isToc()
     {
-        return tocEnabled;
+        return this.toc;
     }
 
     /**
-     * @param tocEnabled the tocEnabled to set
+     * @param toc see {@link #isToc()}
      */
-    public void setTocEnabled(boolean tocEnabled)
+    public void setToc(boolean toc)
     {
-        this.tocEnabled = tocEnabled;
+        this.toc = toc;
     }
 
     /**
-     * @return the figuresEnabled
+     * @return true if a list of figures should be inserted or false otherwise
      */
     @PropertyName("Figures")
-    @PropertyDescription("Indicate if an index of the figures should be inserted")
-    public boolean isFiguresEnabled()
+    @PropertyDescription("Whether a list of figures should be inserted or not")
+    public boolean isListOfFigures()
     {
-        return figuresEnabled;
+        return this.listOfFigures;
     }
 
     /**
-     * @param figuresEnabled the figuresEnabled to set
+     * @param listOfFigures see {@link #isListOfFigures()}
      */
-    public void setFiguresEnabled(boolean figuresEnabled)
+    public void setListOfFigures(boolean listOfFigures)
     {
-        this.figuresEnabled = figuresEnabled;
+        this.listOfFigures = listOfFigures;
     }
 
     /**
-     * @return the tablesEnabled
+     * @return true if a list of tables should be inserted or false otherwise
      */
     @PropertyName("Tables")
-    @PropertyDescription("Indicate if an index of the tables should be inserted")
-    public boolean isTablesEnabled()
+    @PropertyDescription("Whether a list of tables should be inserted or not")
+    public boolean isListOfTables()
     {
-        return tablesEnabled;
+        return this.listOfTables;
     }
 
     /**
-     * @param tablesEnabled the tablesEnabled to set
+     * @param listOfTables see {@link #isListOfTables()}
      */
-    public void setTablesEnabled(boolean tablesEnabled)
+    public void setListOfTables(boolean listOfTables)
     {
-        this.tablesEnabled = tablesEnabled;
+        this.listOfTables = listOfTables;
     }
 
     /**
      * @return the pageNumberEnabled
      */
-    @PropertyName("Page number")
-    @PropertyDescription("Indicate if a number should be inserted for each page")
-    public boolean isPageNumberEnabled()
+    @PropertyName("Page numbering")
+    @PropertyDescription("Whether pages should be numbered or not")
+    public boolean isPageNumbering()
     {
-        return pageNumberEnabled;
+        return this.pageNumbering;
     }
 
     /**
-     * @param pageNumberEnabled the pageNumberEnabled to set
+     * @param pageNumbering see {@link #isPageNumbering()}
      */
-    public void setPageNumberEnabled(boolean pageNumberEnabled)
+    public void setPageNumbering(boolean pageNumbering)
     {
-        this.pageNumberEnabled = pageNumberEnabled;
+        this.pageNumbering = pageNumbering;
     }
 
     /**
      * @return the documentclass
      */
-    @PropertyName("Document class")
-    @PropertyDescription("The value to indicate in the LaTeX \\documentclass")
+    @PropertyName("Document Class")
+    @PropertyDescription("The type of document to produce ('article', 'book', etc)")
     public String getDocumentClass()
     {
-        return documentClass;
+        return this.documentClass;
     }
 
     /**
-     * @param documentClass the documentclass to set
+     * @param documentClass see {@link #getDocumentClass()}
      */
     public void setDocumentClass(String documentClass)
     {
@@ -193,35 +196,35 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     }
 
     /**
-     * @return the coverPageEnabled
+     * @return true if there shoud be a page cover generated or false otherwise
      */
-    @PropertyName("Page cover")
-    @PropertyDescription("Indicate of a page cover should be exported")
-    public boolean isCoverPageEnabled()
+    @PropertyName("Cover Page")
+    @PropertyDescription("Whether a cover page (title, author, date, etc) should be generated or not")
+    public boolean isCoverPage()
     {
-        return coverPageEnabled;
+        return this.coverPage;
     }
 
     /**
-     * @param coverPageEnabled the coverPageEnabled to set
+     * @param coverPage see {@link #isCoverPage()} ()}
      */
-    public void setCoverPageEnabled(boolean coverPageEnabled)
+    public void setCoverPage(boolean coverPage)
     {
-        this.coverPageEnabled = coverPageEnabled;
+        this.coverPage = coverPage;
     }
 
     /**
-     * @return the title
+     * @return the title of the exported document or set of documents
      */
     @PropertyName("Title")
-    @PropertyDescription("The title to display in the index")
+    @PropertyDescription("The title of the exported document or set of documents")
     public String getTitle()
     {
-        return title;
+        return this.title;
     }
 
     /**
-     * @param title the title to set
+     * @param title see {@link #getTitle()}
      */
     public void setTitle(String title)
     {
@@ -229,17 +232,17 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     }
 
     /**
-     * @return the subtitle
+     * @return the subtitle of the exported document or set of documents
      */
     @PropertyName("Subtitle")
-    @PropertyDescription("The subtitle to dispay in the index")
+    @PropertyDescription("The subtitle of the exported document or set of documents")
     public String getSubtitle()
     {
-        return subtitle;
+        return this.subtitle;
     }
 
     /**
-     * @param subtitle the subtitle to set
+     * @param subtitle see {@link #getSubtitle()}
      */
     public void setSubtitle(String subtitle)
     {
@@ -247,17 +250,17 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     }
 
     /**
-     * @return the author
+     * @return the author of the exported document or set of documents
      */
     @PropertyName("Author")
-    @PropertyDescription("The author document")
+    @PropertyDescription("The author of the exported document or set of documents")
     public String getAuthor()
     {
-        return author;
+        return this.author;
     }
 
     /**
-     * @param author the author to set
+     * @param author see {@link #getAuthor()}
      */
     public void setAuthor(String author)
     {
@@ -268,14 +271,14 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
      * @return the date
      */
     @PropertyName("Date")
-    @PropertyDescription("The date of the document")
+    @PropertyDescription("The date of the exported")
     public Date getDate()
     {
-        return date;
+        return this.date;
     }
 
     /**
-     * @param date the date to set
+     * @param date see {@link #getDate()}
      */
     public void setDate(Date date)
     {

@@ -42,6 +42,7 @@ import org.xwiki.text.StringUtils;
 import org.xwiki.velocity.introspection.DeprecatedCheckUberspector;
 import org.xwiki.velocity.introspection.MethodArgumentsUberspector;
 import org.xwiki.velocity.introspection.SecureUberspector;
+import org.xwiki.velocity.tools.ComparisonDateTool;
 import org.xwiki.velocity.tools.EscapeTool;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -100,6 +101,7 @@ public class MockSetup
         vcontext.put("stringtool", new StringUtils());
         vcontext.put("mathtool", new MathTool());
         vcontext.put("numbertool", new NumberTool());
+        vcontext.put("datetool", new ComparisonDateTool());
 
         // Bridge the Script Context bindings into the Velocity Context
         ScriptContextManager scriptContextManager = componentManager.registerMockComponent(ScriptContextManager.class);
