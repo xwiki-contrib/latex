@@ -126,8 +126,8 @@ public class DefaultTemplateRenderer implements TemplateRenderer
         // this code is called directly without going through the LaTeX exporter for example).
         if (latexBinding == null) {
             latexBinding = new HashMap<>();
-            scriptContext.setAttribute(SC_LATEX, latexBinding, ScriptContext.ENGINE_SCOPE);
         }
+        scriptContext.setAttribute(SC_LATEX, latexBinding, ScriptContext.ENGINE_SCOPE);
 
         TemplateProcessor processor = new TemplateProcessor(this.templateManager, latexBinding, writer, this.filter);
         latexBinding.put("processor", processor);
