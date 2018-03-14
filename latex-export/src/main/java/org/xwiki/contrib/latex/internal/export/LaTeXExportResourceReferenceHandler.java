@@ -20,7 +20,9 @@
 package org.xwiki.contrib.latex.internal.export;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 /*
@@ -46,13 +48,19 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.container.Container;
+import org.xwiki.container.Request;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.resource.AbstractResourceReferenceHandler;
 import org.xwiki.resource.ResourceReference;
 import org.xwiki.resource.ResourceReferenceHandlerChain;
 import org.xwiki.resource.ResourceReferenceHandlerException;
+import org.xwiki.resource.annotations.Authenticate;
 import org.xwiki.resource.entity.EntityResourceAction;
 import org.xwiki.resource.entity.EntityResourceReference;
+import org.xwiki.security.authorization.AccessDeniedException;
+import org.xwiki.security.authorization.ContextualAuthorizationManager;
+import org.xwiki.security.authorization.Right;
 
 /**
  * Entry point to export a document as a LaTeX package.
@@ -62,6 +70,7 @@ import org.xwiki.resource.entity.EntityResourceReference;
 @Component
 @Named(LaTeXExportResourceReferenceHandler.ACTION_STRING)
 @Singleton
+@Authenticate
 public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferenceHandler<EntityResourceAction>
 {
     /**
@@ -77,6 +86,15 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
     @Inject
     private LaTeXExporter exporter;
 
+    @Inject
+    private ContextualAuthorizationManager authorization;
+
+    @Inject
+    private LaTeXTemplate template;
+
+    @Inject
+    private Container container;
+
     @Override
     public List<EntityResourceAction> getSupportedResourceReferences()
     {
@@ -87,13 +105,33 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
     public void handle(ResourceReference reference, ResourceReferenceHandlerChain chain)
         throws ResourceReferenceHandlerException
     {
-        EntityResourceReference documentReference = (EntityResourceReference) reference;
-
+        // Make sure the current user is allowed to export the document
         try {
-            this.exporter.export(new DocumentReference(documentReference.getEntityReference()));
-        } catch (Exception e) {
-            throw new ResourceReferenceHandlerException(
-                "Failed to export document [" + documentReference + "] in LaTeX", e);
+            this.authorization.checkAccess(Right.VIEW);
+        } catch (AccessDeniedException e) {
+            throw new ResourceReferenceHandlerException("Not allowed to export this document", e);
+        }
+
+        Request request = this.container.getRequest();
+
+        EntityResourceReference documentResourceReference = (EntityResourceReference) reference;
+        DocumentReference documentReference = new DocumentReference(documentResourceReference.getEntityReference());
+
+        if (request.getProperty("confirm") != null) {
+            // Export the document
+            try {
+                this.exporter.export(documentReference);
+            } catch (Exception e) {
+                throw new ResourceReferenceHandlerException(
+                    "Failed to export document [" + documentReference + "] in LaTeX", e);
+            }
+        } else {
+            // Display the export option
+            try {
+                this.template.render(documentReference);
+            } catch (Exception e) {
+                throw new ResourceReferenceHandlerException("Failed to render export properties UI", e);
+            }
         }
     }
 

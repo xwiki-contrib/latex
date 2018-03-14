@@ -19,7 +19,11 @@
  */
 package org.xwiki.contrib.latex.internal.export;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,13 +33,11 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.internal.output.LaTeXOutputFilter;
 import org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStreamFactory;
-import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.display.internal.DocumentDisplayer;
 import org.xwiki.display.internal.DocumentDisplayerParameters;
 import org.xwiki.filter.FilterEventParameters;
-import org.xwiki.filter.output.BeanOutputFilterStream;
-import org.xwiki.filter.output.BeanOutputFilterStreamFactory;
 import org.xwiki.filter.output.DefaultOutputStreamOutputTarget;
+import org.xwiki.filter.output.OutputFilterStream;
 import org.xwiki.filter.output.OutputFilterStreamFactory;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.SpaceReference;
@@ -45,6 +47,7 @@ import org.xwiki.rendering.syntax.Syntax;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
+import com.xpn.xwiki.web.XWikiRequest;
 import com.xpn.xwiki.web.XWikiResponse;
 
 /**
@@ -56,6 +59,12 @@ import com.xpn.xwiki.web.XWikiResponse;
 @Singleton
 public class LaTeXExporter
 {
+    private static final String FILTERPROPERTY_PREFIX = "property_";
+
+    private static final String DATE_PROPERTY = "date";
+
+    private static final DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     @Inject
     private DocumentDisplayer documentDisplayer;
 
@@ -93,22 +102,34 @@ public class LaTeXExporter
 
         XDOM xdom = this.documentDisplayer.display(document, displayParameters);
 
-        LaTeXOutputProperties latexproperties = new LaTeXOutputProperties();
+        XWikiRequest request = xcontext.getRequest();
 
         XWikiResponse response = xcontext.getResponse();
 
         response.setContentType("application/zip");
         response.setHeader("Content-Disposition", "attachment; filename=" + name + ".zip");
 
-        latexproperties.setTarget(new DefaultOutputStreamOutputTarget(response.getOutputStream(), true));
-
-        BeanOutputFilterStream<LaTeXOutputProperties> streamFilter =
-            ((BeanOutputFilterStreamFactory<LaTeXOutputProperties>) this.factory)
-                .createOutputFilterStream(latexproperties);
-        LaTeXOutputFilter filter = (LaTeXOutputFilter) streamFilter.getFilter();
+        // Get properties from request
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("target", new DefaultOutputStreamOutputTarget(response.getOutputStream(), true));
+        for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+            if (entry.getKey().startsWith(FILTERPROPERTY_PREFIX) && entry.getValue() != null
+                && entry.getValue().length > 0) {
+                String propertyName = entry.getKey().substring(FILTERPROPERTY_PREFIX.length());
+                if (propertyName.equals(DATE_PROPERTY)) {
+                    properties.put(DATE_PROPERTY, DATEFORMAT.parse(entry.getValue()[0]));
+                } else if (entry.getValue().length == 1) {
+                    properties.put(propertyName, entry.getValue()[0]);
+                } else {
+                    properties.put(propertyName, entry.getValue());
+                }
+            }
+        }
 
         // Export
-        try {
+        try (OutputFilterStream streamFilter = this.factory.createOutputFilterStream(properties)) {
+            LaTeXOutputFilter filter = (LaTeXOutputFilter) streamFilter.getFilter();
+
             List<SpaceReference> spaces = documentReference.getSpaceReferences();
 
             for (SpaceReference spaceElement : spaces) {
@@ -120,9 +141,6 @@ public class LaTeXExporter
             for (SpaceReference spaceElement : spaces) {
                 filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
             }
-        } finally {
-            // Close
-            streamFilter.close();
         }
     }
 }

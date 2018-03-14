@@ -1,0 +1,54 @@
+#if(!$services.security.authorization.hasAccess("view"))
+  #template("accessdenied.vm")
+#elseif($doc.isNew())
+  $response.setStatus(404)
+  #template("startpage.vm")
+  <div class="main layoutsubsection">
+  <div id="mainContentArea">
+    #error($services.localization.render('core.rename.nonexistingDocument'))
+  </div>## mainContentArea
+  </div>## main
+  #template("endpage.vm")
+#else
+  #macro(displayProperty $property $defaultValues)
+    #set($propertyId = "property_${property.id}")
+    <dt>
+      <label for="$propertyId">$property.name</label>
+      <span class="xHint">$property.description</span>
+      <span class="xHint"><tt>$property.type.getName()</tt></span>
+    </dt>
+    <dd>
+      #set ($defaultValue = $defaultValues.get($property.id))
+      #if ($property.type.getName() == 'boolean')
+        <input type="checkbox" id="$propertyId" name="$propertyId" value="true"#if($request.get($propertyId) == 'true' || $property.defaultValue == true || $defaultValue == true) checked#end/>
+      #elseif ($property.type.getName() == 'java.util.Date')
+        <input type="text" id="$propertyId" name="$propertyId" value="#if($request.get($propertyId))$escapetool.xml($request.get($propertyId))#elseif($defaultValue)$defaultValue#elseif($property.defaultValue)$datetool.format('yyyy-MM-dd', $property.defaultValue)#end"/>
+      #else
+        <input type="text" id="$propertyId" name="$propertyId" value="#if($request.get($propertyId))$escapetool.xml($request.get($propertyId))#elseif($defaultValue)$escapetool.xml($defaultValue)#elseif($property.defaultValue)$escapetool.xml($property.defaultValue)#end"/>
+      #end
+    </dd>
+  #end
+  #template("startpage.vm")
+  <div class="main layoutsubsection">
+  <div id="mainContentArea">
+    <div id="document-title"><h1>$services.localization.render('latex.export.options.title')</h1></div>
+    <form id="latexExportOptions" class="xform half" action="#">
+      <dl>
+        #set($defaultValues = {})
+        #set($void = $defaultValues.put('author', $xwiki.getUserName($xcontext.user, false)))
+        #set($descriptor = $services.filter.getOutputFilterStreamDescriptor('latex'))
+        #foreach($property in $descriptor.properties)
+          #if ($property.id != 'target' && $property.id != 'verbose')
+            #displayProperty($property, $defaultValues)
+          #end
+        #end
+      </dl>
+      <div class="buttons">
+        <span class="buttonwrapper"><input type="submit" name="confirm" value="$services.localization.render('export')" class="button" /></span>
+      </div>
+    </form>
+    <div class="clearfloats"></div>
+  </div>## mainContentArea
+  </div>## main
+  #template("endpage.vm")
+#end

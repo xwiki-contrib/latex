@@ -271,7 +271,7 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
      * @return the date
      */
     @PropertyName("Date")
-    @PropertyDescription("The date of the exported")
+    @PropertyDescription("The date of the exported (yyyy-MM-dd)")
     public Date getDate()
     {
         return this.date;
