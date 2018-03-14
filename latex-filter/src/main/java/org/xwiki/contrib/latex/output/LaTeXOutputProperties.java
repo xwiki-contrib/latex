@@ -109,7 +109,7 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
      * @return the tocEnabled
      */
     @PropertyName("TOC")
-    @PropertyDescription("Whether a Table of Contents should be generated or not")
+    @PropertyDescription("Whether a Table of Contents should be inserted or not")
     public boolean isToc()
     {
         return this.toc;
@@ -271,7 +271,7 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
      * @return the date
      */
     @PropertyName("Date")
-    @PropertyDescription("The date of the exported (yyyy-MM-dd)")
+    @PropertyDescription("The date of the exported document or set of documents (yyyy-MM-dd). You can leave empty for today.")
     public Date getDate()
     {
         return this.date;
