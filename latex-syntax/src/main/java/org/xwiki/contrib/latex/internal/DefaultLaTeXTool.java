@@ -33,7 +33,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.FigureBlock;
-import org.xwiki.rendering.marcro.figure.FigureTypeRecognizer;
+import org.xwiki.rendering.macro.figure.FigureTypeRecognizer;
 import org.xwiki.script.ScriptContextManager;
 
 /**
