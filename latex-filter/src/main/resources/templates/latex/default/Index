@@ -32,7 +32,7 @@ $latex.processor.render('Preamble')
     \author{$latex.tool.escape($latex.properties.author)}
   #end
   #if ("$!latex.properties.date" != '')
-    \date{\DTMdate{$datetool.format('yyyy-MM-dd', $latex.tool.escape($latex.properties.date)}}
+    \date{\DTMdate{$latex.tool.escape($datetool.format('yyyy-MM-dd', $latex.properties.date))}}
   #end
   \maketitle
 #end
