@@ -19,20 +19,16 @@
  */
 package org.xwiki.contrib.latex.internal.export;
 
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.reference.DocumentReference;
-import org.xwiki.template.TemplateManager;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
-import com.xpn.xwiki.web.XWikiResponse;
+import com.xpn.xwiki.web.Utils;
 
 /**
  * Export a document in LaTeX.
@@ -47,9 +43,6 @@ public class LaTeXTemplate
     @Inject
     private Provider<XWikiContext> xcontextProvider;
 
-    @Inject
-    private TemplateManager templates;
-
     public void render(DocumentReference currentDocument) throws Exception
     {
         XWikiContext xcontext = this.xcontextProvider.get();
@@ -57,12 +50,6 @@ public class LaTeXTemplate
         XWikiDocument xdocument = xcontext.getWiki().getDocument(currentDocument, xcontext);
         xcontext.setDoc(xdocument);
 
-        XWikiResponse response = xcontext.getResponse();
-
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-
-        try (Writer writer = response.getWriter()) {
-            this.templates.render("latex/export.vm", writer);
-        }
+        Utils.parseTemplate("latex/export", xcontext);
     }
 }

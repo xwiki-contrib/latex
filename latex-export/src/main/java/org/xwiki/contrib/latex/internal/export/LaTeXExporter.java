@@ -20,6 +20,7 @@
 package org.xwiki.contrib.latex.internal.export;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +64,7 @@ public class LaTeXExporter
 
     private static final String DATE_PROPERTY = "date";
 
-    private static final DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Inject
     private DocumentDisplayer documentDisplayer;
@@ -92,6 +93,7 @@ public class LaTeXExporter
 
         // Get document
         XWikiDocument document = xcontext.getWiki().getDocument(documentReference, xcontext);
+        xcontext.setDoc(document);
 
         // Display document
         DocumentDisplayerParameters displayParameters = new DocumentDisplayerParameters();
@@ -106,9 +108,6 @@ public class LaTeXExporter
 
         XWikiResponse response = xcontext.getResponse();
 
-        response.setContentType("application/zip");
-        response.setHeader("Content-Disposition", "attachment; filename=" + name + ".zip");
-
         // Get properties from request
         Map<String, Object> properties = new HashMap<>();
         properties.put("target", new DefaultOutputStreamOutputTarget(response.getOutputStream(), true));
@@ -117,7 +116,14 @@ public class LaTeXExporter
                 && entry.getValue().length > 0) {
                 String propertyName = entry.getKey().substring(FILTERPROPERTY_PREFIX.length());
                 if (propertyName.equals(DATE_PROPERTY)) {
-                    properties.put(DATE_PROPERTY, DATEFORMAT.parse(entry.getValue()[0]));
+                    String dateString = entry.getValue()[0];
+                    if (!dateString.isEmpty()) {
+                        try {
+                            properties.put(DATE_PROPERTY, this.dateformat.parse(dateString));
+                        } catch (ParseException e) {
+                            // TODO: Should report something but not very nice to pollute the system log with that
+                        }
+                    }
                 } else if (entry.getValue().length == 1) {
                     properties.put(propertyName, entry.getValue()[0]);
                 } else {
@@ -125,6 +131,9 @@ public class LaTeXExporter
                 }
             }
         }
+
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=" + name + ".zip");
 
         // Export
         try (OutputFilterStream streamFilter = this.factory.createOutputFilterStream(properties)) {
