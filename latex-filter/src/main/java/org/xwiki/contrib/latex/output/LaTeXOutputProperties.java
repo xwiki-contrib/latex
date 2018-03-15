@@ -271,7 +271,8 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
      * @return the date
      */
     @PropertyName("Date")
-    @PropertyDescription("The date of the exported document or set of documents (yyyy-MM-dd). You can leave empty for today.")
+    @PropertyDescription(
+        "The date of the exported document or set of documents (yyyy-MM-dd). If empty, no specific date is set")
     public Date getDate()
     {
         return this.date;

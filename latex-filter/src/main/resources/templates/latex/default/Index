@@ -22,17 +22,17 @@ $latex.processor.render('Preamble')
   #if ("$!latex.properties.title" != '')
     #if ("$!latex.properties.subtitle" != '')
       \title{%
-        ${SP}${SP}$latex.properties.title\\
+        ${SP}${SP}$latex.tool.escape($latex.properties.title)\\
         ${SP}${SP}\large ${latex.properties.subtitle}}
     #else
-      \title{$latex.properties.title}
+      \title{$latex.tool.escape($latex.properties.title)}
     #end
   #end
   #if ("$!latex.properties.author" != '')
-    \author{$latex.properties.author}
+    \author{$latex.tool.escape($latex.properties.author)}
   #end
   #if ("$!latex.properties.date" != '')
-    \date{\DTMdate{$datetool.format('yyyy-MM-dd', $latex.properties.date)}}
+    \date{\DTMdate{$datetool.format('yyyy-MM-dd', $latex.tool.escape($latex.properties.date)}}
   #end
   \maketitle
 #end
