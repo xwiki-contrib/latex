@@ -44,7 +44,7 @@ import static org.junit.Assert.assertEquals;
  * @version $Id$
  */
 @AllComponents
-public class IndexGenerationTest
+public class IndexSerializerTest
 {
     @Rule
     public MockitoComponentManagerRule componentManager = new MockitoComponentManagerRule();
