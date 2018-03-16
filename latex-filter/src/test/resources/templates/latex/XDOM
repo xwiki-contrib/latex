@@ -1,5 +1,5 @@
 ## Test that we can access $latex.doc
-Title: $latex.doc.title
+Title: $doc.title
 
 #set ($template = $latex.processor.getTemplate('default/XDOM'))
 $latex.processor.render($template)

@@ -130,11 +130,11 @@ public class MockSetup
         }).when(scriptContext).getAttribute(any(String.class));
 
         // Simulate a "doc" in the Script Context to verify that the index template can have access to the
-        // $latex.doc binding.
+        // $doc binding.
         XWikiDocument contextDoc = new XWikiDocument(
             new DocumentReference("contextwiki", "contextspace", "contextdoc"));
         contextDoc.setTitle("Some title");
-        when(scriptContext.getAttribute("doc")).thenReturn(contextDoc);
+        scriptContext.setAttribute("doc", contextDoc, ScriptContext.ENGINE_SCOPE);
 
         doAnswer(new Answer<Object>()
         {

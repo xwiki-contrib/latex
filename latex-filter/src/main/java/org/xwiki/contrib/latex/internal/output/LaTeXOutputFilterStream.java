@@ -78,16 +78,6 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
      */
     private static final String LATEX_BINDING_PROPERTIES = "properties";
 
-    /**
-     * Object put in the {@code latex} binding and representing the current document (of type {@code Document} class)
-     */
-    private static final String LATEX_BINDING_DOC = "doc";
-
-    /**
-     * Binding in the Script Context under which to find the current document.
-     */
-    private static final String SC_BINDING_DOC = LATEX_BINDING_DOC;
-
     @Inject
     private FilterDescriptorManager filterManager;
 
@@ -233,14 +223,6 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     {
         if (this.xdomGenerator != null) {
             checkPushContext();
-
-            // Provide current document in the latex binding in the Script Context so that it's available to templates
-            ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
-            Map<String, Object> latex = (Map<String, Object>) scriptContext.getAttribute(LATEX_BINDING);
-            Object currentDoc = scriptContext.getAttribute(SC_BINDING_DOC);
-            if (latex != null && currentDoc != null) {
-                latex.put(LATEX_BINDING_DOC, currentDoc);
-            }
 
             XDOM xdom = this.xdomGenerator.getXDOM();
             this.xdomGenerator = null;
