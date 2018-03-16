@@ -64,8 +64,8 @@ public class IndexSerializerTest
         properties.setAuthor("Author");
 
         String expected = "\\pagenumbering{Roman}\n"
-            + "\\title{Title}\n"
-            + "\\author{Author}\n"
+            + "\\xwikititle{Title}\n"
+            + "\\xwikiauthor{Author}\n"
             + "\\maketitle\n"
             + "\\setcounter{tocdepth}{3}\n"
             + "\\tableofcontents\n"
@@ -109,7 +109,7 @@ public class IndexSerializerTest
         properties.setSubtitle("Subtitle");
 
         String expected = "\\pagenumbering{Roman}\n"
-            + "\\title{%\n"
+            + "\\xwikititle{%\n"
             + "  Title\\\\\n"
             + "  \\large Subtitle}\n"
             + "\\maketitle\n"
@@ -147,10 +147,7 @@ public class IndexSerializerTest
         LaTeXOutputProperties properties = new LaTeXOutputProperties();
         properties.setDocumentClass("book");
 
-        String expected = "\\documentclass{book}\n"
-            + "\\usepackage{standalone}\n"
-            + "\n"
-            + "********** Preamble **********\n"
+        String expected = getPreamble("book")
             + "\n"
             + "\\begin{document}\n"
             + "\n"
@@ -174,10 +171,7 @@ public class IndexSerializerTest
         properties.setAuthor("Author");
         properties.setDate(new DateTime(2018, 3, 14, 0, 0).toDate());
 
-        String expected = "\\documentclass{article}\n"
-            + "\\usepackage{standalone}\n"
-            + "\n"
-            + "********** Preamble **********\n"
+        String expected = getPreamble("article")
             + "\n"
             + "% Used to format the date for the cover page\n"
             + "\\usepackage[useregional]{datetime2}\n"
@@ -185,9 +179,9 @@ public class IndexSerializerTest
             + "\\begin{document}\n"
             + "\n"
             + "\\pagenumbering{Roman}\n"
-            + "\\title{Title}\n"
-            + "\\author{Author}\n"
-            + "\\date{\\DTMdate{2018-03-14}}\n"
+            + "\\xwikititle{Title}\n"
+            + "\\xwikiauthor{Author}\n"
+            + "\\xwikidate{2018-03-14}\n"
             + "\\maketitle\n"
             + "\\setcounter{tocdepth}{3}\n"
             + "\\tableofcontents\n"
@@ -202,10 +196,7 @@ public class IndexSerializerTest
 
     private void assertIndex(LaTeXOutputProperties properties, String expected) throws Exception
     {
-        String normalizedExpected = "\\documentclass{article}\n"
-            + "\\usepackage{standalone}\n"
-            + "\n"
-            + "********** Preamble **********\n"
+        String normalizedExpected = getPreamble("article")
             + "\n"
             + "\\begin{document}\n"
             + "\n"
@@ -214,6 +205,21 @@ public class IndexSerializerTest
             + "\\end{document}\n";
 
         assertFullIndex(properties, normalizedExpected);
+    }
+
+    private String getPreamble(String documentclass)
+    {
+        return "\\documentclass{" + documentclass + "}\n"
+            + "\\usepackage{standalone}\n"
+            + "\n"
+            + "\\newcommand{\\xwikidate}[1]{\n"
+            + "  \\date{\\DTMdate{#1}}}\n"
+            + "\\newcommand{\\xwikititle}[1]{\n"
+            + "  \\title{#1}}\n"
+            + "\\newcommand{\\xwikiauthor}[1]{\n"
+            + "  \\author{#1}}\n"
+            + "\n"
+            + "********** Preamble **********\n";
     }
 
     private void assertFullIndex(LaTeXOutputProperties properties, String expected) throws Exception

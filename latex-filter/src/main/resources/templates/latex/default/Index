@@ -1,6 +1,14 @@
 \documentclass{$latex.properties.documentClass}
 \usepackage{standalone}
 
+## Commands that can be overridden by users in a custom Preamble
+\newcommand{\xwikidate}[1]{
+  ${SP}${SP}\date{\DTMdate{#1}}}
+\newcommand{\xwikititle}[1]{
+  ${SP}${SP}\title{#1}}
+\newcommand{\xwikiauthor}[1]{
+  ${SP}${SP}\author{#1}}
+
 $latex.processor.render('Preamble')
 
 ## Needs to be put after the babel package
@@ -21,18 +29,18 @@ $latex.processor.render('Preamble')
 #if ($latex.properties.coverPage && "$!latex.properties.title" != '')
   #if ("$!latex.properties.title" != '')
     #if ("$!latex.properties.subtitle" != '')
-      \title{%
+      \xwikititle{%
         ${SP}${SP}$latex.tool.escape($latex.properties.title)\\
         ${SP}${SP}\large ${latex.properties.subtitle}}
     #else
-      \title{$latex.tool.escape($latex.properties.title)}
+      \xwikititle{$latex.tool.escape($latex.properties.title)}
     #end
   #end
   #if ("$!latex.properties.author" != '')
-    \author{$latex.tool.escape($latex.properties.author)}
+    \xwikiauthor{$latex.tool.escape($latex.properties.author)}
   #end
   #if ("$!latex.properties.date" != '')
-    \date{\DTMdate{$latex.tool.escape($datetool.format('yyyy-MM-dd', $latex.properties.date))}}
+    \xwikidate{$latex.tool.escape($datetool.format('yyyy-MM-dd', $latex.properties.date))}
   #end
   \maketitle
 #end
