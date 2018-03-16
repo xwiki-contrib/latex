@@ -33,6 +33,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.localization.LocalizationContext;
+import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.Template;
 import org.xwiki.template.TemplateContent;
@@ -44,6 +45,8 @@ import org.xwiki.velocity.introspection.MethodArgumentsUberspector;
 import org.xwiki.velocity.introspection.SecureUberspector;
 import org.xwiki.velocity.tools.ComparisonDateTool;
 import org.xwiki.velocity.tools.EscapeTool;
+
+import com.xpn.xwiki.doc.XWikiDocument;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -125,6 +128,13 @@ public class MockSetup
                 return vcontext.get(key);
             }
         }).when(scriptContext).getAttribute(any(String.class));
+
+        // Simulate a "doc" in the Script Context to verify that the index template can have access to the
+        // $latex.doc binding.
+        XWikiDocument contextDoc = new XWikiDocument(
+            new DocumentReference("contextwiki", "contextspace", "contextdoc"));
+        contextDoc.setTitle("Some title");
+        when(scriptContext.getAttribute("doc")).thenReturn(contextDoc);
 
         doAnswer(new Answer<Object>()
         {

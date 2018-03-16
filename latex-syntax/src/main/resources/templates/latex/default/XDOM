@@ -1,4 +1,8 @@
-\documentclass{article}
+#if ("$!latex.properties.documentClass" != '')
+  \documentclass{$latex.properties.documentClass}
+#else
+  \documentclass{article}
+#end
 
 $latex.processor.render('Preamble')
 

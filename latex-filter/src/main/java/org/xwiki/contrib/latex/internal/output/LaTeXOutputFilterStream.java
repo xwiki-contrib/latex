@@ -68,14 +68,25 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     private static final String LATEX_BINDING = "latex";
 
     /**
-     * Script Context binding used to tell the Index template the list and location of pages that are being exported.
+     * Object put in the {@code latex} binding and used to tell the Index template the list and location of pages
+     * that are being exported.
      */
     private static final String LATEX_BINDING_INCLUDES = "includes";
 
     /**
-     * Script Context binding used to pass templates the filter properties.
+     * Object put in the {@code latex} binding and used to pass templates the filter properties.
      */
     private static final String LATEX_BINDING_PROPERTIES = "properties";
+
+    /**
+     * Object put in the {@code latex} binding and representing the current document (of type {@code Document} class)
+     */
+    private static final String LATEX_BINDING_DOC = "doc";
+
+    /**
+     * Binding in the Script Context under which to find the current document.
+     */
+    private static final String SC_BINDING_DOC = LATEX_BINDING_DOC;
 
     @Inject
     private FilterDescriptorManager filterManager;
@@ -147,10 +158,10 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
             Map<String, Object> latex = new HashMap<>();
 
-            // Provider filter properties
+            // Provide filter properties
             latex.put(LATEX_BINDING_PROPERTIES, this.properties);
 
-            // Provider includes
+            // Provide list of documents
             latex.put(LATEX_BINDING_INCLUDES, this.includes);
 
             scriptContext.setAttribute(LATEX_BINDING, latex, ScriptContext.ENGINE_SCOPE);
@@ -222,6 +233,14 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     {
         if (this.xdomGenerator != null) {
             checkPushContext();
+
+            // Provide current document in the latex binding in the Script Context so that it's available to templates
+            ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
+            Map<String, Object> latex = (Map<String, Object>) scriptContext.getAttribute(LATEX_BINDING);
+            Object currentDoc = scriptContext.getAttribute(SC_BINDING_DOC);
+            if (latex != null && currentDoc != null) {
+                latex.put(LATEX_BINDING_DOC, currentDoc);
+            }
 
             XDOM xdom = this.xdomGenerator.getXDOM();
             this.xdomGenerator = null;

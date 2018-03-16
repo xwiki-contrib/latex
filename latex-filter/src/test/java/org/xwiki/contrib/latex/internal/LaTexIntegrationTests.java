@@ -24,6 +24,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.Date;
 
+import javax.script.ScriptContext;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

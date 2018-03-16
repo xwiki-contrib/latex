@@ -1,27 +1,11 @@
-********** latex result for the following events **********
-beginDocument
-beginParagraph
-onWord [word]
-beginLink [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/space/document/attachment.txt]] [false]
-onWord [attachmentlabel]
-endLink [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/space/document/attachment.txt]] [false]
-beginLink [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/otherspace/otherdocument/otherattachment.txt]] [false]
-onWord [otherattachmentlabel]
-endLink [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/otherspace/otherdocument/otherattachment.txt]] [false]
-beginLink [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/space/document/attachment.txt]] [false]
-onWord [currentattachmentlabel]
-endLink [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/space/document/attachment.txt]] [false]
-onImage [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/space/document/image.png]] [false]
-onImage [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/otherspace/otherdocument/otherimage.png]] [false]
-onImage [Typed = [true] Type = [path] Reference = [files/attachments/xwiki/space/document/image.png]] [false]
-beginLink [Typed = [true] Type = [url] Reference = [http://test/bin/view/OtherSpace/OtherDocument]] [false]
-onWord [otherdocumentlink]
-endLink [Typed = [true] Type = [url] Reference = [http://test/bin/view/OtherSpace/OtherDocument]] [false]
-beginLink [Typed = [true] Type = [doc] Reference = []] [false]
-onWord [emptylink]
-endLink [Typed = [true] Type = [doc] Reference = []] [false]
-beginLink [Typed = [true] Type = [doc] Reference = []] [false]
-onWord [currentdocument]
-endLink [Typed = [true] Type = [doc] Reference = []] [false]
-endParagraph
-endDocument
+Title: Some title
+
+\documentclass{article}
+
+********** Preamble **********
+
+\begin{document}
+
+word\textattachfile{files/attachments/xwiki/space/document/attachment.txt}{attachmentlabel}\textattachfile{files/attachments/xwiki/otherspace/otherdocument/otherattachment.txt}{otherattachmentlabel}\textattachfile{files/attachments/xwiki/space/document/attachment.txt}{currentattachmentlabel}\includegraphics{files/attachments/xwiki/space/document/image.png}\includegraphics{files/attachments/xwiki/otherspace/otherdocument/otherimage.png}\includegraphics{files/attachments/xwiki/space/document/image.png}\href{http://test/bin/view/OtherSpace/OtherDocument}{otherdocumentlink}emptylinkcurrentdocument
+
+\end{document}
