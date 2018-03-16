@@ -15,7 +15,6 @@
     <dt>
       <label for="$propertyId">$property.name</label>
       <span class="xHint">$property.description</span>
-      ##<span class="xHint"><tt>$property.type.getName()</tt></span>
     </dt>
     <dd>
       #set ($defaultValue = $defaultValues.get($property.id))
@@ -35,14 +34,18 @@
     <form id="latexExportOptions" class="xform half" action="#">
       <dl>
         #set($defaultValues = {})
-        #set($void = $defaultValues.put('author', $xwiki.getUserName($xcontext.user, false)))
-        #set($void = $defaultValues.put('date', $datetool.format('yyyy-MM-dd', $datetool.date)))
-        #set($void = $defaultValues.put('title', $doc.getRenderedTitle('plain/1.0')))
+        #set($discard = $defaultValues.put('author', $xwiki.getUserName($xcontext.user, false)))
+        #set($discard = $defaultValues.put('date', $datetool.format('yyyy-MM-dd', $datetool.date)))
+        #set($discard = $defaultValues.put('title', $doc.getRenderedTitle('plain/1.0')))
         #set($descriptor = $services.filter.getOutputFilterStreamDescriptor('latex'))
+        #set ($propertiesOrder = ['documentClass', 'coverPage', 'title', 'subtitle', 'author', 'date', 'toc', 'pageNumbering', 'listOfFigures', 'listOfTables'])
+        #set ($propertiesMap = {})
         #foreach($property in $descriptor.properties)
-          #if ($property.id != 'target' && $property.id != 'verbose')
-            #displayProperty($property, $defaultValues)
-          #end
+          #set ($discard = $propertiesMap.put($property.id, $property))
+        #end
+        #foreach($id in $propertiesOrder)
+          #set ($property = $propertiesMap.get($id))
+          #displayProperty($property, $defaultValues)
         #end
       </dl>
       <div class="buttons">
