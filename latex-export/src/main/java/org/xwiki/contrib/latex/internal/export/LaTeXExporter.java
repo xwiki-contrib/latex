@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.latex.internal.export;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,11 +105,35 @@ public class LaTeXExporter
 
         XDOM xdom = this.documentDisplayer.display(document, displayParameters);
 
-        XWikiRequest request = xcontext.getRequest();
-
         XWikiResponse response = xcontext.getResponse();
 
-        // Get properties from request
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=" + name + ".zip");
+
+        Map<String, Object> properties = createProperties(xcontext, response);
+
+        // Export
+        try (OutputFilterStream streamFilter = this.factory.createOutputFilterStream(properties)) {
+            LaTeXOutputFilter filter = (LaTeXOutputFilter) streamFilter.getFilter();
+
+            List<SpaceReference> spaces = documentReference.getSpaceReferences();
+
+            for (SpaceReference spaceElement : spaces) {
+                filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
+            }
+            filter.beginWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
+            xdom.traverse((Listener) filter);
+            filter.endWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
+            for (SpaceReference spaceElement : spaces) {
+                filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
+            }
+        }
+    }
+
+    private Map<String, Object> createProperties(XWikiContext xcontext, XWikiResponse response) throws IOException
+    {
+        XWikiRequest request = xcontext.getRequest();
+
         Map<String, Object> properties = new HashMap<>();
         properties.put("target", new DefaultOutputStreamOutputTarget(response.getOutputStream(), true));
         for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
@@ -132,24 +157,6 @@ public class LaTeXExporter
             }
         }
 
-        response.setContentType("application/zip");
-        response.setHeader("Content-Disposition", "attachment; filename=" + name + ".zip");
-
-        // Export
-        try (OutputFilterStream streamFilter = this.factory.createOutputFilterStream(properties)) {
-            LaTeXOutputFilter filter = (LaTeXOutputFilter) streamFilter.getFilter();
-
-            List<SpaceReference> spaces = documentReference.getSpaceReferences();
-
-            for (SpaceReference spaceElement : spaces) {
-                filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
-            }
-            filter.beginWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
-            xdom.traverse((Listener) filter);
-            filter.endWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
-            for (SpaceReference spaceElement : spaces) {
-                filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
-            }
-        }
+        return properties;
     }
 }

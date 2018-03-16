@@ -43,6 +43,10 @@ public class LaTeXTemplate
     @Inject
     private Provider<XWikiContext> xcontextProvider;
 
+    /**
+     * @param currentDocument the current document being exported
+     * @throws Exception when failing to render the UI
+     */
     public void render(DocumentReference currentDocument) throws Exception
     {
         XWikiContext xcontext = this.xcontextProvider.get();
