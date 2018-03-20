@@ -51,6 +51,15 @@
       <div class="buttons">
         <span class="buttonwrapper"><input type="submit" name="confirm" value="$services.localization.render('export')" class="button" /></span>
       </div>
+      ## We preserve the original request parameters but we put them at the end so that they don't overwrite the
+      ## parameters from the LaTeX export form.
+      <div class="hidden">
+        #foreach ($entry in $request.parameterMap.entrySet())
+          #foreach($value in $entry.value)
+            <input type="hidden" name="$escapetool.xml($entry.key)" value="$escapetool.xml($value)" />
+          #end
+        #end
+      </div>
     </form>
     <div class="clearfloats"></div>
   </div>## mainContentArea
