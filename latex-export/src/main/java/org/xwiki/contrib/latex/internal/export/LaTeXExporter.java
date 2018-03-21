@@ -45,7 +45,9 @@ import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.output.DefaultOutputStreamOutputTarget;
 import org.xwiki.filter.output.OutputFilterStream;
 import org.xwiki.filter.output.OutputFilterStreamFactory;
+import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.model.reference.EntityReferenceProvider;
 import org.xwiki.model.reference.SpaceReference;
 import org.xwiki.properties.BeanDescriptor;
 import org.xwiki.properties.BeanManager;
@@ -70,7 +72,7 @@ public class LaTeXExporter
 {
     private static final String FILTERPROPERTY_PREFIX = "property_";
 
-    private final DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     @Inject
     private DocumentDisplayer documentDisplayer;
@@ -85,6 +87,9 @@ public class LaTeXExporter
     @Inject
     private BeanManager beans;
 
+    @Inject
+    private EntityReferenceProvider entityReferenceProvider;
+
     /**
      * Export passed document.
      * 
@@ -94,11 +99,6 @@ public class LaTeXExporter
     public void export(DocumentReference documentReference) throws Exception
     {
         XWikiContext xcontext = this.xcontextProvider.get();
-
-        String name = documentReference.getName();
-        if (name.equals("WebHome")) {
-            name = documentReference.getName();
-        }
 
         // Get document
         XWikiDocument document = xcontext.getWiki().getDocument(documentReference, xcontext);
@@ -114,6 +114,8 @@ public class LaTeXExporter
         XDOM xdom = this.documentDisplayer.display(document, displayParameters);
 
         XWikiResponse response = xcontext.getResponse();
+
+        String name = computeExportFileName(documentReference);
 
         response.setContentType("application/zip");
         response.setHeader("Content-Disposition", "attachment; filename=" + name + ".zip");
@@ -136,6 +138,17 @@ public class LaTeXExporter
                 filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
             }
         }
+    }
+
+    private String computeExportFileName(DocumentReference documentReference)
+    {
+        String name = documentReference.getName();
+        if (this.entityReferenceProvider.getDefaultReference(EntityType.DOCUMENT).getName().equals(name)
+            && documentReference.getParent() != null)
+        {
+            name = documentReference.getParent().getName();
+        }
+        return name;
     }
 
     private boolean isIterable(PropertyDescriptor propertyDescriptor)
@@ -173,7 +186,7 @@ public class LaTeXExporter
             if (TypeUtils.isAssignable(propertyDescriptor.getPropertyType(), Date.class)) {
                 String dateString = value[0];
                 if (!dateString.isEmpty()) {
-                    properties.put(parameterKey, this.dateformat.parse(dateString));
+                    properties.put(parameterKey, DATE_FORMAT.parse(dateString));
                 }
             } else if (isIterable(propertyDescriptor)) {
                 properties.put(parameterKey, value);
