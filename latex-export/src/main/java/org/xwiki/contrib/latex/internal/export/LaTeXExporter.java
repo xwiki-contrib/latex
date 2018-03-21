@@ -20,9 +20,11 @@
 package org.xwiki.contrib.latex.internal.export;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +34,11 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.internal.output.LaTeXOutputFilter;
 import org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStreamFactory;
+import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.display.internal.DocumentDisplayer;
 import org.xwiki.display.internal.DocumentDisplayerParameters;
 import org.xwiki.filter.FilterEventParameters;
@@ -43,6 +47,9 @@ import org.xwiki.filter.output.OutputFilterStream;
 import org.xwiki.filter.output.OutputFilterStreamFactory;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.SpaceReference;
+import org.xwiki.properties.BeanDescriptor;
+import org.xwiki.properties.BeanManager;
+import org.xwiki.properties.PropertyDescriptor;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.syntax.Syntax;
@@ -63,8 +70,6 @@ public class LaTeXExporter
 {
     private static final String FILTERPROPERTY_PREFIX = "property_";
 
-    private static final String DATE_PROPERTY = "date";
-
     private final DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Inject
@@ -76,6 +81,9 @@ public class LaTeXExporter
     @Inject
     @Named(LaTeXOutputFilterStreamFactory.ROLEHINT)
     private OutputFilterStreamFactory factory;
+
+    @Inject
+    private BeanManager beans;
 
     /**
      * Export passed document.
@@ -130,33 +138,60 @@ public class LaTeXExporter
         }
     }
 
-    private Map<String, Object> createProperties(XWikiContext xcontext, XWikiResponse response) throws IOException
+    private boolean isIterable(PropertyDescriptor propertyDescriptor)
     {
-        XWikiRequest request = xcontext.getRequest();
+        Type type = propertyDescriptor.getPropertyType();
 
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("target", new DefaultOutputStreamOutputTarget(response.getOutputStream(), true));
+        if (TypeUtils.isArrayType(type)) {
+            return true;
+        }
+
+        return TypeUtils.isAssignable(type, Iterable.class);
+    }
+
+    private Map<String, Object> extractParameters(XWikiRequest request, Map<String, Object> properties)
+        throws ParseException
+    {
+        BeanDescriptor descriptor = this.beans.getBeanDescriptor(LaTeXOutputProperties.class);
+
         for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
             if (entry.getKey().startsWith(FILTERPROPERTY_PREFIX) && entry.getValue() != null
                 && entry.getValue().length > 0) {
-                String propertyName = entry.getKey().substring(FILTERPROPERTY_PREFIX.length());
-                if (propertyName.equals(DATE_PROPERTY)) {
-                    String dateString = entry.getValue()[0];
-                    if (!dateString.isEmpty()) {
-                        try {
-                            properties.put(DATE_PROPERTY, this.dateformat.parse(dateString));
-                        } catch (ParseException e) {
-                            // TODO: Should report something but not very nice to pollute the system log with that
-                        }
-                    }
-                } else if (entry.getValue().length == 1) {
-                    properties.put(propertyName, entry.getValue()[0]);
-                } else {
-                    properties.put(propertyName, entry.getValue());
-                }
+                String parameterKey = entry.getKey().substring(FILTERPROPERTY_PREFIX.length());
+                addValue(descriptor, parameterKey, properties, entry.getValue());
             }
         }
 
         return properties;
+    }
+
+    private void addValue(BeanDescriptor descriptor, String parameterKey, Map<String, Object> properties,
+        String[] value) throws ParseException
+    {
+        PropertyDescriptor propertyDescriptor = descriptor.getProperty(parameterKey);
+        if (propertyDescriptor != null) {
+            if (TypeUtils.isAssignable(propertyDescriptor.getPropertyType(), Date.class)) {
+                String dateString = value[0];
+                if (!dateString.isEmpty()) {
+                    properties.put(parameterKey, this.dateformat.parse(dateString));
+                }
+            } else if (isIterable(propertyDescriptor)) {
+                properties.put(parameterKey, value);
+            } else {
+                properties.put(parameterKey, value[0]);
+            }
+        }
+    }
+
+    private Map<String, Object> createProperties(XWikiContext xcontext, XWikiResponse response)
+        throws IOException, ParseException
+    {
+        XWikiRequest request = xcontext.getRequest();
+
+        Map<String, Object> properties = new HashMap<>();
+
+        properties.put("target", new DefaultOutputStreamOutputTarget(response.getOutputStream(), true));
+
+        return extractParameters(request, properties);
     }
 }

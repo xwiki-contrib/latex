@@ -20,6 +20,8 @@
       #set ($defaultValue = $defaultValues.get($property.id))
       #if ($property.type.getName() == 'boolean')
         <input type="checkbox" id="$propertyId" name="$propertyId" value="true"#if($request.get($propertyId) == 'true' || $property.defaultValue == true || $defaultValue == true) checked#end/>
+        <!-- If first one is not set then false will get the priority -->
+        <input type="hidden" id="$propertyId" name="$propertyId" value="false"/>
       #elseif ($property.type.getName() == 'java.util.Date')
         <input type="text" id="$propertyId" name="$propertyId" value="#if($request.get($propertyId))$escapetool.xml($request.get($propertyId))#elseif($defaultValue)$defaultValue#elseif($property.defaultValue)$datetool.format('yyyy-MM-dd', $property.defaultValue)#end"/>
       #else
