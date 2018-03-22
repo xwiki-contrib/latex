@@ -58,6 +58,7 @@ import com.xpn.xwiki.web.XWikiResponse;
 public class LaTeXExporter
 {
     @Inject
+    @Named("configured")
     private DocumentDisplayer documentDisplayer;
 
     @Inject
