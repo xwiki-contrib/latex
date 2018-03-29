@@ -1,5 +1,7 @@
 #if ($latex.block.getSymbol() == '#')
   \\$escapetool.getHash()##
+#elseif ($latex.block.getSymbol() == '&')
+  \&##
 #elseif ($latex.block.getSymbol() == '$')
   \\$escapetool.getDollar()##
 #elseif ($latex.block.getSymbol() == '%')
