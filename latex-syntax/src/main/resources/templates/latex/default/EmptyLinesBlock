@@ -1,2 +1,2 @@
 
-\\[${latex.block.getEmptyLinesCount()}ex]
+\vspace{${latex.block.getEmptyLinesCount()}\baselineskip}

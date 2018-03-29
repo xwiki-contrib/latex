@@ -3,10 +3,10 @@ ${{{regex:.*\\begin\{document\}}}}
 paragraph1
 
 paragraph2
-\\[1ex]
+\vspace{1\baselineskip}
 
 paragraph3
-\\[2ex]
+\vspace{2\baselineskip}
 
 paragraph4
 
