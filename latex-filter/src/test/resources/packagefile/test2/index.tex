@@ -1,0 +1,24 @@
+\documentclass{article}
+\usepackage{standalone}
+
+\newcommand{\xwikidate}[1]{
+  \date{\DTMdate{#1}}}
+\newcommand{\xwikititle}[1]{
+  \title{#1}}
+\newcommand{\xwikiauthor}[1]{
+  \author{#1}}
+
+********** Preamble **********
+
+\begin{document}
+
+\pagenumbering{Roman}
+\setcounter{tocdepth}{3}
+\tableofcontents
+\clearpage
+\setcounter{page}{0}
+\pagenumbering{arabic}
+
+\include{pages/space/document}
+
+\end{document}

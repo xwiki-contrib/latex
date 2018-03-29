@@ -56,7 +56,7 @@ import com.xpn.xwiki.web.XWikiServletURLFactory;
  */
 @RunWith(FilterTestSuite.class)
 @AllComponents
-@Scope(value = "latex"/* , pattern = "test1.test" */)
+@Scope(value = "latex" , pattern = "test2.test")
 public class LaTexIntegrationTests
 {
     @BeforeClass
@@ -94,7 +94,14 @@ public class LaTexIntegrationTests
         document.setAttachment("image.png", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
 
+        XWikiDocument document2 =
+            new XWikiDocument(new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "space2", "document2"));
+
+        document2.setAttachment("attachment.txt", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+            this.oldcore.getXWikiContext());
+
         this.oldcore.getSpyXWiki().saveDocument(document, this.oldcore.getXWikiContext());
+        this.oldcore.getSpyXWiki().saveDocument(document2, this.oldcore.getXWikiContext());
 
         XWikiDocument otherdocument = new XWikiDocument(
             new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "otherspace", "otherdocument"));

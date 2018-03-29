@@ -22,9 +22,9 @@ package org.xwiki.contrib.latex.internal.output;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,6 +50,7 @@ import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.model.reference.EntityReferenceSerializer;
+import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -77,6 +78,10 @@ public class ConverterListener extends WrappingListener
     private DocumentReferenceResolver<EntityReference> currentDocumentResolver;
 
     @Inject
+    @Named("current")
+    private DocumentReferenceResolver<String> currentStringDocumentResolver;
+
+    @Inject
     @Named("fspath")
     private EntityReferenceSerializer<String> fsPathSerializer;
 
@@ -88,7 +93,7 @@ public class ConverterListener extends WrappingListener
 
     private Set<String> stored = new HashSet<>();
 
-    private Deque<ResourceReference> currentReference = new LinkedList<>();
+    private Deque<ResourceReference> currentReference = new ArrayDeque<>();
 
     private LaTeXOutputProperties properties;
 
@@ -97,6 +102,8 @@ public class ConverterListener extends WrappingListener
     private EntityReference baseEntityReference;
 
     private DocumentReference currentDocumentReference;
+
+    private Deque<String> baseResourceMetadataQueue = new ArrayDeque<>();
 
     /**
      * @param properties the filter properties
@@ -145,7 +152,7 @@ public class ConverterListener extends WrappingListener
         builder.append("files/attachments/");
         // Convert reference
         AttachmentReference attachmentReference =
-            (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, this.baseEntityReference);
+            (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, getBaseReference());
         builder.append(this.fsPathSerializer.serialize(attachmentReference));
 
         String path = builder.toString();
@@ -219,7 +226,7 @@ public class ConverterListener extends WrappingListener
 
         if (StringUtils.isNotEmpty(reference.getReference())) {
             DocumentReference documentReference =
-                (DocumentReference) this.resolver.resolve(reference, EntityType.DOCUMENT);
+                (DocumentReference) this.resolver.resolve(reference, EntityType.DOCUMENT, getBaseReference());
 
             if (isCurrentDocument(documentReference)) {
                 convertedReference = new DocumentResourceReference("");
@@ -278,6 +285,46 @@ public class ConverterListener extends WrappingListener
         } finally {
             this.zipStream.closeArchiveEntry();
         }
+    }
+
+    @Override
+    public void beginMetaData(MetaData metadata)
+    {
+        // Stack the BASE reference since we need it to resolve references
+        String baseReference = getBaseReference(metadata);
+        if (baseReference != null) {
+            this.baseResourceMetadataQueue.push(baseReference);
+        }
+    }
+
+    @Override
+    public void endMetaData(MetaData metadata)
+    {
+        String baseReference = getBaseReference(metadata);
+        if (baseReference != null) {
+            this.baseResourceMetadataQueue.pop();
+        }
+    }
+
+    private String getBaseReference(MetaData metadata)
+    {
+        String result = null;
+        Map<String, Object> metaData = metadata.getMetaData();
+        if (metaData != null) {
+            result = (String) metaData.get(MetaData.BASE);
+        }
+        return result;
+    }
+
+    private EntityReference getBaseReference()
+    {
+        EntityReference reference;
+        if (!this.baseResourceMetadataQueue.isEmpty()) {
+            reference = this.currentStringDocumentResolver.resolve((String) this.baseResourceMetadataQueue.peek());
+        } else {
+            reference = this.baseEntityReference;
+        }
+        return reference;
     }
 
     @Override

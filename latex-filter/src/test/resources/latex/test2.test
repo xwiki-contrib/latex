@@ -1,0 +1,30 @@
+.#------------------------------------------------------------------------------
+.input|filter+xml
+.# Verify that we honor MetaData blocks with a BASE reference specified.
+.# Example of real use case: when using the {{context}} macro.
+.#------------------------------------------------------------------------------
+<wikiSpace name="space">
+  <wikiDocument name="document">
+    <document metadata="">
+      <metaData>
+        <p>
+          <metadata>
+            <metadata>
+              <entry>
+                <string>base</string>
+                <string>space2.document2</string>
+              </entry>
+            </metadata>
+          </metadata>
+        </p>
+        <paragraph>
+          <link reference="attach:attachment.txt"><word>attachmentlabel</word></link>
+        </paragraph>
+     </metaData>
+    </document>
+  </wikiDocument>
+</wikiSpace>
+.#------------------------------------------------------------------------------
+.expect|latex
+.configuration.source=${{{extension.repository}}}/test2-1.0.zip
+.#------------------------------------------------------------------------------

@@ -31,12 +31,12 @@
   <name>LaTeX - Filter</name>
   <description>LaTeX Output Filter</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.71</xwiki.jacoco.instructionRatio>
-
+    <xwiki.jacoco.instructionRatio>0.70</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX Output Filter</xwiki.extension.name>
     <!-- List it as a module containing a filter -->
     <xwiki.extension.category>filter</xwiki.extension.category>
+    <checkstyle.suppressions.location>${basedir}/src/checkstyle/checkstyle-suppressions.xml</checkstyle.suppressions.location>
   </properties>
   <dependencies>
     <dependency>
@@ -54,7 +54,6 @@
       <artifactId>xwiki-platform-oldcore</artifactId>
       <version>${platform.version}</version>
     </dependency>
-
     <!-- Test Dependencies -->
     <dependency>
         <groupId>org.xwiki.commons</groupId>
@@ -88,24 +87,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <executions>
-          <execution>
-            <!-- Specify the "default" execution id so that the "blocker" one is always executed -->
-            <id>default</id>
-            <configuration>
-              <excludes>
-                org/xwiki/contrib/latex/internal/output/LaTeXOutputFilterStream.java
-              </excludes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
