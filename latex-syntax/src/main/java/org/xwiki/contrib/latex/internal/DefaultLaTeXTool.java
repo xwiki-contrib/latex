@@ -33,6 +33,9 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.FigureBlock;
+import org.xwiki.rendering.block.MacroMarkerBlock;
+import org.xwiki.rendering.block.TableCellBlock;
+import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.macro.figure.FigureTypeRecognizer;
 import org.xwiki.script.ScriptContextManager;
 
@@ -102,5 +105,23 @@ public class DefaultLaTeXTool implements LaTeXTool
     public boolean isTable(FigureBlock figureBlock)
     {
         return this.figureTypeRecognizer.isTable(figureBlock);
+    }
+
+    @Override
+    public boolean isTableCell(Block block)
+    {
+        return (block instanceof TableCellBlock) || (block instanceof TableHeadCellBlock);
+    }
+
+    @Override
+    public Block getParentBlock(Block current)
+    {
+        Block cursor = current;
+        while ((cursor = cursor.getParent()) != null) {
+            if (!(cursor instanceof MacroMarkerBlock)) {
+                return cursor;
+            }
+        }
+        return null;
     }
 }

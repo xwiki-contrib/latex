@@ -68,4 +68,16 @@ public interface LaTeXTool
      * @return the stack
      */
     Stack<?> getStack(String id);
+
+    /**
+     * @param block the block to check
+     * @return true if the block is a table cell block (head cell or normal cell)
+     */
+    boolean isTableCell(Block block);
+
+    /**
+     * @param current the current block for which to find the parent
+     * @return the parent of the passed block, ignoring MacroMarkerBlocks
+     */
+    Block getParentBlock(Block current);
 }

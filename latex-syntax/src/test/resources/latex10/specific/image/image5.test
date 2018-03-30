@@ -1,0 +1,15 @@
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Images with reserved chars in reference
+.#-----------------------------------------------------
+[[image:hello&world]]
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{center}
+\includegraphics{hello\&world}
+\end{center}
+
+\end{document}

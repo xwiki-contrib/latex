@@ -153,7 +153,12 @@ public class ConverterListener extends WrappingListener
         // Convert reference
         AttachmentReference attachmentReference =
             (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, getBaseReference());
-        builder.append(this.fsPathSerializer.serialize(attachmentReference));
+
+        // Remove the % characters since those paths will be used with the \includegraphics[width=0.9\linewidth]{<path>}
+        // command and this doesn't seem to support escapes. The file will be looked for with the escapes...
+        String normalizedPath = this.fsPathSerializer.serialize(attachmentReference);
+        normalizedPath = StringUtils.remove(normalizedPath, '%');
+        builder.append(normalizedPath);
 
         String path = builder.toString();
 

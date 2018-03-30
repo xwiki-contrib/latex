@@ -1,9 +1,10 @@
 #set ($type = $latex.block.reference.type.scheme)
 #if ($type == 'path' || $type == 'attach')
-  ## Only center if the image is the only block in the parent since it only makes sense in this case.
-  ## Only use a floating image if the image is the only block in the parent since it only makes sense in this case.
+  ## Only center if the image is the only block in the parent since it doesn't make sense if the image is inline
+  ## (in a paragraph with other blocks for example).
+  ## However this is also only supported if not in a table cell. Otherwise it would need a group.
   #set ($isImageStandalone = false)
-  #if ($latex.block.parent.children.size() == 1)
+  #if ($latex.block.parent.children.size() == 1 && !$latex.tool.isTableCell($latex.tool.getParentBlock($latex.block)))
     #set ($isImageStandalone = true)
   #end
   #if ($isImageStandalone)
@@ -34,9 +35,9 @@
     #end
   #end
   #if ($imageDimensions.isEmpty())
-    \includegraphics{${latex.block.reference.reference}}##
+    \includegraphics{$latex.tool.escape($latex.block.reference.reference)}##
   #else
-    \includegraphics[$stringtool.join($imageDimensions, ',')]{${latex.block.reference.reference}}##
+    \includegraphics[$stringtool.join($imageDimensions, ',')]{$latex.tool.escape($latex.block.reference.reference)}##
   #end
   #if ($isImageStandalone)
 

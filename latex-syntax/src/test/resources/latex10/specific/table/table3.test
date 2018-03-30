@@ -1,0 +1,31 @@
+.runTransformations:macro
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Image in a table cell. Also test a macro generating
+.# an image (since that inserts a MacroMarkerBlock).
+.#-----------------------------------------------------
+|image:whatever
+
+|{{imagetest/}}
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{center}
+\begin{tabular}{|l|}
+\hline
+\includegraphics{whatever}\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|l|}
+\hline
+\includegraphics{whatever}\\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}

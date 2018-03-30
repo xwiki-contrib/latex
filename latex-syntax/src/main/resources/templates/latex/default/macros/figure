@@ -1,7 +1,7 @@
 #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
 
 
-## If there content only has a single TableBlock then use the table environment, otherwise use the figure environment
+## If the content only has a single TableBlock then use the table environment, otherwise use the figure environment
 #if ($latex.tool.isTable($latex.block.children.get(0)))
 \begin{table}[h]
 $latex.processor.process($latex.block.getChildren())
