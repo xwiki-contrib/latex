@@ -65,7 +65,7 @@ public class ModifiableTemplateContent implements TemplateContent
         }
 
         // If we're in Velocity, remove all leading spaces and New lines to make the templates more readable.
-        if (getSourceSyntax() == null) {
+        if (getSourceSyntax() == null && this.filter != null) {
             rawContent = this.filter.before(rawContent, this.velocityContext);
         }
 
