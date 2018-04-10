@@ -32,6 +32,7 @@
   <version>1.7-SNAPSHOT</version>
   <name>LaTeX - Parent POM</name>
   <description>Parent POM for LaTeX modules</description>
+  <url>http://extensions.xwiki.org/xwiki/bin/view/Extension/LaTeX/</url>
   <packaging>pom</packaging>
   <properties>
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
