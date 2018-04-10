@@ -30,9 +30,9 @@ import javax.inject.Singleton;
 
 import org.xwiki.bridge.DocumentAccessBridge;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.LinkBlock;
-import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.uiextension.UIExtension;
@@ -55,6 +55,9 @@ public class LaTeXExportUIExtension implements UIExtension
 
     @Inject
     private DocumentAccessBridge bridge;
+
+    @Inject
+    private ContextualLocalizationManager localizationManager;
 
     @Override
     public String getId()
@@ -84,6 +87,7 @@ public class LaTeXExportUIExtension implements UIExtension
         Map<String, String> linkParameters = new HashMap<>();
         linkParameters.put("class", "btn btn-primary");
 
-        return new LinkBlock(Arrays.asList(new WordBlock("LaTeX")), linkReference, false, linkParameters);
+        Block buttonLabelBlocks = this.localizationManager.getTranslation("latex.export.button.label").render();
+        return new LinkBlock(Arrays.asList(buttonLabelBlocks), linkReference, false, linkParameters);
     }
 }
