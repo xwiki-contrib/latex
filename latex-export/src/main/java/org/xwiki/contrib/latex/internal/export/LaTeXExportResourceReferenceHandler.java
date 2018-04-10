@@ -121,14 +121,14 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
                 this.exporter.export(documentReference);
             } catch (Exception e) {
                 throw new ResourceReferenceHandlerException(
-                    "Failed to export document [" + documentReference + "] in LaTeX", e);
+                    String.format("Failed to export document [%s] to LaTeX", documentReference), e);
             }
         } else {
             // Display the export option
             try {
                 this.template.render(documentReference);
             } catch (Exception e) {
-                throw new ResourceReferenceHandlerException("Failed to render export properties UI", e);
+                throw new ResourceReferenceHandlerException("Failed to render the LaTeX export properties UI", e);
             }
         }
     }
