@@ -56,7 +56,7 @@ import com.xpn.xwiki.web.XWikiServletURLFactory;
  */
 @RunWith(FilterTestSuite.class)
 @AllComponents
-@Scope(value = "latex" , pattern = "test2.test")
+@Scope(value = "latex")
 public class LaTexIntegrationTests
 {
     @BeforeClass

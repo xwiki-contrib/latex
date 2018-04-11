@@ -73,7 +73,8 @@ $latex.processor.render('Preamble')
 #if ("$!latex.includes" != '')
 
   #foreach ($latexPageInclude in $latex.includes)
-    \include{$latex.tool.escape($latexPageInclude)}
+    ## Don't escape the page since LaTeX doesn't support escapes in paths and the path has already been cleaned.
+    \include{$latexPageInclude}
   #end
 #end
 

@@ -85,8 +85,8 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     private ConverterListener converterListener;
 
     @Inject
-    @Named("fspath")
-    private EntityReferenceSerializer<String> fsPathSerializer;
+    @Named("latexpath")
+    private EntityReferenceSerializer<String> latexPathSerializer;
 
     @Inject
     @Named(LaTeXBlockRenderer.ROLEHINT)
@@ -232,7 +232,7 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
             String latexContent = printer.toString();
 
-            String path = "pages/" + this.fsPathSerializer.serialize(this.currentReference);
+            String path = "pages/" + this.latexPathSerializer.serialize(this.currentReference);
 
             ZipArchiveEntry entry = new ZipArchiveEntry(path + ".tex");
 

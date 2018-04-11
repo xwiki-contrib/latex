@@ -82,8 +82,8 @@ public class ConverterListener extends WrappingListener
     private DocumentReferenceResolver<String> currentStringDocumentResolver;
 
     @Inject
-    @Named("fspath")
-    private EntityReferenceSerializer<String> fsPathSerializer;
+    @Named("latexpath")
+    private EntityReferenceSerializer<String> latexPathSerializer;
 
     @Inject
     private DocumentAccessBridge bridge;
@@ -154,10 +154,7 @@ public class ConverterListener extends WrappingListener
         AttachmentReference attachmentReference =
             (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, getBaseReference());
 
-        // Remove the % characters since those paths will be used with the \includegraphics[width=0.9\linewidth]{<path>}
-        // command and this doesn't seem to support escapes. The file will be looked for with the escapes...
-        String normalizedPath = this.fsPathSerializer.serialize(attachmentReference);
-        normalizedPath = StringUtils.remove(normalizedPath, '%');
+        String normalizedPath = this.latexPathSerializer.serialize(attachmentReference);
         builder.append(normalizedPath);
 
         String path = builder.toString();

@@ -2,3 +2,4 @@ org.xwiki.contrib.latex.internal.output.ConverterListener
 org.xwiki.contrib.latex.internal.output.IndexSerializer
 org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStream
 org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStreamFactory
+org.xwiki.contrib.latex.internal.output.LaTeXPathEntityReferenceSerializer
