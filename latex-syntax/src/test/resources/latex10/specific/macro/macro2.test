@@ -11,6 +11,8 @@ public class HelloWorld
 	}
 }
 {{/code}}
+
+Hello {{code language="java"}}world{{/code}}
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
@@ -24,5 +26,7 @@ public class HelloWorld
 	}
 }
 \end{minted}
+
+Hello \mintinline{java}{world}
 
 \end{document}
