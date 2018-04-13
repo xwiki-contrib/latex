@@ -80,4 +80,11 @@ public interface LaTeXTool
      * @return the parent of the passed block, ignoring MacroMarkerBlocks
      */
     Block getParentBlock(Block current);
+
+    /**
+     * @param block the block for which we want to check previous siblings
+     * @return return true if previous siblings only contain Id macros
+     * @since 1.7
+     */
+    boolean previousSiblingsContainsOnlyIdMacros(Block block);
 }

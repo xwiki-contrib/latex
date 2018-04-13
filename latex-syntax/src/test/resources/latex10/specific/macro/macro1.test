@@ -1,11 +1,19 @@
 .runTransformations:macro
-.#-----------------------------------------------------
+.#--------------------------------------------------------
 .input|xwiki/2.1
 .# id Macro.
-.#-----------------------------------------------------
+.# Also verify the special handling when id macro is used
+.# without any content before and a new line.
+.#--------------------------------------------------------
 {{id name="anchor"/}}
 
 Hello{{id name="world"/}}
+
+{{id name="anchor"/}}
+{{id name="anchor"/}}
+
+something {{id name="anchor"/}}
+{{id name="anchor"/}}
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
@@ -14,5 +22,11 @@ ${{{regex:.*\\begin\{document\}}}}
 \label{anchor}
 
 Hello\label{world}
+
+\label{anchor}
+\label{anchor}
+
+something \label{anchor}\\*
+\label{anchor}
 
 \end{document}

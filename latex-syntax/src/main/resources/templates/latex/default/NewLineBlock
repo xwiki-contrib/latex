@@ -1,1 +1,7 @@
+## Special case: If the previous sibling blocks contain only IdBlock then LaTeX doesn't consider that as content
+## and fails if a new line is added.
+#if (!$latex.tool.previousSiblingsContainsOnlyIdMacros($latex.block))
 \\*
+#else
+
+#end

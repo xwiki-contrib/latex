@@ -33,6 +33,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.FigureBlock;
+import org.xwiki.rendering.block.IdBlock;
 import org.xwiki.rendering.block.MacroMarkerBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
@@ -123,5 +124,23 @@ public class DefaultLaTeXTool implements LaTeXTool
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean previousSiblingsContainsOnlyIdMacros(Block block)
+    {
+        boolean result = true;
+        Block cursor = block.getPreviousSibling();
+        while (cursor != null) {
+            if (cursor instanceof MacroMarkerBlock && cursor.getChildren().size() == 1
+                && cursor.getChildren().get(0) instanceof IdBlock)
+            {
+                cursor = cursor.getPreviousSibling();
+            } else {
+                result = false;
+                break;
+            }
+        }
+        return result;
     }
 }
