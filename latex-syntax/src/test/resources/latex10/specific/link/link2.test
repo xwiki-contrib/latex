@@ -9,7 +9,7 @@ attach:C.D@file2.ext
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-label\footnote{A.B@file.ext}\\
+label\footnote{A.B@file.ext}\\*
 C.D@file2.ext
 
 \end{document}

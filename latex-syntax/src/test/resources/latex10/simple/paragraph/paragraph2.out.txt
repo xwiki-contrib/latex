@@ -1,7 +1,7 @@
 ${{{regex:.*\\begin\{document\}}}}
 
-paragraph1 on\\
-multiple\\
+paragraph1 on\\*
+multiple\\*
 lines
 
 paragraph2

@@ -9,7 +9,7 @@ image:whatever
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\includegraphics{whatever}\\
+\includegraphics{whatever}\\*
 \includegraphics{whatever}
 
 \end{document}

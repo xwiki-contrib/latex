@@ -1,10 +1,10 @@
 ${{{regex:.*\\begin\{document\}}}}
 
-paragraph\\
-\\
+paragraph\\*
+\\*
 same paragraph
 
-paragraph\\
+paragraph\\*
 same paragraph
 
 \end{document}

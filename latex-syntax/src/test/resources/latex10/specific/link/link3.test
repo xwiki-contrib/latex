@@ -9,7 +9,7 @@
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\attachfile{what/ever\%}\\
+\attachfile{what/ever\%}\\*
 \textattachfile{what/ever\%}{label}
 
 \end{document}
