@@ -1,6 +1,9 @@
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Test verbatim with separator chars inside
+.# Test verbatim with separator chars inside.
+.# Note that the last example produces some empty string
+.# since it has exhausted all possible options for
+.# finding a delimiter and has given up!
 .#-----------------------------------------------------
 {{{a|b}}}
 {{{a%b}}}
