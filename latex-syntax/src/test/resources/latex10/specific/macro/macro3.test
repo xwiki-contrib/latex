@@ -1,7 +1,7 @@
 .runTransformations:macro
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Message Macros.
+.# Message Macros. Standalone and inline.
 .#-----------------------------------------------------
 {{info}}hello **world**{{/info}}
 
@@ -10,6 +10,8 @@
 {{error}}hello **world**{{/error}}
 
 {{success}}hello **world**{{/success}}
+
+{{info}}hello{{/info}}{{success}}nice{{/success}}{{warning}}colored{{/warning}}{{error}}world{{/error}}
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
@@ -30,5 +32,7 @@ hello \textbf{world}
 \begin{xwikisuccess}
 hello \textbf{world}
 \end{xwikisuccess}
+
+\xwikiinfoinline{hello}\xwikisuccessinline{nice}\xwikiwarninginline{colored}\xwikierrorinline{world}
 
 \end{document}

@@ -60,6 +60,18 @@
   {\begin{xwikimessage}{green}}
   {\end{xwikimessage}}
 
+\newcommand{\xwikiinfoinline}[1] {
+\fcolorbox{blue}{white}{#1}}
+
+\newcommand{\xwikiwarninginline}[1] {
+\fcolorbox{yellow}{white}{#1}}
+
+\newcommand{\xwikierrorinline}[1] {
+\fcolorbox{red}{white}{#1}}
+
+\newcommand{\xwikisuccessinline}[1] {
+\fcolorbox{green}{white}{#1}}
+
 %% Set the style of internal references (hyperref)
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
 

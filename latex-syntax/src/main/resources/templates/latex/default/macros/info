@@ -1,8 +1,10 @@
 #if (!$latex.block.isInline())
 
 
-#end
 \begin{xwikiinfo}
 ## We skip the GroupBlock to make the output nicer since it's not needed to output a varwidth env
 $latex.tool.escape($latex.processor.process($latex.block.children.get(0).children))
 \end{xwikiinfo}##
+#else
+\xwikiinfoinline{$latex.processor.process($latex.block.getChildren())}##
+#end

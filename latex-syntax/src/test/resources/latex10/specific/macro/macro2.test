@@ -1,7 +1,7 @@
 .runTransformations:macro
 .#-----------------------------------------------------
 .input|xwiki/2.1
-.# Code Macro.
+.# Code Macro. Standalone and inline.
 .#-----------------------------------------------------
 {{code language="java"}}
 public class HelloWorld
