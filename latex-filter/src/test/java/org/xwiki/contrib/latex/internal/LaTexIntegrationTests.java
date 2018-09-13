@@ -24,8 +24,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.Date;
 
-import javax.script.ScriptContext;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -49,9 +47,9 @@ import com.xpn.xwiki.web.XWikiServletResponseStub;
 import com.xpn.xwiki.web.XWikiServletURLFactory;
 
 /**
- * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in
- * {@link org.xwiki.filter.test.integration.TestDataParser}.
- * 
+ * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in {@link
+ * org.xwiki.filter.test.integration.TestDataParser}.
+ *
  * @version $Id: e40aa21bca0d81646e776d761d5b692d3b7d8b3b $
  */
 @RunWith(FilterTestSuite.class)
@@ -88,16 +86,16 @@ public class LaTexIntegrationTests
 
         XWikiDocument document =
             new XWikiDocument(new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "space", "document"));
-
-        document.setAttachment("attachment.txt", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+        document.setAttachment("attachment.txt", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
-        document.setAttachment("image.png", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+        document.setAttachment("image.png", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
+        document.setAttachment("space percent%dot.some.png", new ByteArrayInputStream(
+            new byte[]{ '1', '2', '3', '4' }), this.oldcore.getXWikiContext());
 
         XWikiDocument document2 =
             new XWikiDocument(new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "space2", "document2"));
-
-        document2.setAttachment("attachment.txt", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+        document2.setAttachment("attachment.txt", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
 
         this.oldcore.getSpyXWiki().saveDocument(document, this.oldcore.getXWikiContext());
@@ -105,10 +103,9 @@ public class LaTexIntegrationTests
 
         XWikiDocument otherdocument = new XWikiDocument(
             new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "otherspace", "otherdocument"));
-
-        otherdocument.setAttachment("otherattachment.txt", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+        otherdocument.setAttachment("otherattachment.txt", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
-        otherdocument.setAttachment("otherimage.png", new ByteArrayInputStream(new byte[] { '1', '2', '3', '4' }),
+        otherdocument.setAttachment("otherimage.png", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
 
         this.oldcore.getSpyXWiki().saveDocument(otherdocument, this.oldcore.getXWikiContext());

@@ -14,6 +14,7 @@
         <image reference="attach:image.png"/>
         <image reference="attach:otherspace.otherdocument@otherimage.png"/>
         <image reference="attach:space.document@image.png"/>
+        <image reference="attach:space percent%dot.some.png"/>
 
         <link reference="doc:OtherSpace.OtherDocument"><word>otherdocumentlink</word></link>
         <link reference="doc:"><word>emptylink</word></link>

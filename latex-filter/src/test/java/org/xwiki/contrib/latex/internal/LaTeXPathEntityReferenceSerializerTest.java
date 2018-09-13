@@ -43,8 +43,15 @@ public class LaTeXPathEntityReferenceSerializerTest
     public void serializeAttachment() throws Exception
     {
         DocumentReference documentReference = new DocumentReference("wiki", "space", "page");
-        AttachmentReference attachmentReference = new AttachmentReference("test.txt", documentReference);
-        assertEquals("wiki/space/page/test-1147906284.txt", this.mocker.getComponentUnderTest().serialize(attachmentReference));
+
+        AttachmentReference attachmentReference1 = new AttachmentReference("test.txt", documentReference);
+        assertEquals("wiki/space/page/test-1147906284.txt",
+            this.mocker.getComponentUnderTest().serialize(attachmentReference1));
+
+        // Verify that special character are removed (even when there are several times the same char)
+        AttachmentReference attachmentReference2 = new AttachmentReference("t#e\\{}#$%&^_~st.txt", documentReference);
+        assertEquals("wiki/space/page/test-1260387818.txt",
+            this.mocker.getComponentUnderTest().serialize(attachmentReference2));
     }
 
     @Test

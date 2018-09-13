@@ -56,12 +56,11 @@ public class LaTeXPathEntityReferenceSerializer extends FSPathStringEntityRefere
         // special chars removed.
         if (isLastReference) {
             // Add the hashcode before any extension
-            String currentName = currentReference.getName();
-            int pos = StringUtils.lastIndexOf(currentName, '.');
-            String suffix = "-" + Math.abs(currentName.hashCode());
+            int pos = StringUtils.lastIndexOf(cleanedName, '.');
+            String suffix = "-" + Math.abs(currentReference.getName().hashCode());
             if (pos > -1) {
-                cleanedName = StringUtils.substring(currentName, 0, pos) + suffix
-                    + StringUtils.substring(currentName, pos);
+                cleanedName = StringUtils.substring(cleanedName, 0, pos) + suffix
+                    + StringUtils.substring(cleanedName, pos);
             } else {
                 cleanedName = cleanedName + suffix;
             }
