@@ -14,7 +14,12 @@
         <image reference="attach:image.png"/>
         <image reference="attach:otherspace.otherdocument@otherimage.png"/>
         <image reference="attach:space.document@image.png"/>
-        <image reference="attach:space percent%dot.some.png"/>
+
+        <!-- This tests 2 things:
+             - that special characters are removed
+             - that non-ASCII chars are supported
+        -->
+        <image reference="attach:späce percent%dot.some.png"/>
 
         <link reference="doc:OtherSpace.OtherDocument"><word>otherdocumentlink</word></link>
         <link reference="doc:"><word>emptylink</word></link>

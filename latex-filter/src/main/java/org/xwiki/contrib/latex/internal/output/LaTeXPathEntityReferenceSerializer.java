@@ -47,10 +47,21 @@ public class LaTeXPathEntityReferenceSerializer extends FSPathStringEntityRefere
     {
         String cleanedName = currentReference.getName();
 
-        // Remove reserved LaTeX chars
+        // Start by removing spaces since the would be URL-encoded into "+" which would get again encoded into "%xx"
+        // which we don't want since % is a reserved LaTeX char
+        cleanedName = StringUtils.remove(cleanedName, " ");
+
+        // First pass to remove reserved LaTeX chars
         for (int i = 0; i < RESERVED_CHARS.length; i++) {
             cleanedName = StringUtils.remove(cleanedName, RESERVED_CHARS[i]);
         }
+
+        // Encode the reference name since they can contain non-ASCII chars which will lead to introducing % characters
+        // which are reserved chars for LaTeX and which will thus be removed in the next step below.
+        cleanedName = encodeReferenceName(cleanedName, isLastReference);
+
+        // Second pass to remove % characters
+        cleanedName = StringUtils.remove(cleanedName, RESERVED_CHARS[5]);
 
         // Add a hash to handle the issue of having an already existing file with the same name as the path with the
         // special chars removed.

@@ -49,8 +49,8 @@ public class LaTeXPathEntityReferenceSerializerTest
             this.mocker.getComponentUnderTest().serialize(attachmentReference1));
 
         // Verify that special character are removed (even when there are several times the same char)
-        AttachmentReference attachmentReference2 = new AttachmentReference("t#e\\{}#$%&^_~st.txt", documentReference);
-        assertEquals("wiki/space/page/test-1260387818.txt",
+        AttachmentReference attachmentReference2 = new AttachmentReference("t#ä \\{}#$%&^_~st.txt", documentReference);
+        assertEquals("wiki/space/page/tC3A4st-192862763.txt",
             this.mocker.getComponentUnderTest().serialize(attachmentReference2));
     }
 

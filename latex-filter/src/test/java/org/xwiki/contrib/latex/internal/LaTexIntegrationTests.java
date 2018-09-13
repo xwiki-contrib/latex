@@ -90,7 +90,7 @@ public class LaTexIntegrationTests
             this.oldcore.getXWikiContext());
         document.setAttachment("image.png", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
-        document.setAttachment("space percent%dot.some.png", new ByteArrayInputStream(
+        document.setAttachment("späce percent%dot.some.png", new ByteArrayInputStream(
             new byte[]{ '1', '2', '3', '4' }), this.oldcore.getXWikiContext());
 
         XWikiDocument document2 =
