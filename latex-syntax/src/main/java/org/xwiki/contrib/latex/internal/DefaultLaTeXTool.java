@@ -50,12 +50,22 @@ import org.xwiki.script.ScriptContextManager;
 @Singleton
 public class DefaultLaTeXTool implements LaTeXTool
 {
-    private static final String[] SEARCH_STRINGS = { "\\", "{", "}", "#", "$", "%", "&", "^", "_", "~" };
+    private static final String BACKSLASH = "\\";
+    private static final String BEGINCURLY = "{";
+    private static final String ENDCURLY = "}";
+    private static final String HASH = "#";
+    private static final String DOLLAR = "$";
+    private static final String PERCENT = "%";
+    private static final String TILDE = "~";
+
+    private static final String[] SEARCH_STRINGS =
+        { BACKSLASH, BEGINCURLY, ENDCURLY, HASH, DOLLAR, PERCENT, "&", "^", "_", TILDE };
 
     private static final String[] REPLACE_STRINGS =
         { "\\textbackslash{}", "\\{", "\\}", "\\#", "\\$", "\\%", "\\&", "\\^{}", "\\_", "\\~{}" };
 
-    private static final String[] LABEL_INVALID_STRINGS = { "\\", "{", "}", "#", "$", "%", "~" };
+    private static final String[] LABEL_INVALID_STRINGS =
+        { BACKSLASH, BEGINCURLY, ENDCURLY, HASH, DOLLAR, PERCENT, TILDE };
 
     @Inject
     private LocalizationContext localizationContext;
