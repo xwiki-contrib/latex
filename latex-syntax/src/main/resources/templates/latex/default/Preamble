@@ -75,7 +75,7 @@ ${SP}${SP}\Gin@nat@width
 \fi}
 \makeatother
 
-%% Define heading command so that this can be overridden easily
+%% Define heading command so that it can be overridden easily
 #if ("$!latex.properties.documentClass" == 'book')
   #set ($isBook = true)
 #else
@@ -109,3 +109,8 @@ ${SP}${SP}\fi
 ${SP}${SP}\fi
 ${SP}${SP}\fi
 ${SP}${SP}\fi}
+
+%% Define xwikihorizontalline command so that it can be overridden easily
+\newcommand{\xwikihorizontalline}{
+\noindent\rule{\textwidth}{0.4pt}\vspace{0.5\baselineskip}
+}

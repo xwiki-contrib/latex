@@ -84,7 +84,7 @@
 \fi}
 \makeatother
 
-%% Define heading command so that this can be overridden easily
+%% Define heading command so that it can be overridden easily
 \newcommand{\heading}[2]{
   \ifx#11
     \section{#2}
@@ -108,6 +108,11 @@
   \fi
   \fi
   \fi}
+
+%% Define xwikihorizontalline command so that it can be overridden easily
+\newcommand{\xwikihorizontalline}{
+\noindent\rule{\textwidth}{0.4pt}\vspace{0.5\baselineskip}
+}
 
 \begin{document}
 

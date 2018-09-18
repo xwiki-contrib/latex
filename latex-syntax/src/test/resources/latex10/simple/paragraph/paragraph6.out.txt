@@ -2,7 +2,7 @@ ${{{regex:.*\\begin\{document\}}}}
 
 hello
 
-\hline
+\xwikihorizontalline
 
 world
 
