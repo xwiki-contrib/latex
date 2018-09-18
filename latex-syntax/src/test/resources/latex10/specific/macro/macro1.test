@@ -4,6 +4,7 @@
 .# id Macro.
 .# Also verify the special handling when id macro is used
 .# without any content before and a new line.
+.# Also verifies special characters
 .#--------------------------------------------------------
 {{id name="anchor"/}}
 
@@ -14,6 +15,8 @@ Hello{{id name="world"/}}
 
 something {{id name="anchor"/}}
 {{id name="anchor"/}}
+
+{{id name="~"\{}#$%&^_~~:"/}}
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
@@ -28,5 +31,7 @@ Hello\label{world}
 
 something \label{anchor}\\*
 \label{anchor}
+
+\label{"&^_:}
 
 \end{document}

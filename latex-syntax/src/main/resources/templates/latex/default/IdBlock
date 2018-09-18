@@ -5,5 +5,5 @@
 
 
   #end
-  \label{$latex.tool.escape($latex.block.name)}##
+  \label{$latex.tool.normalizeLabel($latex.block.name)}##
 #end

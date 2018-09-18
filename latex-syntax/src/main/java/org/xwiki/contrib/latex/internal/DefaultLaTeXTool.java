@@ -55,6 +55,8 @@ public class DefaultLaTeXTool implements LaTeXTool
     private static final String[] REPLACE_STRINGS =
         { "\\textbackslash{}", "\\{", "\\}", "\\#", "\\$", "\\%", "\\&", "\\^{}", "\\_", "\\~{}" };
 
+    private static final String[] LABEL_INVALID_STRINGS = { "\\", "{", "}", "#", "$", "%", "~" };
+
     @Inject
     private LocalizationContext localizationContext;
 
@@ -68,6 +70,18 @@ public class DefaultLaTeXTool implements LaTeXTool
     public String escape(String input)
     {
         return StringUtils.replaceEach(input, SEARCH_STRINGS, REPLACE_STRINGS);
+    }
+
+    @Override
+    public String normalizeLabel(String input)
+    {
+        String result = input;
+
+        // Remove invalid characters
+        for (String invalid : LABEL_INVALID_STRINGS) {
+            result = StringUtils.remove(result, invalid);
+        }
+        return result;
     }
 
     @Override

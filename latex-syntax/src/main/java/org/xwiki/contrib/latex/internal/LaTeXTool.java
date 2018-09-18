@@ -44,6 +44,18 @@ public interface LaTeXTool
     String escape(String input);
 
     /**
+     * Remove forbidden characters when used in labels. Allowed characters are {@code &}, {@code _}, {@code ^}.
+     * The following characters are invalid and thus removed: {@code #}, {@code %}, {@code ~}, {@code |}, {@code {}
+     * {@code $}, and {@code }}.
+     *
+     * @see <a href="https://tex.stackexchange.com/questions/18311/what-are-the-valid-names-as-labels">what-are-the-
+     *      valid-names-as-labels</a>
+     * @param input the label string to normalize
+     * @return the valid string
+     */
+    String normalizeLabel(String input);
+
+    /**
      * @return the LaTeX language name to use for the content
      */
     String getLanguage();
