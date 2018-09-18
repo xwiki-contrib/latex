@@ -114,6 +114,17 @@
 \noindent\rule{\textwidth}{0.4pt}\vspace{0.5\baselineskip}
 }
 
+%% Use LaTeX quotes by default but allow users to change that here to use << >> for example
+\newif\ifquoteopen
+\catcode`\"=\active % lets you define `"` as a macro
+\DeclareRobustCommand*{"}{%
+  \ifquoteopen
+    \quoteopenfalse ''%
+  \else
+    \quoteopentrue ``%
+  \fi
+}
+
 \begin{document}
 
 \end{document}

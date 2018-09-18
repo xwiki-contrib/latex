@@ -114,3 +114,14 @@ ${SP}${SP}\fi}
 \newcommand{\xwikihorizontalline}{
 \noindent\rule{\textwidth}{0.4pt}\vspace{0.5\baselineskip}
 }
+
+%% Use LaTeX quotes by default but allow users to change that here to use << >> for example
+\newif\ifquoteopen
+\catcode`\"=\active % lets you define `"` as a macro
+\DeclareRobustCommand*{"}{%
+${SP}${SP}\ifquoteopen
+${SP}${SP}${SP}${SP}\quoteopenfalse ''%
+${SP}${SP}\else
+${SP}${SP}${SP}${SP}\quoteopentrue ``%
+${SP}${SP}\fi
+}
