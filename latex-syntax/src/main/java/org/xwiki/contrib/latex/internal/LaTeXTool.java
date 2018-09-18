@@ -51,6 +51,7 @@ public interface LaTeXTool
      *      valid-names-as-labels</a>
      * @param input the label string to normalize
      * @return the valid string
+     * @since 1.8
      */
     String normalizeLabel(String input);
 
