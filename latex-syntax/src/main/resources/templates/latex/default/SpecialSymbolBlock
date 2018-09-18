@@ -9,7 +9,7 @@
 #elseif ($latex.block.getSymbol() == '_')
   \_##
 #elseif ($latex.block.getSymbol() == '\')
-  \$\backslash\$##
+  \textbackslash{}##
 #elseif ($latex.block.getSymbol() == '^')
   \^{}##
 #elseif ($latex.block.getSymbol() == '<')

@@ -8,6 +8,6 @@
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\#\$\%\_\$\backslash\$\^{}\textless\textgreater\textbar\&
+\#\$\%\_\textbackslash{}\^{}\textless\textgreater\textbar\&
 
 \end{document}
