@@ -45,7 +45,7 @@ public class LaTeXTestMacro extends AbstractNoParameterMacro
     @Override
     public boolean supportsInlineMode()
     {
-        return false;
+        return true;
     }
 
     @Override

@@ -1,5 +1,11 @@
 #if ($latex.block.syntax.type.id == 'tex')
-  ## Since this is a standalone element we separate from the previous block by 2 NL
+  ## Since there's no info if the RawBlock is inline or not, we need to check if it's inside an inline MacroMarkerBlock
+  ## or not...
+  #if ("$!latex.block.parent.class.simpleName" == 'MacroMarkerBlock')
+    #if (!$latex.block.parent.isInline())
 
 
-  $latex.block.rawContent#end
+    #end
+    ${latex.block.rawContent}##
+  #end
+#end
