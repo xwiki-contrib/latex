@@ -1,5 +1,5 @@
 ${{{regex:.*\\begin\{document\}}}}
 
-@ \# \$ * \% ' ( ! ) - \_ \^{} ` ? , ; . / : = + \textless \textbar \textgreater
+@ \# \$ * \% ' ( ! ) - \_ \^{} ` ? , ; . / : = + \textless{} \textbar{} \textgreater{}
 
 \end{document}

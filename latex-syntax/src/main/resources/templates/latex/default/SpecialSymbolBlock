@@ -13,11 +13,11 @@
 #elseif ($latex.block.getSymbol() == '^')
   \^{}##
 #elseif ($latex.block.getSymbol() == '<')
-  \textless##
+  \textless{}##
 #elseif ($latex.block.getSymbol() == '>')
-  \textgreater##
+  \textgreater{}##
 #elseif ($latex.block.getSymbol() == '|')
-  \textbar##
+  \textbar{}##
 #else
   ${latex.block.getSymbol()}##
 #end

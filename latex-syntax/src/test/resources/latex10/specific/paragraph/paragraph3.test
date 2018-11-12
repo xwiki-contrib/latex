@@ -1,13 +1,14 @@
 .#------------------------------------------------------
 .input|xwiki/2.1
-.# Verify special characters are escaped
+.# Verify special characters are escaped and work when
+.# there's text after them.
 .#------------------------------------------------------
-#$%_\^<>|&
+<hello>brave|world
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\#\$\%\_\textbackslash{}\^{}\textless{}\textgreater{}\textbar{}\&
+\textless{}hello\textgreater{}brave\textbar{}world
 
 \end{document}
