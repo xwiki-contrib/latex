@@ -3,6 +3,11 @@
 #if ($class.contains('wikigeneratedfigurenumber') || $class.contains('wikigeneratedtablenumber') || $class.contains('wikigeneratedheadingnumber'))
   #break
 #end
+## Support specifying some text to be displayed in a smaller font
+## Example: Hello (% class=small %)small(%%) world
+#if ($class.equals('small'))
+  {\small ##
+#end
 #set ($format = $latex.block.getFormat().toString())
 #if ($format == 'BOLD')
   \textbf{${latex.processor.process($latex.block.getChildren())}}##
@@ -20,4 +25,7 @@
   \textsuperscript{${latex.processor.process($latex.block.getChildren())}}##
 #else
   $latex.processor.process($latex.block.getChildren())##
+#end
+#if ($class.equals('small'))
+  }##
 #end

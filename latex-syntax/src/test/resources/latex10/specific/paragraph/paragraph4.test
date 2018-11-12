@@ -1,0 +1,17 @@
+.#------------------------------------------------------
+.input|xwiki/2.1
+.# Ability to set small font for a format block.
+.#------------------------------------------------------
+Hello (% class=small %)world(%%) and...
+
+Hello (% class=small %)**world**(%%) and...
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+Hello {\small world} and...
+
+Hello {\small \textbf{world}} and...
+
+\end{document}
