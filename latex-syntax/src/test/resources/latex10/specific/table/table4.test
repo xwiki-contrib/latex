@@ -1,0 +1,20 @@
+.runTransformations:macro
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Ability to set small font for a full cell.
+.#-----------------------------------------------------
+|(% class="small" %)cell
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{center}
+\begin{tabular}{|l|}
+\hline
+{\small cell}\\
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}
