@@ -116,12 +116,16 @@ ${SP}${SP}\fi}
 }
 
 %% Use LaTeX quotes by default but allow users to change that here to use << >> for example
-\newif\ifquoteopen
 \catcode`\"=\active % lets you define `"` as a macro
-\DeclareRobustCommand*{"}{%
-${SP}${SP}\ifquoteopen
-${SP}${SP}${SP}${SP}\quoteopenfalse ''%
-${SP}${SP}\else
-${SP}${SP}${SP}${SP}\quoteopentrue ``%
-${SP}${SP}\fi
-}
+\makeatletter
+\@ifundefined{ifquoteopen}{%
+${SP}${SP}\expandafter\newif\csname ifquoteopen\endcsname
+${SP}${SP}\DeclareRobustCommand*{"}{%
+${SP}${SP}${SP}${SP}\ifquoteopen
+${SP}${SP}${SP}${SP}${SP}${SP}\quoteopenfalse ''%
+${SP}${SP}${SP}${SP}\else
+${SP}${SP}${SP}${SP}${SP}${SP}\quoteopentrue ``%
+${SP}${SP}${SP}${SP}\fi
+${SP}${SP}}
+}{}
+\makeatother
