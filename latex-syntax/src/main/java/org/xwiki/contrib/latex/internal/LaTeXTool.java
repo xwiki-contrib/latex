@@ -24,7 +24,6 @@ import java.util.Stack;
 
 import org.xwiki.component.annotation.Role;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.FigureBlock;
 
 /**
  * Provides useful tools for use in the LaTeX templates.
@@ -44,13 +43,13 @@ public interface LaTeXTool
     String escape(String input);
 
     /**
-     * Remove forbidden characters when used in labels. Forbidden chars are:
-     * {@code #}, {@code %}, {@code ~}, {@code |}, {@code {}, {@code $}, and {@code }}.
+     * Remove forbidden characters when used in labels. Forbidden chars are: {@code #}, {@code %}, {@code ~}, {@code |},
+     * {@code {}, {@code $}, and {@code }}.
      *
-     * @see <a href="https://tex.stackexchange.com/questions/18311/what-are-the-valid-names-as-labels">what-are-the-
-     *      valid-names-as-labels</a>
      * @param input the label string to normalize
      * @return the valid string
+     * @see <a href="https://tex.stackexchange.com/questions/18311/what-are-the-valid-names-as-labels">what-are-the-
+     * valid-names-as-labels</a>
      * @since 1.8
      */
     String normalizeLabel(String input);
@@ -67,11 +66,11 @@ public interface LaTeXTool
     List<Block> getSiblings(Block currentBlock);
 
     /**
-     * @param figureBlock the figure block that needs to be checked to verify if it contains only a table (should be a
-     *        FigureBlock)
+     * @param block the figure block (or a MetaData block wrapping it) that needs to be checked to verify if it contains
+     * only a table (should be a FigureBlock)
      * @return true if it contains only a table or false otherwise
      */
-    boolean isTable(FigureBlock figureBlock);
+    boolean isTable(Block block);
 
     /**
      * Retrieve and create a Stack if it doesn't exist.
