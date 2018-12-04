@@ -1,9 +1,14 @@
 #set ($tableBlock = $latex.block)
 ## If not inside a Container block that accepts standalone elements (Group block, etc then we separate from the
 ## previous block by 2 NL.
-#if ($latex.tool.getStack('isInContainerAcceptingStandalone').empty())
+#set ($standaloneStack = $latex.tool.getStack('isInContainerAcceptingStandalone'))
+#if ($standaloneStack.empty() || !$standaloneStack.peek())
 
 
+#else
+  ## Reset so that next elements can get 2NLs if needed
+  #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())
+  #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(false))
 #end
 ## Compute the number of columns
 #set ($firstRowBlock = $latex.block.getChildren().get(0))

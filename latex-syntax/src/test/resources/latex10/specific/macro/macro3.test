@@ -2,8 +2,16 @@
 .#-----------------------------------------------------
 .input|xwiki/2.1
 .# Message Macros. Standalone and inline.
+.# Make sure that the {{info}} macro works when there
+.# are paragraphs blocks inside.
 .#-----------------------------------------------------
 {{info}}hello **world**{{/info}}
+
+{{info}}
+hello
+
+world
+{{/info}}
 
 {{warning}}hello **world**{{/warning}}
 
@@ -19,6 +27,12 @@ ${{{regex:.*\\begin\{document\}}}}
 
 \begin{xwikiinfo}
 hello \textbf{world}
+\end{xwikiinfo}
+
+\begin{xwikiinfo}
+hello
+
+world
 \end{xwikiinfo}
 
 \begin{xwikiwarning}

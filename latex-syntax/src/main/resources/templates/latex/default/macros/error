@@ -2,8 +2,10 @@
 
 
 \begin{xwikierror}
+#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
 ## We skip the GroupBlock to make the output nicer since it's not needed to output a varwidth env
 $latex.tool.escape($latex.processor.process($latex.block.children.get(0).children))
+#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())
 \end{xwikierror}##
 #else
 \xwikierrorinline{$latex.processor.process($latex.block.getChildren())}##
