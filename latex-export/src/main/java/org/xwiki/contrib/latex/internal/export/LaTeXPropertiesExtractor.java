@@ -51,7 +51,7 @@ public class LaTeXPropertiesExtractor
     private static final String FILTERPROPERTY_PREFIX = "property_";
 
     // Not making static as it's not thread-safe.
-    private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Inject
     private BeanManager beans;
@@ -94,7 +94,7 @@ public class LaTeXPropertiesExtractor
             if (TypeUtils.isAssignable(propertyDescriptor.getPropertyType(), Date.class)) {
                 String dateString = value[0];
                 if (!dateString.isEmpty()) {
-                    properties.put(parameterKey, DATE_FORMAT.parse(dateString));
+                    properties.put(parameterKey, dateFormat.parse(dateString));
                 }
             } else if (isIterable(propertyDescriptor)) {
                 properties.put(parameterKey, value);
