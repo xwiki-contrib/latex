@@ -63,17 +63,6 @@
     <module>latex-export</module>
   </modules>
   <build>
-    <!-- TODO: Remove once we upgrade the parent version to be 11.0RC1+ -->
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.sonarsource.scanner.maven</groupId>
-          <artifactId>sonar-maven-plugin</artifactId>
-          <!-- Lock down plugin version for build reproducibility -->
-          <version>3.5.0.1254</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <!-- Skipping Spoon since there was a problem with our custom Spoon rule. Was fixed in more recent versions of
            XWiki. TODO: Remove once we upgrade the parent pom version. -->
@@ -86,4 +75,20 @@
       </plugin>
     </plugins>
   </build>
+  <!-- TODO: Remove once we upgrade the parent version to be 11.0RC1+ -->
+  <profiles>
+    <profile>
+      <id>quality</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <!-- Lock down plugin version for build reproducibility -->
+            <version>3.5.0.1254</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
