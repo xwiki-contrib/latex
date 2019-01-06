@@ -50,7 +50,8 @@ public class LaTeXPropertiesExtractor
 {
     private static final String FILTERPROPERTY_PREFIX = "property_";
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    // Not making static as it's not thread-safe.
+    private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     @Inject
     private BeanManager beans;

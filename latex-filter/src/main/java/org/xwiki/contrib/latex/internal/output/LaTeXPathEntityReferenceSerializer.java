@@ -68,7 +68,12 @@ public class LaTeXPathEntityReferenceSerializer extends FSPathStringEntityRefere
         if (isLastReference) {
             // Add the hashcode before any extension
             int pos = StringUtils.lastIndexOf(cleanedName, '.');
-            String suffix = "-" + Math.abs(currentReference.getName().hashCode());
+            // Note: hashcode() can return negative value and even Integer.MIN_VALUE. Thus we cannot use
+            // Math.abs() since Math.abs(Integer.MIN_VALUE) == Integer.MIN_VALUE. This is wy we convert to a String
+            // and remove the negative char if need be.
+            String hashcodeString = String.valueOf(currentReference.getName().hashCode());
+            hashcodeString = hashcodeString.startsWith("-") ? hashcodeString.substring(1) : hashcodeString;
+            String suffix = "-" + hashcodeString;
             if (pos > -1) {
                 cleanedName = StringUtils.substring(cleanedName, 0, pos) + suffix
                     + StringUtils.substring(cleanedName, pos);
