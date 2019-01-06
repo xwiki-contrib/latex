@@ -39,6 +39,8 @@ import org.xwiki.model.reference.EntityReference;
 @Singleton
 public class LaTeXPathEntityReferenceSerializer extends FSPathStringEntityReferenceSerializer
 {
+    private static final String DASH = "-";
+
     private static final char[] RESERVED_CHARS = new char[] { '\\', '{', '}', '#', '$', '%', '&', '^', '_', '~' };
 
     @Override
@@ -72,7 +74,7 @@ public class LaTeXPathEntityReferenceSerializer extends FSPathStringEntityRefere
             // Math.abs() since Math.abs(Integer.MIN_VALUE) == Integer.MIN_VALUE. This is wy we convert to a String
             // and remove the negative char if need be.
             String hashcodeString = String.valueOf(currentReference.getName().hashCode());
-            String suffix = hashcodeString.startsWith("-") ? hashcodeString : "-" + hashcodeString;
+            String suffix = hashcodeString.startsWith(DASH) ? hashcodeString : DASH + hashcodeString;
             if (pos > -1) {
                 cleanedName = StringUtils.substring(cleanedName, 0, pos) + suffix
                     + StringUtils.substring(cleanedName, pos);
