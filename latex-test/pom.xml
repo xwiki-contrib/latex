@@ -27,34 +27,25 @@
     <artifactId>latex</artifactId>
     <version>1.10-SNAPSHOT</version>
   </parent>
-  <artifactId>latex-export</artifactId>
-  <name>LaTeX - Export</name>
-  <description>Entry point to export to LaTeX</description>
+  <artifactId>latex-test</artifactId>
+  <name>LaTeX - Tests - Parent POM</name>
+  <description>Tests for the LaTeX Extension</description>
+  <packaging>pom</packaging>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.00</xwiki.jacoco.instructionRatio>
-    <!-- Name to display by the Extension Manager -->
-    <xwiki.extension.name>LaTeX Exporter</xwiki.extension.name>
+    <!-- Don't run backward-compatibility checks in test modules since we don't consider them as public APIs -->
+    <xwiki.revapi.skip>true</xwiki.revapi.skip>
+    <!-- Don't run Checkstyle in test modules -->
+    <xwiki.checkstyle.skip>true</xwiki.checkstyle.skip>
   </properties>
-  <dependencies>
-    <dependency>
-      <groupId>org.xwiki.contrib.latex</groupId>
-      <artifactId>latex-filter</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-uiextension-api</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-filter-script</artifactId>
-      <version>${platform.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-    </dependency>
-  </dependencies>
+  <modules>
+    <module>latex-test-pageobjects</module>
+  </modules>
+  <profiles>
+    <profile>
+      <id>docker</id>
+      <modules>
+        <module>latex-test-docker</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>

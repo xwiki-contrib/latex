@@ -22,6 +22,7 @@ package org.xwiki.contrib.latex.internal;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
 
 import org.junit.After;
@@ -112,10 +113,10 @@ public class LaTexIntegrationTests
 
         this.oldcore.getMocker().registerMockComponent(WikiModel.class);
 
-        this.oldcore.getXWikiContext().setURL(new URL("https", "test", ""));
-        XWikiServletRequestStub initialRequest = new XWikiServletRequestStub();
-        initialRequest.setHost("test");
-        initialRequest.setScheme("http");
+        URL url = new URL("http", "test", "");
+        this.oldcore.getXWikiContext().setURL(url);
+        XWikiServletRequestStub initialRequest = new XWikiServletRequestStub(url, Collections.emptyMap());
+
         XWikiServletRequest request = new XWikiServletRequest(initialRequest);
         this.oldcore.getXWikiContext().setRequest(request);
         XWikiServletURLFactory urlFactory = new XWikiServletURLFactory(this.oldcore.getXWikiContext());
