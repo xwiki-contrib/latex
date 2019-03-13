@@ -23,11 +23,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.xwiki.contrib.latex</groupId>
-    <artifactId>latex</artifactId>
-    <version>1.10-SNAPSHOT</version>
+    <groupId>org.xwiki.platform</groupId>
+    <artifactId>xwiki-platform</artifactId>
+    <version>11.2-SNAPSHOT</version>
   </parent>
+  <groupId>org.xwiki.contrib.latex</groupId>
   <artifactId>latex-test</artifactId>
+  <version>1.10-SNAPSHOT</version>
   <name>LaTeX - Tests - Parent POM</name>
   <description>Tests for the LaTeX Extension</description>
   <packaging>pom</packaging>
@@ -36,6 +38,8 @@
     <xwiki.revapi.skip>true</xwiki.revapi.skip>
     <!-- Don't run Checkstyle in test modules -->
     <xwiki.checkstyle.skip>true</xwiki.checkstyle.skip>
+    <xwiki.enforcer.skip>true</xwiki.enforcer.skip>
+    <xwiki.enforcer.enforce-upper-bounds.skip>false</xwiki.enforcer.enforce-upper-bounds.skip>
   </properties>
   <modules>
     <module>latex-test-pageobjects</module>

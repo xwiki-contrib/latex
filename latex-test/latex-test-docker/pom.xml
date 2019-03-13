@@ -45,14 +45,6 @@
   </properties>
   <dependencies>
     <!-- ================================
-         Dependencies for tested features
-         ================================ -->
-    <dependency>
-      <groupId>org.xwiki.contrib.latex</groupId>
-      <artifactId>latex-export</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <!-- ================================
          Test only dependencies
          ================================ -->
     <dependency>
@@ -90,6 +82,9 @@
           <includes>
             <include>**/AllIT.java</include>
           </includes>
+          <systemProperties>
+            <xwiki.test.ui.dependencies>org.xwiki.contrib.latex:latex-export</xwiki.test.ui.dependencies>
+          </systemProperties>
         </configuration>
       </plugin>
     </plugins>

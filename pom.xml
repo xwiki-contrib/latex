@@ -76,7 +76,6 @@
     </plugins>
   </build>
   <profiles>
-    <!-- TODO: The tests below will currently only work when the parent POM will use XWiki 11.2RC1+ -->
     <profile>
       <id>integration-tests</id>
       <modules>
