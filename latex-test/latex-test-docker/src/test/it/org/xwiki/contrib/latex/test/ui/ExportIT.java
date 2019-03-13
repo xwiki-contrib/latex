@@ -91,8 +91,7 @@ public class ExportIT
 
         // Convert the LaTeX results into PDF by using the Docker "blang/latex:ubuntu" image.
         // docker run --rm -i --user="$(id -u):$(id -g)" --net=none -v "$PWD":/data blang/latex:ubuntu
-        try (GenericContainer container = new GenericContainer("blang/latex:ubuntu")
-        )
+        try (GenericContainer container = new GenericContainer("blang/latex:ubuntu"))
         {
             // Note: we copy files instead of mounting volumes so that this can work when using DOOD
             // (Docker out of Docker).
