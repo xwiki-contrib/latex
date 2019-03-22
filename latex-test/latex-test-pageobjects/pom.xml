@@ -35,12 +35,12 @@
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-test-ui</artifactId>
-      <version>11.2-SNAPSHOT</version>
+      <version>${platform.version}</version>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-flamingo-skin-test-pageobjects</artifactId>
-      <version>11.2-SNAPSHOT</version>
+      <version>${platform.version}</version>
     </dependency>
   </dependencies>
 </project>

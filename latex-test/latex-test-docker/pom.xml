@@ -50,7 +50,7 @@
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-test-docker</artifactId>
-      <version>11.2-SNAPSHOT</version>
+      <version>${platform.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
