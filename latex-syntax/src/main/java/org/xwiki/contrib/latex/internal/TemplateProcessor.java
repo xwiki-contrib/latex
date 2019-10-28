@@ -19,7 +19,7 @@
  */
 package org.xwiki.contrib.latex.internal;
 
-import java.io.Writer;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Map;
 
@@ -41,8 +41,6 @@ public class TemplateProcessor
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(TemplateProcessor.class);
 
-    private Writer writer;
-
     private TemplateManager templateManager;
 
     private VelocityMacroFilter filter;
@@ -53,15 +51,13 @@ public class TemplateProcessor
      * @param templateManager the template manager used to locate, get and execute template content
      * @param latexBinding the script context "latex" binding into which we can inject new "bindings" for the template
      *        evaluation
-     * @param writer the object into which to write the result of the template evaluations
      * @param filter the Velocity filter to apply to the template content if the source is written in Velocity
      */
-    public TemplateProcessor(TemplateManager templateManager, Map<String, Object> latexBinding, Writer writer,
+    public TemplateProcessor(TemplateManager templateManager, Map<String, Object> latexBinding,
         VelocityMacroFilter filter)
     {
         this.templateManager = templateManager;
         this.latexBinding = latexBinding;
-        this.writer = writer;
         this.filter = filter;
     }
 
@@ -69,24 +65,27 @@ public class TemplateProcessor
      * Evaluate the passed Blocks by finding matching LaTeX templates and executing Velocity on them.
      *
      * @param blocks the rendering blocks to evaluate
+     * @return the result of processing all blocks
      */
-    public void process(Collection<Block> blocks)
+    public String process(Collection<Block> blocks)
     {
+        StringWriter writer = new StringWriter();
         for (Block block : blocks) {
             try {
                 this.latexBinding.put("block", block);
                 Template template = getTemplate(block);
                 if (template != null) {
-                    render(template);
+                    writer.write(render(template));
                 } else {
                     // Ignore the template and render children
-                    process(block.getChildren());
+                    writer.write(process(block.getChildren()));
                 }
             } catch (Exception e) {
                 LOGGER.warn("Failed to evaluate template for Block [{}]. Reason [{}]. Skipping template",
                     block.getClass().getName(), ExceptionUtils.getRootCauseMessage(e));
             }
         }
+        return writer.toString();
     }
 
     /**
@@ -127,21 +126,27 @@ public class TemplateProcessor
 
     /**
      * @param template the template to render
+     * @return the result of the Template execution
      * @throws Exception if the template fails to render
      */
-    public void render(Template template) throws Exception
+    public String render(Template template) throws Exception
     {
         if (template != null) {
-            this.templateManager.render(template, this.writer);
+            StringWriter writer = new StringWriter();
+            this.templateManager.render(template, writer);
+            return writer.toString();
+        } else {
+            return "";
         }
     }
 
     /**
      * @param templateName the name of the template to render
+     * @return the result of the Template execution
      * @throws Exception if the template fails to render
      */
-    public void render(String templateName) throws Exception
+    public String render(String templateName) throws Exception
     {
-        render(getTemplate(templateName));
+        return render(getTemplate(templateName));
     }
 }

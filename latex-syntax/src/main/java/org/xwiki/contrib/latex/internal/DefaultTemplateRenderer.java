@@ -19,7 +19,6 @@
  */
 package org.xwiki.contrib.latex.internal;
 
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -80,11 +79,8 @@ public class DefaultTemplateRenderer implements TemplateRenderer
     public void render(Collection<Block> blocks, WikiPrinter printer)
     {
         try {
-            // TODO: stream the template writer directly to the printer
-            StringWriter writer = new StringWriter();
-            TemplateProcessor processor = initializeProcessor(writer);
-            processor.process(blocks);
-            printer.print(writer.toString());
+            TemplateProcessor processor = initializeProcessor();
+            printer.print(processor.process(blocks));
         } catch (Exception e) {
             this.logger.warn("Failed to render LaTeX templates. Reason [{}].", ExceptionUtils.getRootCauseMessage(e));
         } finally {
@@ -96,10 +92,8 @@ public class DefaultTemplateRenderer implements TemplateRenderer
     public void render(String relativeTemplateName, WikiPrinter printer)
     {
         try {
-            StringWriter writer = new StringWriter();
-            TemplateProcessor processor = initializeProcessor(writer);
-            processor.render(relativeTemplateName);
-            printer.print(writer.toString());
+            TemplateProcessor processor = initializeProcessor();
+            printer.print(processor.render(relativeTemplateName));
         } catch (Exception e) {
             this.logger.warn("Failed to render LaTeX template [{}]. Reason [{}].", relativeTemplateName,
                 ExceptionUtils.getRootCauseMessage(e));
@@ -108,7 +102,7 @@ public class DefaultTemplateRenderer implements TemplateRenderer
         }
     }
 
-    private TemplateProcessor initializeProcessor(StringWriter writer) throws ExecutionContextException
+    private TemplateProcessor initializeProcessor() throws ExecutionContextException
     {
         // Push a new Execution Context for the template rendering. Note that we need to copy the "latex" binding if
         // it exists since this code can be called by the LaTeX exporter for example which sets config options in this
@@ -129,7 +123,7 @@ public class DefaultTemplateRenderer implements TemplateRenderer
         }
         scriptContext.setAttribute(SC_LATEX, latexBinding, ScriptContext.ENGINE_SCOPE);
 
-        TemplateProcessor processor = new TemplateProcessor(this.templateManager, latexBinding, writer, this.filter);
+        TemplateProcessor processor = new TemplateProcessor(this.templateManager, latexBinding, this.filter);
         latexBinding.put("processor", processor);
         latexBinding.put("tool", this.latexTool);
 
