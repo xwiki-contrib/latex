@@ -39,28 +39,9 @@ public class LaTeXFormatPane extends OtherFormatPane
     }
 
     /**
-     * @param buttonText the text of the button to assert
-     * @return true if the export button exists.
-     * @todo remove once we upgrade to XWiki 11.2RC1 since it's in there already
-     */
-    public boolean isExportButtonAvailable(String buttonText)
-    {
-        return getDriver().findElementByLinkText(buttonText) != null;
-    }
-
-    /**
-     * Click on an export button.
-     *
-     * @param buttonText the text of the button to click
-     * @todo remove once we upgrade to XWiki 11.2RC1 since it's in there already
-     */
-    public void clickExportButton(String buttonText)
-    {
-        getDriver().findElementByLinkText(buttonText).click();
-    }
-
-    /**
      * Click on the export LaTeX button.
+     *
+     * @return the Page Object representing the Export options UI
      */
     public LaTeXExportOptions clickExportAsLaTeXButton()
     {
