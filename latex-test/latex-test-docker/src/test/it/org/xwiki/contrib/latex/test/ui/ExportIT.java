@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ import org.xwiki.contrib.latex.test.po.LaTeXFormatPane;
 import org.xwiki.flamingo.skin.test.po.ExportModal;
 import org.xwiki.test.docker.internal.junit5.DockerTestUtils;
 import org.xwiki.test.docker.junit5.UITest;
+import org.xwiki.test.integration.junit.LogCaptureConfiguration;
 import org.xwiki.test.ui.TestUtils;
 import org.xwiki.test.ui.po.ViewPage;
 import org.xwiki.tree.test.po.TreeElement;
@@ -55,6 +57,18 @@ import static org.junit.Assert.assertTrue;
 public class ExportIT
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExportIT.class);
+
+    @AfterEach
+    public void validatationExcludes(LogCaptureConfiguration logCaptureConfiguration)
+    {
+        logCaptureConfiguration.registerExcludes(
+            "New fonts found, font cache will be re-built",
+            "Building on-disk font cache, this may take a while",
+            "Finished building on-disk font cache, found 6 fonts",
+            "Using fallback font",
+            "Can't find any begin event corresponding to"
+        );
+    }
 
     @Test
     public void export(TestUtils setup) throws Exception
