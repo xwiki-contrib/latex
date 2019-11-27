@@ -64,9 +64,11 @@ public class ExportIT
         logCaptureConfiguration.registerExcludes(
             "New fonts found, font cache will be re-built",
             "Building on-disk font cache, this may take a while",
-            "Finished building on-disk font cache, found 6 fonts",
             "Using fallback font",
             "Can't find any begin event corresponding to"
+        );
+        logCaptureConfiguration.registerExcludeRegexes(
+            "Finished building on-disk font cache, found .* fonts"
         );
     }
 

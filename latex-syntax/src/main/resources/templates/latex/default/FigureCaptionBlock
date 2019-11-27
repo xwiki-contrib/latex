@@ -1,0 +1,20 @@
+#set ($figureCaptionBlock = $latex.block)
+## If the caption is last then add a NL before the caption so that the caption is on a new line
+## This FigureCaptionBlock could be by itself or inside a MacroMarkerBlock (MMB). If inside a MMB then we need to
+## compare the sibling of the MMB.
+#if (("$figureCaptionBlock.parent.class.simpleName" == 'MacroMarkerBlock'
+  && "$!figureCaptionBlock.parent.nextSibling" == '') ||
+  ("$figureCaptionBlock.parent.class.simpleName" != 'MacroMarkerBlock'
+  && "$!figureCaptionBlock.nextSibling" == ''))
+
+#end
+\caption{$latex.processor.process($figureCaptionBlock.getChildren())}##
+## If the caption is first then add a NL after the caption so that next element is on a new line
+## This FigureCaptionBlock could be by itself or inside a MacroMarkerBlock (MMB). If inside a MMB then we need to
+## compare the sibling of the MMB.
+#if (("$figureCaptionBlock.parent.class.simpleName" == 'MacroMarkerBlock'
+  && "$!figureCaptionBlock.parent.previousSibling" == '') ||
+  ("$figureCaptionBlock.parent.class.simpleName" != 'MacroMarkerBlock'
+  && "$!figureCaptionBlock.previousSibling" == ''))
+
+#end

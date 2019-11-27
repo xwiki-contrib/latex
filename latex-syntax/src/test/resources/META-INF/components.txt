@@ -1,2 +1,3 @@
 org.xwiki.contrib.latex.internal.LaTeXTestMacro
 org.xwiki.contrib.latex.internal.ImageTestMacro
+org.xwiki.contrib.latex.internal.FigureTestMacro

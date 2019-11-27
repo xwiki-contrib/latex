@@ -1,0 +1,20 @@
+.runTransformations:macro
+.#-------------------------------------------------------
+.input|xwiki/2.1
+.# Test FigureBlock that are not generated inside a
+.# MacroMarkerBlock (e.g. this can happen a wiki macro
+.# is used since MMB are removed in this case, till
+.# https://jira.xwiki.org/browse/XWIKI-16708 is fixed).
+.#-------------------------------------------------------
+{{figuretest/}}
+.#-----------------------------------------------------
+.expect|latex/1.0
+.#-----------------------------------------------------
+${{{regex:.*\\begin\{document\}}}}
+
+\begin{figure}[h]
+test
+\caption{caption}
+\end{figure}
+
+\end{document}
