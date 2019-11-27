@@ -1,2 +1,0 @@
-Once XWiki 9.11.4 is released, update test dependency to it and remove the files in this package. They are implementing
-https://jira.xwiki.org/browse/XRENDERING-501 which was released only in XWiki 9.11.4 and XWiki 10.2RC1.
