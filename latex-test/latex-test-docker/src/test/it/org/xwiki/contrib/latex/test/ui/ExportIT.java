@@ -65,10 +65,8 @@ public class ExportIT
             "New fonts found, font cache will be re-built",
             "Building on-disk font cache, this may take a while",
             "Using fallback font",
-            "Can't find any begin event corresponding to"
-        );
-        logCaptureConfiguration.registerExcludeRegexes(
-            "Finished building on-disk font cache, found .* fonts"
+            "Can't find any begin event corresponding to",
+            "Finished building on-disk font cache, found"
         );
     }
 
