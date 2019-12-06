@@ -29,7 +29,7 @@
   </parent>
   <groupId>org.xwiki.contrib.latex</groupId>
   <artifactId>latex-test</artifactId>
-  <version>1.10-SNAPSHOT</version>
+  <version>1.9.4</version>
   <name>LaTeX - Tests - Parent POM</name>
   <description>Tests for the LaTeX Extension</description>
   <packaging>pom</packaging>
@@ -57,4 +57,8 @@
       </modules>
     </profile>
   </profiles>
+
+  <scm>
+    <tag>latex-1.9.4</tag>
+  </scm>
 </project>
