@@ -29,6 +29,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.FigureBlock;
 import org.xwiki.rendering.block.FigureCaptionBlock;
+import org.xwiki.rendering.block.IdBlock;
 import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.macro.AbstractNoParameterMacro;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
@@ -61,7 +62,7 @@ public class FigureTestMacro extends AbstractNoParameterMacro
     public List<Block> execute(Object parameters, String content, MacroTransformationContext context)
     {
         return Arrays.asList(new FigureBlock(Arrays.asList(
-            new WordBlock("test"),
-            new FigureCaptionBlock(Arrays.asList(new WordBlock("caption"))))));
+            new FigureCaptionBlock(Arrays.asList(new IdBlock("label"), new WordBlock("caption"))),
+            new WordBlock("test"))));
     }
 }

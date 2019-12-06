@@ -1,9 +1,5 @@
-## Since there's no info if the IdBlock is inline or not, we need to check if it's inside an inline MacroMarkerBlock
-## or not...
-#if ("$!latex.block.parent.class.simpleName" == 'MacroMarkerBlock')
-  #if (!$latex.block.parent.isInline())
+#if (!$latex.tool.isIdBlockInline($latex.block))
 
 
-  #end
-  \label{$latex.tool.normalizeLabel($latex.block.name)}##
 #end
+\label{$latex.tool.normalizeLabel($latex.block.name)}##

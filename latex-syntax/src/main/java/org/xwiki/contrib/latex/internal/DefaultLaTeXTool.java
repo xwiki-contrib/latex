@@ -83,6 +83,9 @@ public class DefaultLaTeXTool implements LaTeXTool
     @Inject
     private FigureTypeRecognizer figureTypeRecognizer;
 
+    @Inject
+    private IdBlockManager idBlockManager;
+
     @Override
     public String escape(String input)
     {
@@ -183,5 +186,11 @@ public class DefaultLaTeXTool implements LaTeXTool
             }
         }
         return result;
+    }
+
+    @Override
+    public boolean isIdBlockInline(IdBlock idBLock)
+    {
+        return this.idBlockManager.isInline(idBLock);
     }
 }

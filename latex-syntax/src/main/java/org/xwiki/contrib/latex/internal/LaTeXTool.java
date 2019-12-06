@@ -24,6 +24,7 @@ import java.util.Stack;
 
 import org.xwiki.component.annotation.Role;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.IdBlock;
 
 /**
  * Provides useful tools for use in the LaTeX templates.
@@ -98,4 +99,10 @@ public interface LaTeXTool
      * @since 1.7
      */
     boolean previousSiblingsContainsOnlyIdMacros(Block block);
+
+    /**
+     * @param idBLock the id block for which to check if it's inline or not
+     * @return true if inline, false otherwise
+     */
+    boolean isIdBlockInline(IdBlock idBLock);
 }

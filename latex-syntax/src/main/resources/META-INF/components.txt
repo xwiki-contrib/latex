@@ -1,3 +1,4 @@
 org.xwiki.contrib.latex.internal.LaTeXBlockRenderer
 org.xwiki.contrib.latex.internal.DefaultLaTeXTool
 org.xwiki.contrib.latex.internal.DefaultTemplateRenderer
+org.xwiki.contrib.latex.internal.DefaultIdBlockManager

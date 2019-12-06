@@ -13,8 +13,8 @@
 ${{{regex:.*\\begin\{document\}}}}
 
 \begin{figure}[h]
+\caption{\label{label}caption}
 test
-\caption{caption}
 \end{figure}
 
 \end{document}
