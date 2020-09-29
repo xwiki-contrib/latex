@@ -251,37 +251,37 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     // events
 
     @Override
-    public void beginWikiFarm(FilterEventParameters parameters) throws FilterException
+    public void beginWikiFarm(FilterEventParameters parameters)
     {
         this.currentReference = null;
     }
 
     @Override
-    public void endWikiFarm(FilterEventParameters parameters) throws FilterException
+    public void endWikiFarm(FilterEventParameters parameters)
     {
         this.currentReference = null;
     }
 
     @Override
-    public void beginWiki(String name, FilterEventParameters parameters) throws FilterException
+    public void beginWiki(String name, FilterEventParameters parameters)
     {
         this.currentReference = new WikiReference(name);
     }
 
     @Override
-    public void endWiki(String name, FilterEventParameters parameters) throws FilterException
+    public void endWiki(String name, FilterEventParameters parameters)
     {
         this.currentReference = null;
     }
 
     @Override
-    public void beginWikiSpace(String name, FilterEventParameters parameters) throws FilterException
+    public void beginWikiSpace(String name, FilterEventParameters parameters)
     {
         this.currentReference = new EntityReference(name, EntityType.SPACE, this.currentReference);
     }
 
     @Override
-    public void endWikiSpace(String name, FilterEventParameters parameters) throws FilterException
+    public void endWikiSpace(String name, FilterEventParameters parameters)
     {
         this.currentReference = this.currentReference.getParent();
     }
@@ -307,25 +307,25 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     }
 
     @Override
-    public void beginWikiDocumentLocale(Locale locale, FilterEventParameters parameters) throws FilterException
+    public void beginWikiDocumentLocale(Locale locale, FilterEventParameters parameters)
     {
         // Not supported
     }
 
     @Override
-    public void endWikiDocumentLocale(Locale locale, FilterEventParameters parameters) throws FilterException
+    public void endWikiDocumentLocale(Locale locale, FilterEventParameters parameters)
     {
         // Not supported
     }
 
     @Override
-    public void beginWikiDocumentRevision(String revision, FilterEventParameters parameters) throws FilterException
+    public void beginWikiDocumentRevision(String revision, FilterEventParameters parameters)
     {
         // Not supported
     }
 
     @Override
-    public void endWikiDocumentRevision(String revision, FilterEventParameters parameters) throws FilterException
+    public void endWikiDocumentRevision(String revision, FilterEventParameters parameters)
     {
         // Not supported
     }

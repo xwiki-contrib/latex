@@ -322,7 +322,7 @@ public class ConverterListener extends WrappingListener
     {
         EntityReference reference;
         if (!this.baseResourceMetadataQueue.isEmpty()) {
-            reference = this.currentStringDocumentResolver.resolve((String) this.baseResourceMetadataQueue.peek());
+            reference = this.currentStringDocumentResolver.resolve(this.baseResourceMetadataQueue.peek());
         } else {
             reference = this.baseEntityReference;
         }
