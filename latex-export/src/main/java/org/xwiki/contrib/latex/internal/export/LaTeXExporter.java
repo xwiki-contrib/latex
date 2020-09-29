@@ -120,7 +120,7 @@ public class LaTeXExporter
             xdom.traverse((Listener) filter);
             filter.endWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
             for (SpaceReference spaceElement : spaces) {
-                filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
+                filter.endWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
             }
         }
     }
