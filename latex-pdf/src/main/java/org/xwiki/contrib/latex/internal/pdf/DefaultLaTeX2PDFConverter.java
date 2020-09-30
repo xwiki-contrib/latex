@@ -36,11 +36,13 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
+import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.AccessMode;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -71,6 +73,16 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
     public File convert(File latexDirectory)
     {
         DockerClient dockerClient = getDockerClient();
+
+        // If the image doesn't exist locally, pull it.
+        List<Image> images =
+            dockerClient.listImagesCmd().withImageNameFilter(this.configuration.getDockerImageName()).exec();
+        if (images.isEmpty()) {
+            PullImageResultCallback pullImageResultCallback =
+                dockerClient.pullImageCmd(this.configuration.getDockerImageName())
+                .exec(new PullImageResultCallback());
+            wait(pullImageResultCallback);
+        }
 
         // Example docker run command line that we're simulating:
         //   docker run --rm -v <local dir>:/data blang/latex:ubuntu <cmd>
