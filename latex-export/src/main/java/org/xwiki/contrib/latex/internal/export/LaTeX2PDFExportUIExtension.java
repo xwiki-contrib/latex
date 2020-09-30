@@ -25,20 +25,21 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 
 /**
- * Inject a button in the standard export menu UI to export to LaTeX.
+ * Inject a button in the standard export menu UI to export to PDF (i.e. convert the LaTeX results to PDF
+ * automatically).
  * 
  * @version $Id$
- * @since 1.5
+ * @since 1.10
  */
 @Component
 @Singleton
-@Named(LaTeXExportUIExtension.ID)
-public class LaTeXExportUIExtension extends AbstractLaTeXExportUIExtension
+@Named(LaTeX2PDFExportUIExtension.ID)
+public class LaTeX2PDFExportUIExtension extends AbstractLaTeXExportUIExtension
 {
     /**
      * The ID of this UI extension.
      */
-    public static final String ID = "latexexport";
+    public static final String ID = "latex2pdfexport";
 
     @Override
     public String getId()
@@ -49,12 +50,12 @@ public class LaTeXExportUIExtension extends AbstractLaTeXExportUIExtension
     @Override
     protected String getQueryString()
     {
-        return null;
+        return "pdf=true";
     }
 
     @Override
     protected String getButtonLabelTranslationKey()
     {
-        return "latex.export.button.label";
+        return "latex.exportToPDF.button.label";
     }
 }

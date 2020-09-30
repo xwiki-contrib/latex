@@ -37,7 +37,7 @@ import org.testcontainers.utility.MountableFile;
 import org.xwiki.contrib.latex.test.po.LaTeXExportOptions;
 import org.xwiki.contrib.latex.test.po.LaTeXFormatPane;
 import org.xwiki.flamingo.skin.test.po.ExportModal;
-import org.xwiki.test.docker.internal.junit5.DockerTestUtils;
+import org.xwiki.test.docker.internal.junit5.FileTestUtils;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.integration.junit.LogCaptureConfiguration;
 import org.xwiki.test.ui.TestUtils;
@@ -101,7 +101,7 @@ public class ExportIT
             + "pages=LaTeX.WebHome&confirm=1"), new File("target/latex.zip"));
 
         // Unzip
-        DockerTestUtils.unzip(new File("target/latex.zip"), new File("target/latex"));
+        FileTestUtils.unzip(new File("target/latex.zip"), new File("target/latex"));
 
         // Convert the LaTeX results into PDF by using the Docker "blang/latex:ubuntu" image.
         // docker run --rm -i --user="$(id -u):$(id -g)" --net=none -v "$PWD":/data blang/latex:ubuntu

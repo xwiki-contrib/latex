@@ -33,6 +33,9 @@ public class LaTeXExportOptions extends BaseElement
     @FindBy(xpath = "//input[@type = 'submit' and @value = 'Export']")
     private WebElement buttonElement;
 
+    /**
+     * Click the export button to export to LaTeX.
+     */
     public void clickExportButton()
     {
         this.buttonElement.click();

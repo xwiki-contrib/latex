@@ -42,6 +42,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.xwiki.contrib.latex</groupId>
+      <artifactId>latex-pdf</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-uiextension-api</artifactId>
       <version>${platform.version}</version>
@@ -51,6 +56,14 @@
       <artifactId>xwiki-platform-filter-script</artifactId>
       <version>${platform.version}</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.sisu</groupId>
+      <artifactId>org.eclipse.sisu.plexus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-archiver</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

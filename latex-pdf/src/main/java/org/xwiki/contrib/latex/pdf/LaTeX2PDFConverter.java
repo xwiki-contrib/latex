@@ -17,44 +17,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.latex.internal.export;
+package org.xwiki.contrib.latex.pdf;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import java.io.File;
 
-import org.xwiki.component.annotation.Component;
+import org.xwiki.component.annotation.Role;
+import org.xwiki.stability.Unstable;
 
 /**
- * Inject a button in the standard export menu UI to export to LaTeX.
- * 
+ * Converts a directory containing LaTeX files to a PDF file.
+ *
  * @version $Id$
- * @since 1.5
+ * @since 1.10
  */
-@Component
-@Singleton
-@Named(LaTeXExportUIExtension.ID)
-public class LaTeXExportUIExtension extends AbstractLaTeXExportUIExtension
+@Role
+@Unstable
+public interface LaTeX2PDFConverter
 {
     /**
-     * The ID of this UI extension.
+     * Converts the passed directory containing LaTeX files to a PDF.
+     *
+     * @param latexDirectory the directory containing the LaTeX files (must contain a {@code index.tex} file)
+     * @return the generated PDF file
      */
-    public static final String ID = "latexexport";
-
-    @Override
-    public String getId()
-    {
-        return ID;
-    }
-
-    @Override
-    protected String getQueryString()
-    {
-        return null;
-    }
-
-    @Override
-    protected String getButtonLabelTranslationKey()
-    {
-        return "latex.export.button.label";
-    }
+    File convert(File latexDirectory);
 }

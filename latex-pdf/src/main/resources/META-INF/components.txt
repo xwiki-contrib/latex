@@ -1,0 +1,2 @@
+org.xwiki.contrib.latex.internal.pdf.DefaultLaTeX2PDFConfiguration
+org.xwiki.contrib.latex.internal.pdf.DefaultLaTeX2PDFConverter

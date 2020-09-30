@@ -19,7 +19,7 @@
  */
 package org.xwiki.contrib.latex.internal.export;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -75,7 +75,7 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
     @Override
     public List<EntityResourceAction> getSupportedResourceReferences()
     {
-        return Arrays.asList(ACTION);
+        return Collections.singletonList(ACTION);
     }
 
     @Override

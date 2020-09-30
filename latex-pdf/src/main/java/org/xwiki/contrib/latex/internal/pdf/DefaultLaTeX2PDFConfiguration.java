@@ -17,44 +17,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.latex.internal.export;
+package org.xwiki.contrib.latex.internal.pdf;
 
-import javax.inject.Named;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.contrib.latex.pdf.LaTeX2PDFConfiguration;
 
 /**
- * Inject a button in the standard export menu UI to export to LaTeX.
- * 
+ * Default configuration options for converting from LaTeX to PDF.
+ *
  * @version $Id$
- * @since 1.5
+ * @since 1.10
  */
 @Component
 @Singleton
-@Named(LaTeXExportUIExtension.ID)
-public class LaTeXExportUIExtension extends AbstractLaTeXExportUIExtension
+public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
 {
-    /**
-     * The ID of this UI extension.
-     */
-    public static final String ID = "latexexport";
-
     @Override
-    public String getId()
+    public String getDockerImageName()
     {
-        return ID;
+        return "blang/latex:ubuntu";
     }
 
     @Override
-    protected String getQueryString()
+    public List<String> getDockerCommands()
     {
-        return null;
+        return Arrays.asList("pdflatex", "-shell-escape", "index.tex");
     }
 
     @Override
-    protected String getButtonLabelTranslationKey()
+    public boolean autoRemoveContainer()
     {
-        return "latex.export.button.label";
+        return true;
     }
 }

@@ -32,7 +32,12 @@
   #template("startpage.vm")
   <div class="main layoutsubsection">
   <div id="mainContentArea">
-    <div id="document-title"><h1>$services.localization.render('latex.export.options.title')</h1></div>
+    #if ("$!request.pdf" == 'true')
+      #set ($exportTitle = $services.localization.render('latex.exportToPDF.options.title'))
+    #else
+      #set ($exportTitle = $services.localization.render('latex.export.options.title'))
+    #end
+    <div id="document-title"><h1>$exportTitle</h1></div>
     <form id="latexExportOptions" class="xform half" action="#">
       <dl>
         #set($defaultValues = {})

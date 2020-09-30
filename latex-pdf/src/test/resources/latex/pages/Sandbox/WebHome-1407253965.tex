@@ -1,0 +1,299 @@
+\documentclass{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%% Used for strike through support
+\usepackage[normalem]{ulem}
+%% Used for image support
+\usepackage{graphicx}
+%% For the Code macro
+%% Note: Needs to be loaded before csquotes
+\usepackage{minted}
+%% Use for quotes and to support nested quotes
+\usepackage{csquotes}
+%% For the message macros
+\usepackage{pifont,mdframed}
+%% For the TOC macro, to have local tocs
+\usepackage{etoc}
+%% For the Formula macro
+\usepackage{amsmath}
+%% For links to attachments (we embed the attachments and link to them)
+\usepackage{attachfile}
+%% For putting standalone blocks inside table cells and keeping table cells to a minimal width
+\usepackage{varwidth}
+%% Used for links
+%% Note: Should be loaded last
+\usepackage{hyperref}
+%% For the container macro
+\usepackage{multicol}
+
+%% Message macro environments
+
+\newenvironment{xwikimessage}[1]
+  {\par\begin{mdframed}[linewidth=2pt,linecolor=#1]%
+    \begin{list}{}{\leftmargin=1cm
+                   \labelwidth=\leftmargin}\item[\Large\ding{43}]}
+  {\end{list}\end{mdframed}\par}
+
+\newenvironment{xwikierror}
+  {\begin{xwikimessage}{red}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikiwarning}
+  {\begin{xwikimessage}{yellow}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikiinfo}
+  {\begin{xwikimessage}{blue}}
+  {\end{xwikimessage}}
+
+\newenvironment{xwikisuccess}
+  {\begin{xwikimessage}{green}}
+  {\end{xwikimessage}}
+
+\newcommand{\xwikiinfoinline}[1] {
+\fcolorbox{blue}{white}{#1}}
+
+\newcommand{\xwikiwarninginline}[1] {
+\fcolorbox{yellow}{white}{#1}}
+
+\newcommand{\xwikierrorinline}[1] {
+\fcolorbox{red}{white}{#1}}
+
+\newcommand{\xwikisuccessinline}[1] {
+\fcolorbox{green}{white}{#1}}
+
+%% Set the style of internal references (hyperref)
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
+
+%% Ensure that images have a max width of 95% of the line width
+\makeatletter
+\setkeys{Gin}{width=\ifdim\Gin@nat@width>\linewidth
+  0.95\linewidth
+\else
+  \Gin@nat@width
+\fi}
+\makeatother
+
+%% Define heading command so that it can be overridden easily
+\newcommand{\heading}[2]{
+  \ifx#11
+    \section{#2}
+  \else
+  \ifx#12
+    \subsection{#2}
+  \else
+  \ifx#13
+    \subsubsection{#2}
+  \else
+  \ifx#14
+    \paragraph{#2}
+  \else
+  \ifx#15
+    \subparagraph{#2}
+  \ifnum#1>5
+    \subparagraph{#2}
+  \fi
+  \fi
+  \fi
+  \fi
+  \fi
+  \fi}
+
+%% Define xwikihorizontalline command so that it can be overridden easily
+\newcommand{\xwikihorizontalline}{
+\noindent\rule{\textwidth}{0.4pt}\vspace{0.5\baselineskip}
+}
+
+%% Use LaTeX quotes by default
+\MakeOuterQuote{"}
+
+\begin{document}
+
+The sandbox is a part of your wiki that you can freely modify. It's meant to let you practice editing. You will discover how page editing works and create new pages. Simply click on \textbf{Edit} to get started!
+
+\begin{xwikiinfo}
+Don't worry about overwriting or losing stuff when editing the page, you can always roll back to the first version of the page from the "History" tab at the bottom of the page.
+\end{xwikiinfo}
+
+If you want to give a look to the underlying \href{http://localhost:8080/xwiki/bin/view/XWiki/XWikiSyntax}{XWiki Syntax}, you can click on "Wiki code" in the "Show" menu or click on the "Source" tab when editing the page.
+
+Here are a number of test pages you can play with:
+
+\begin{itemize}
+ \item \href{http://localhost:8080/xwiki/bin/view/Sandbox/TestPage1}{Sandbox Test Page 1}
+ \item \href{http://localhost:8080/xwiki/bin/view/Sandbox/TestPage2}{Sandbox Test Page 2}
+ \item \href{http://localhost:8080/xwiki/bin/view/Sandbox/TestPage3}{Sandbox Test Page 3}
+\end{itemize}
+
+Below is a demonstration of the \href{http://localhost:8080/xwiki/bin/view/XWiki/XWikiSyntax}{XWiki Syntax} you can use in wiki pages (headings, images, tables).
+
+\label{HHeadings}
+\heading{1}{Headings}
+
+XWiki offers 6 levels of headings. You can use them to structure your pages.
+
+\label{HLevel2Heading}
+\heading{2}{Level 2 Heading}
+
+\label{HLevel3Heading}
+\heading{3}{Level 3 Heading}
+
+\label{HLevel4Heading4}
+\heading{4}{Level 4 Heading 4}
+
+\label{HLevel5Heading5}
+\heading{5}{Level 5 Heading 5}
+
+\label{HLevel6Heading6}
+\heading{6}{Level 6 Heading 6}
+
+\label{HStyles}
+\heading{1}{Styles}
+
+Basic styles are supported in XWiki:
+
+\begin{itemize}
+ \item \textbf{Text in Bold}
+ \item \textit{Text in Italics}
+ \item \underline{Text in Underline}
+ \item \sout{Text in Strikethrough}
+ \item Text in \textsubscript{subscript}
+ \item Text in \textsuperscript{superscript}
+\end{itemize}
+
+\label{HLists}
+\heading{1}{Lists}
+
+You can create various types of lists in your wiki pages:
+
+\label{HUnorderedlist}
+\heading{2}{Unordered list}
+
+\begin{itemize}
+ \item Level 1
+ \begin{itemize}
+  \item Level 2
+  \begin{itemize}
+   \item Level 3
+  \end{itemize}
+  \item Level 2
+ \end{itemize}
+ \item Level 1
+\end{itemize}
+
+\label{HNumberedlist}
+\heading{2}{Numbered list}
+
+\begin{enumerate}
+ \item Item
+ \begin{enumerate}
+  \item Subitem
+  \begin{enumerate}
+   \item Item
+  \end{enumerate}
+ \end{enumerate}
+ \item Subitem
+\end{enumerate}
+
+\label{HMixedlist}
+\heading{2}{Mixed list}
+
+\begin{enumerate}
+ \item Item 1
+ \begin{enumerate}
+  \item Item 2
+  \begin{itemize}
+   \item Item 3
+   \item Item 4
+  \end{itemize}
+ \end{enumerate}
+ \item Item 5
+\end{enumerate}
+
+\label{HTables}
+\heading{1}{Tables}
+
+You can create tables right into wiki pages:
+
+\label{HTablewithheadersinthetoprow}
+\heading{2}{Table with headers in the top row}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{ table header } & \textbf{ table header } & \textbf{ table header}\\
+\hline
+ cell  &  cell  &  cell\\
+\hline
+ cell  &  cell  &  cell\\
+\hline
+\end{tabular}
+\end{center}
+
+\label{HTablewithheadersinthetoprowandleftcolumn}
+\heading{2}{Table with headers in the top row and left column}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{ table header } & \textbf{ table header } & \textbf{ table header}\\
+\hline
+\textbf{ table header } &  cell  &  cell\\
+\hline
+\textbf{ table header } &  cell  &  cell\\
+\hline
+\end{tabular}
+\end{center}
+
+\label{HLinks}
+\heading{1}{Links}
+
+XWiki allows you to create links to other pages in your wiki or on the web:
+
+\begin{itemize}
+ \item  -\textgreater{} links to the homepage of the current space
+ \item Sandbox Home -\textgreater{} links can have labels
+ \item \href{http://localhost:8080/xwiki/bin/view/Main/}{Wiki Home} -\textgreater{} a link can use the SpaceName.PageName format to link to a page located in another space
+ \item \url{http://www.xwiki.org} -\textgreater{} you can link to wiki pages or to external websites
+ \item \href{http://www.xwiki.org}{XWiki.org Website} -\textgreater{} link labels work for exernal links too
+\end{itemize}
+
+You can also create links to attachments:
+
+\attachfile{files/attachments/xwiki/Sandbox/WebHome/XWikiLogo-329090990.png}
+
+\label{HImages}
+\heading{1}{Images}
+
+You can insert images in your wiki pages:
+
+\begin{center}
+\includegraphics{files/attachments/xwiki/Sandbox/WebHome/XWikiLogo-329090990.png}
+\end{center}
+
+\label{HMacros}
+\heading{1}{Macros}
+
+Macros allow you to make wiki content look better and to add additional features to your wiki. Here are 2 examples of how macros can be used in wiki pages:
+
+\label{HWarningMacro}
+\heading{2}{Warning Macro}
+
+This macro allows you to draw users' attention to a specific piece of information:
+
+\begin{xwikiwarning}
+Hello World
+\end{xwikiwarning}
+
+\label{HTableofContents}
+\heading{2}{Table of Contents}
+
+This macro automatically generates a table of contents of your wiki page based on headings:
+
+\etocsettocstyle{}{}
+\tableofcontents
+
+\end{document}
