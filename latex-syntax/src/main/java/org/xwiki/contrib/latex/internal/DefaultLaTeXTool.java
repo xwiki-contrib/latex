@@ -32,13 +32,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.FigureBlock;
 import org.xwiki.rendering.block.IdBlock;
 import org.xwiki.rendering.block.MacroMarkerBlock;
-import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
-import org.xwiki.rendering.macro.figure.FigureTypeRecognizer;
 import org.xwiki.script.ScriptContextManager;
 
 /**
@@ -81,7 +78,7 @@ public class DefaultLaTeXTool implements LaTeXTool
     private ScriptContextManager scriptContextManager;
 
     @Inject
-    private FigureTypeRecognizer figureTypeRecognizer;
+    private FigureTool figureTool;
 
     @Inject
     private IdBlockManager idBlockManager;
@@ -137,19 +134,9 @@ public class DefaultLaTeXTool implements LaTeXTool
     }
 
     @Override
-    public boolean isTable(Block block)
+    public FigureTool getFigureTool()
     {
-        // In XWiki 10.10+, a MetaDataBlock is surrounding the FigureBlock to make the macro editable inline. Thus
-        // we need to skip it.
-        Block computedBlock = block;
-        if (block instanceof MetaDataBlock && block.getChildren().get(0) instanceof FigureBlock) {
-            computedBlock = block.getChildren().get(0);
-        }
-        if (computedBlock instanceof FigureBlock) {
-            return this.figureTypeRecognizer.isTable((FigureBlock) computedBlock);
-        } else {
-            return false;
-        }
+        return this.figureTool;
     }
 
     @Override

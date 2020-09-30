@@ -67,11 +67,9 @@ public interface LaTeXTool
     List<Block> getSiblings(Block currentBlock);
 
     /**
-     * @param block the figure block (or a MetaData block wrapping it) that needs to be checked to verify if it contains
-     * only a table (should be a FigureBlock)
-     * @return true if it contains only a table or false otherwise
+     * @return the figure tool providing useful Figure-related tools for use in the LaTeX templates
      */
-    boolean isTable(Block block);
+    FigureTool getFigureTool();
 
     /**
      * Retrieve and create a Stack if it doesn't exist.

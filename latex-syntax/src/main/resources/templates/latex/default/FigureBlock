@@ -1,13 +1,8 @@
+#set ($figureBlock = $latex.block)
 #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
 
 
-## If the content only has a single TableBlock then use the table environment, otherwise use the figure environment
-#if ("$latex.block.parent.class.simpleName" == 'MacroMarkerBlock')
-  #set ($firstBlock = $latex.block.parent.children.get(0))
-#else
-  #set ($firstBlock = $latex.block.children.get(0))
-#end
-#if ($latex.tool.isTable($firstBlock))
+#if ($latex.tool.figureTool.isTable($figureBlock))
 \begin{table}[h]
 $latex.processor.process($latex.block.getChildren())
 \end{table}##
