@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConfiguration;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
+import org.xwiki.contrib.latex.pdf.LaTeX2PDFException;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
@@ -70,7 +71,20 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
     private LaTeX2PDFConfiguration configuration;
 
     @Override
-    public File convert(File latexDirectory)
+    public File convert(File latexDirectory) throws LaTeX2PDFException
+    {
+        try {
+            return convertInternal(latexDirectory);
+        } catch (Exception e) {
+            // Note: docker-java only throws runtime exceptions so we convert them to checked exceptions so that the
+            // XWiki converter API is more expressive for the caller and follows the XWiki best practices related to
+            // exception handling.
+            throw new LaTeX2PDFException(
+                String.format("Failed to convert LaTeX sources inside the [%s] directory to PDF", latexDirectory), e);
+        }
+    }
+
+    private File convertInternal(File latexDirectory)
     {
         DockerClient dockerClient = getDockerClient();
 

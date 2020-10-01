@@ -119,7 +119,7 @@ public class LaTeXExporter
         Map<String, Object> properties = this.propertiesGenerator.extract(xcontext.getRequest());
 
         String outputFileName = getOutputFileName(name, xcontext);
-        setResponseContent(outputFileName, response, xcontext);
+        setResponseContentType(outputFileName, response, xcontext);
 
         // If a PDF is supposed to be generated then generate the latex zip in the perm dir, perform conversion from
         // latex to pdf and stream back the pdf into the output.
@@ -164,14 +164,19 @@ public class LaTeXExporter
         return outputFileName;
     }
 
-    private void setResponseContent(String outputFileName, XWikiResponse response, XWikiContext xcontext)
+    private void setResponseContentType(String outputFileName, XWikiResponse response, XWikiContext xcontext)
     {
+        String contentDisposition;
         if (isPDF(xcontext)) {
             response.setContentType("application/pdf");
+            // Display inline
+            contentDisposition = String.format("inline; filename=%s", outputFileName);
         } else {
             response.setContentType("application/zip");
+            // Force download since it's a zip (the browser cannot display it inline)
+            contentDisposition = String.format("attachment; filename=%s", outputFileName);
         }
-        response.setHeader("Content-Disposition", String.format("attachment; filename=%s", outputFileName));
+        response.setHeader("Content-Disposition", contentDisposition);
     }
 
     private boolean isPDF(XWikiContext xcontext)
