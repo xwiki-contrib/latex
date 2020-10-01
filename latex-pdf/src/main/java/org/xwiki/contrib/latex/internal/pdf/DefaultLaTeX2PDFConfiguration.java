@@ -55,8 +55,10 @@ public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
     @Override
     public List<String> getDockerCommands()
     {
-        return this.configurationSource.getProperty(PREFIX + "dockerCommands",
-            Arrays.asList("pdflatex", "-shell-escape", "index.tex"));
+        // Note: we run the compilation twice so that the TOC is generated properly (it requires two passes from
+        // pdflatex).
+        return Arrays.asList("sh", "-c", this.configurationSource.getProperty(PREFIX + "dockerCommands",
+            "pdflatex -shell-escape index.tex; pdflatex -shell-escape index.tex"));
     }
 
     @Override
