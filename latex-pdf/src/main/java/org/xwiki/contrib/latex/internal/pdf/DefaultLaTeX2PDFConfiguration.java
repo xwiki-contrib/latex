@@ -49,7 +49,7 @@ public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
     @Override
     public String getDockerImageName()
     {
-        return this.configurationSource.getProperty(PREFIX + "pdf.dokerImageName", "blang/latex:ubuntu");
+        return this.configurationSource.getProperty(PREFIX + "pdf.dockerImageName", "blang/latex:ubuntu");
     }
 
     @Override
