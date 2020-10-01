@@ -22,9 +22,12 @@ package org.xwiki.contrib.latex.internal.pdf;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.configuration.ConfigurationSource;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConfiguration;
 
 /**
@@ -37,21 +40,28 @@ import org.xwiki.contrib.latex.pdf.LaTeX2PDFConfiguration;
 @Singleton
 public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
 {
+    private static final String PREFIX = "latex.";
+
+    @Inject
+    @Named("xwikiproperties")
+    private ConfigurationSource configurationSource;
+
     @Override
     public String getDockerImageName()
     {
-        return "blang/latex:ubuntu";
+        return this.configurationSource.getProperty(PREFIX + "pdf.dokerImageName", "blang/latex:ubuntu");
     }
 
     @Override
     public List<String> getDockerCommands()
     {
-        return Arrays.asList("pdflatex", "-shell-escape", "index.tex");
+        return this.configurationSource.getProperty(PREFIX + "pdf.dockerCommands", Arrays.asList("pdflatex", "-shell"
+            + "-escape", "index.tex"));
     }
 
     @Override
     public boolean autoRemoveContainer()
     {
-        return true;
+        return this.configurationSource.getProperty(PREFIX + "pdf.removeContainer", true);
     }
 }

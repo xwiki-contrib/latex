@@ -45,6 +45,11 @@
       <version>${commons.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-configuration-default</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java-core</artifactId>
       <version>${dockerJava.version}</version>
@@ -87,6 +92,17 @@
       <artifactId>xwiki-commons-tool-test-component</artifactId>
       <scope>test</scope>
       <version>${commons.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-environment-standard</artifactId>
+      <scope>test</scope>
+      <version>${commons.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
