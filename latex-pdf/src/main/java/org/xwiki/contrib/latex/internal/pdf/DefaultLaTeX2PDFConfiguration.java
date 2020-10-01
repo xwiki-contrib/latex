@@ -40,7 +40,7 @@ import org.xwiki.contrib.latex.pdf.LaTeX2PDFConfiguration;
 @Singleton
 public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
 {
-    private static final String PREFIX = "latex.";
+    private static final String PREFIX = "latex.pdf.";
 
     @Inject
     @Named("xwikiproperties")
@@ -49,19 +49,19 @@ public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
     @Override
     public String getDockerImageName()
     {
-        return this.configurationSource.getProperty(PREFIX + "pdf.dockerImageName", "blang/latex:ubuntu");
+        return this.configurationSource.getProperty(PREFIX + "dockerImageName", "blang/latex:ubuntu");
     }
 
     @Override
     public List<String> getDockerCommands()
     {
-        return this.configurationSource.getProperty(PREFIX + "pdf.dockerCommands",
+        return this.configurationSource.getProperty(PREFIX + "dockerCommands",
             Arrays.asList("pdflatex", "-shell-escape", "index.tex"));
     }
 
     @Override
     public boolean autoRemoveContainer()
     {
-        return this.configurationSource.getProperty(PREFIX + "pdf.removeContainer", true);
+        return this.configurationSource.getProperty(PREFIX + "removeContainer", true);
     }
 }
