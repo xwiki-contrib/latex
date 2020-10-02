@@ -22,6 +22,8 @@ package org.xwiki.contrib.latex.test;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.Test;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
@@ -56,7 +58,27 @@ class LaTeX2PDFIT
 
         LaTeX2PDFConverter converter = this.componentManager.getInstance(LaTeX2PDFConverter.class);
         File pdfFile = converter.convert(this.tmpDir);
-        assertEquals(new File(this.tmpDir, "index.pdf"), pdfFile);
+        File fullPdfFile = new File(this.tmpDir, "index.pdf");
+        assertEquals(fullPdfFile, pdfFile);
         assertTrue(pdfFile.exists());
+
+        // Assert the generated PDF
+        assertTrue(getPDFContent(fullPdfFile).contains(
+            "The sandbox is a part of your wiki that you can freely modify"));
+    }
+
+    private String getPDFContent(File pdfFile) throws Exception
+    {
+        PDDocument pdd = PDDocument.load(pdfFile);
+        String text;
+        try {
+            PDFTextStripper stripper = new PDFTextStripper();
+            text = stripper.getText(pdd);
+        } finally {
+            if (pdd != null) {
+                pdd.close();
+            }
+        }
+        return text;
     }
 }
