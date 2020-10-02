@@ -29,6 +29,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFException;
@@ -53,6 +54,9 @@ import static org.xwiki.contrib.latex.internal.export.Unzipper.unzip;
 @Singleton
 public class PDFLaTeXExporter extends AbstractLaTeXExporter
 {
+    @Inject
+    private Logger logger;
+
     @Inject
     private LaTeX2PDFConverter laTeX2PDFConverter;
 
@@ -99,6 +103,8 @@ public class PDFLaTeXExporter extends AbstractLaTeXExporter
             // Delete the temporary directory to not use too much space on disk, unless we're in debug mode.
             if (xcontext.getRequest().getParameter("debug") != null) {
                 FileUtils.deleteDirectory(outputDir);
+            } else {
+                this.logger.info("LaTeX PDF export compilation files available at [{}]", unzippedLaTeXDirectory);
             }
         } else {
             throw new LaTeX2PDFException(String.format("Error when generating the PDF file in [%s]. Compilation "
