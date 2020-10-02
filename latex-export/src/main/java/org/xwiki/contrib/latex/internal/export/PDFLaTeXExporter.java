@@ -101,7 +101,7 @@ public class PDFLaTeXExporter extends AbstractLaTeXExporter
                 FileUtils.deleteDirectory(outputDir);
             }
         } else {
-            throw new LaTeX2PDFException(String.format("Error when generating the PDF file in [%s–. Compilation "
+            throw new LaTeX2PDFException(String.format("Error when generating the PDF file in [%s]. Compilation "
                 + "logs: [%s]", unzippedLaTeXDirectory, result.getLogs()));
         }
     }
