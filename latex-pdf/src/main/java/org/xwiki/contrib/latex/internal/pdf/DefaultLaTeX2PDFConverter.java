@@ -84,6 +84,20 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         }
     }
 
+    @Override
+    public boolean isReady()
+    {
+        boolean isReady;
+        DockerClient dockerClient = getDockerClient();
+        try {
+            dockerClient.pingCmd().exec();
+            isReady = true;
+        } catch (Exception e) {
+            isReady = false;
+        }
+        return isReady;
+    }
+
     private LaTeX2PDFResult convertInternal(File latexDirectory)
     {
         DockerClient dockerClient = getDockerClient();

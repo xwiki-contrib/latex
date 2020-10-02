@@ -42,4 +42,13 @@ public interface LaTeX2PDFConverter
      * @throws LaTeX2PDFException when an error occurs during the conversion
      */
     LaTeX2PDFResult convert(File latexDirectory) throws LaTeX2PDFException;
+
+    /**
+     * @return true if the converter is ready to perform conversions (e.g. will return false if docker is not installed
+     *         or not ready)
+     */
+    default boolean isReady()
+    {
+        return true;
+    }
 }
