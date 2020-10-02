@@ -93,7 +93,7 @@ public class PDFLaTeXExporter extends AbstractLaTeXExporter
         // Step 3: Convert from latex to pdf
         LaTeX2PDFResult result = this.laTeX2PDFConverter.convert(unzippedLaTeXDirectory);
         // Step 4: Read the generated PDF and stream it back to the response output stream
-        if (result.getPDFFile().exists()) {
+        if (result.getPDFFile() != null) {
             FileUtils.copyFile(result.getPDFFile(), response.getOutputStream());
             response.getOutputStream().close();
             // Delete the temporary directory to not use too much space on disk, unless we're in debug mode.
