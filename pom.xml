@@ -37,9 +37,6 @@
   <properties>
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
     <xwiki.issueManagement.jira.id>LATEX</xwiki.issueManagement.jira.id>
-    <!-- TODO: Remove once we upgrade the parent version to be 11.0RC1+ -->
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <sonar.organization>xwiki</sonar.organization>
   </properties>
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/latex.git</connection>
@@ -64,39 +61,12 @@
     <module>latex-pdf</module>
     <module>latex-syntax</module>
   </modules>
-  <build>
-    <plugins>
-      <!-- Skipping Spoon since there was a problem with our custom Spoon rule. Was fixed in more recent versions of
-           XWiki. TODO: Remove once we upgrade the parent pom version. -->
-      <plugin>
-        <groupId>fr.inria.gforge.spoon</groupId>
-        <artifactId>spoon-maven-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
   <profiles>
     <profile>
       <id>integration-tests</id>
       <modules>
         <module>latex-test</module>
       </modules>
-    </profile>
-    <!-- TODO: Remove once we upgrade the parent version to be 11.0RC1+ -->
-    <profile>
-      <id>quality</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <!-- Lock down plugin version for build reproducibility -->
-            <version>3.5.0.1254</version>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 </project>

@@ -31,7 +31,7 @@
   <name>LaTeX - PDF</name>
   <description>Converts from LaTeX to PDF</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>1.00</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.57</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX to PDF Converter</xwiki.extension.name>
     <!-- List it as a module containing a filter -->
@@ -116,5 +116,16 @@
   </dependencies>
   <build>
     <testSourceDirectory>src/test/it</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/*IT.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>
