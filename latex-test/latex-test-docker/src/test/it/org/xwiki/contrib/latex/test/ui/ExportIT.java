@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,8 @@ import org.xwiki.test.ui.po.ViewPage;
 import org.xwiki.tree.test.po.TreeElement;
 import org.xwiki.tree.test.po.TreeNodeElement;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Verify the ability to export to LaTeX and then transform into PDF.
@@ -54,12 +55,12 @@ import static org.junit.Assert.assertTrue;
  * @version $Id: 4ec9fafbe8b7b043c145f37d2fa753eadec6e17b $
  */
 @UITest
-public class ExportIT
+class ExportIT
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExportIT.class);
 
     @AfterEach
-    public void validatationExcludes(LogCaptureConfiguration logCaptureConfiguration)
+    void validatationExcludes(LogCaptureConfiguration logCaptureConfiguration)
     {
         logCaptureConfiguration.registerExcludes(
             "New fonts found, font cache will be re-built",
@@ -71,7 +72,8 @@ public class ExportIT
     }
 
     @Test
-    public void export(TestUtils setup) throws Exception
+    @Order(1)
+    void exportToLaTeX(TestUtils setup) throws Exception
     {
         setup.loginAsSuperAdmin();
 
@@ -123,6 +125,39 @@ public class ExportIT
 
         // Assert the generated PDF
         assertTrue(getPDFContent(new File("target/latex/index.pdf")).contains("Hello world"));
+    }
+
+    @Test
+    @Order(2)
+    void exportToPDF(TestUtils setup) throws Exception
+    {
+        ViewPage viewPage = setup.gotoPage("LaTeX", "WebHome");
+
+        // Modal created before the opening to avoid fade effect. (see BaseModal)
+        ExportModal exportModal = new ExportModal();
+
+        viewPage.clickMoreActionsSubMenuEntry("tmExport");
+        exportModal.openOtherFormatPane();
+        LaTeXFormatPane laTeXFormatPane = new LaTeXFormatPane();
+        assertTrue(laTeXFormatPane.isTreeAvailable());
+        assertTrue(laTeXFormatPane.isExportAsPDFButtonAvailable());
+
+        // Verify that the current page is selected
+        TreeElement treeElement = laTeXFormatPane.getTreeElement();
+        List<TreeNodeElement> topLevelNodes = treeElement.getTopLevelNodes();
+        assertEquals(1, topLevelNodes.size());
+
+        LaTeXExportOptions leo = laTeXFormatPane.clickExportAsPDFButton();
+        leo.clickExportButton();
+
+        // Since it's difficult to click on the browser save dialog or to configure the browsers to do automatic saves
+        // we take the approach of downloading the PDF directly from the client side (ie from this test) and to save
+        // it on the host in the target/ directory.
+        FileUtils.copyURLToFile(new URL("http://localhost:8080/xwiki/bin/latexexport/LaTeX/WebHome?"
+            + "pages=LaTeX.WebHome&pdf=true&confirm=1"), new File("target/latex.pdf"));
+
+        // Assert the generated PDF
+        assertTrue(getPDFContent(new File("target/latex.pdf")).contains("Hello world"));
     }
 
     private String getPDFContent(File pdfFile) throws Exception

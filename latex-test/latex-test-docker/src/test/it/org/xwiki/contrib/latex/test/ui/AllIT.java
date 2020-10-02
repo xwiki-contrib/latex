@@ -29,7 +29,7 @@ import org.xwiki.test.docker.junit5.UITest;
  * @version $Id$
  */
 @UITest
-public class AllIT
+class AllIT
 {
     @Nested
     @DisplayName("Export")

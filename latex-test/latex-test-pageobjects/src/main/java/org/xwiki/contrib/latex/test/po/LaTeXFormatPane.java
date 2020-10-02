@@ -30,12 +30,22 @@ public class LaTeXFormatPane extends OtherFormatPane
 {
     private static final String LATEX_EXPORT_LINK_TEXT = "Export as LaTeX";
 
+    private static final String LATEXPDF_EXPORT_LINK_TEXT = "Export as PDF (LaTeX)";
+
     /**
      * @return true if the export LaTeX button exists.
      */
     public boolean isExportAsLaTeXButtonAvailable()
     {
         return isExportButtonAvailable(LATEX_EXPORT_LINK_TEXT);
+    }
+
+    /**
+     * @return true if the export to PDF (through LaTeX) button exists.
+     */
+    public boolean isExportAsPDFButtonAvailable()
+    {
+        return isExportButtonAvailable(LATEXPDF_EXPORT_LINK_TEXT);
     }
 
     /**
@@ -46,6 +56,17 @@ public class LaTeXFormatPane extends OtherFormatPane
     public LaTeXExportOptions clickExportAsLaTeXButton()
     {
         clickExportButton(LATEX_EXPORT_LINK_TEXT);
+        return new LaTeXExportOptions();
+    }
+
+    /**
+     * Click on the export as PDF (through LaTeX) button.
+     *
+     * @return the Page Object representing the Export options UI
+     */
+    public LaTeXExportOptions clickExportAsPDFButton()
+    {
+        clickExportButton(LATEXPDF_EXPORT_LINK_TEXT);
         return new LaTeXExportOptions();
     }
 }
