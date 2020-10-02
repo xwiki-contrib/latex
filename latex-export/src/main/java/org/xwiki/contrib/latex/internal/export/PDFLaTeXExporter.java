@@ -102,7 +102,7 @@ public class PDFLaTeXExporter extends AbstractLaTeXExporter
             }
         } else {
             throw new LaTeX2PDFException(String.format("Error when generating the PDF file in [%s]. Compilation "
-                + "logs: [%s]", unzippedLaTeXDirectory, result.getLogs()));
+                + "logs: [\n%s\n]", unzippedLaTeXDirectory, result.getLogs()));
         }
     }
 
