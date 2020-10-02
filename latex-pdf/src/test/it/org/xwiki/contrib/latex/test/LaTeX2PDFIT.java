@@ -27,12 +27,16 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.Test;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
+import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
 import org.xwiki.test.annotation.AllComponents;
 import org.xwiki.test.junit5.XWikiTempDir;
 import org.xwiki.test.junit5.mockito.ComponentTest;
 import org.xwiki.test.junit5.mockito.InjectComponentManager;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -57,14 +61,25 @@ class LaTeX2PDFIT
         FileUtils.copyDirectory(new File("src/test/resources/latex"), this.tmpDir);
 
         LaTeX2PDFConverter converter = this.componentManager.getInstance(LaTeX2PDFConverter.class);
-        File pdfFile = converter.convert(this.tmpDir);
+        LaTeX2PDFResult result = converter.convert(this.tmpDir);
         File fullPdfFile = new File(this.tmpDir, "index.pdf");
-        assertEquals(fullPdfFile, pdfFile);
-        assertTrue(pdfFile.exists());
+        assertEquals(fullPdfFile, result.getPDFFile());
+        assertTrue(result.getPDFFile().exists());
 
         // Assert the generated PDF
         assertTrue(getPDFContent(fullPdfFile).contains(
             "The sandbox is a part of your wiki that you can freely modify"));
+    }
+
+    @Test
+    void convertWhenCompilationError() throws Exception
+    {
+        FileUtils.copyDirectory(new File("src/test/resources/latexInvalid"), this.tmpDir);
+
+        LaTeX2PDFConverter converter = this.componentManager.getInstance(LaTeX2PDFConverter.class);
+        LaTeX2PDFResult result = converter.convert(this.tmpDir);
+        assertNull(result.getPDFFile());
+        assertThat(result.getLogs(), containsString("==> Fatal error occurred, no output PDF file produced!"));
     }
 
     private String getPDFContent(File pdfFile) throws Exception

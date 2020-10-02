@@ -20,7 +20,6 @@
 package org.xwiki.contrib.latex.internal.pdf;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,6 +31,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConfiguration;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFException;
+import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
@@ -71,7 +71,7 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
     private LaTeX2PDFConfiguration configuration;
 
     @Override
-    public File convert(File latexDirectory) throws LaTeX2PDFException
+    public LaTeX2PDFResult convert(File latexDirectory) throws LaTeX2PDFException
     {
         try {
             return convertInternal(latexDirectory);
@@ -84,7 +84,7 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         }
     }
 
-    private File convertInternal(File latexDirectory)
+    private LaTeX2PDFResult convertInternal(File latexDirectory)
     {
         DockerClient dockerClient = getDockerClient();
 
@@ -99,25 +99,42 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         }
 
         // Example docker run command line that we're simulating:
-        //   docker run --rm -v <local dir>:/data blang/latex:ubuntu <cmd>
-        CreateContainerResponse container = dockerClient.createContainerCmd(this.configuration.getDockerImageName())
-            .withCmd(this.configuration.getDockerCommands())
-            .withHostConfig(HostConfig.newHostConfig()
-                // Tell Docker to auto remove the container when it stops. It's configurable in order to help debug
-                // issues, so that it's possible to "docker exec" in the container to debug afterwards.
-                .withAutoRemove(this.configuration.autoRemoveContainer())
-                .withBinds(
-                    // Make sure it also works when XWiki is running in Docker
-                    new Bind(DOCKER_SOCK, new Volume(DOCKER_SOCK)),
-                    // Make the LaTeX source visible to the container, in the right place
-                    new Bind(latexDirectory.getAbsolutePath(), new Volume("/data"), AccessMode.rw))
-            )
-            .exec();
+        //   docker run -v <local dir>:/data blang/latex:ubuntu <cmd>
+        CreateContainerResponse container = null;
+        String logs = null;
+        try {
+            container = dockerClient.createContainerCmd(this.configuration.getDockerImageName())
+                .withCmd(this.configuration.getDockerCommands())
+                .withHostConfig(HostConfig.newHostConfig()
+                    .withBinds(
+                        // Make sure it also works when XWiki is running in Docker
+                        new Bind(DOCKER_SOCK, new Volume(DOCKER_SOCK)),
+                        // Make the LaTeX source visible to the container, in the right place
+                        new Bind(latexDirectory.getAbsolutePath(), new Volume("/data"), AccessMode.rw))
+                )
+                .exec();
+            // Perform the compilation
+            startContainer(dockerClient, container.getId());
+            // Get container logs & display them in debug mode
+            logs = getLogs(container.getId(), dockerClient);
+        } finally {
+            // Remove the container. Note that we cannot use autoremove since we need to get the logs and that works
+            // only if the container is still running.
+            if (container != null) {
+                dockerClient.removeContainerCmd(container.getId()).exec();
+            }
+        }
 
-        // Start (and stop and remove automatically when the conversion is finished, thanks to the autoremove above).
-        startContainer(dockerClient, container.getId());
+        // Prepare results. Express an error by setting a null PDF file.
+        File pdfFile = new File(latexDirectory, "index.pdf");
+        LaTeX2PDFResult result;
+        if (pdfFile.exists()) {
+            result = new LaTeX2PDFResult(pdfFile, logs);
+        } else {
+            result = new LaTeX2PDFResult(logs);
+        }
 
-        return new File(latexDirectory, "index.pdf");
+        return result;
     }
 
     private DockerClient getDockerClient()
@@ -140,18 +157,11 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         WaitContainerResultCallback resultCallback = new WaitContainerResultCallback();
         dockerClient.waitContainerCmd(containerId).exec(resultCallback);
         wait(resultCallback);
-
-        // Display container logs in debug mode
-        if (this.logger.isDebugEnabled()) {
-            for (String logLine : getLogs(containerId, dockerClient)) {
-                this.logger.debug(logLine);
-            }
-        }
     }
 
-    private List<String> getLogs(String containerId, DockerClient dockerClient)
+    private String getLogs(String containerId, DockerClient dockerClient)
     {
-        List<String> logs = new ArrayList<>();
+        StringBuilder logs = new StringBuilder();
         LogContainerCmd logContainerCmd = dockerClient.logContainerCmd(containerId)
             .withStdErr(true)
             .withStdOut(true)
@@ -161,10 +171,12 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         wait(logContainerCmd.exec(new LogContainerResultCallback() {
                 @Override
                 public void onNext(Frame item) {
-                    logs.add(item.toString());
+                    logs.append(item.toString()).append('\n');
                 }
             }));
-        return logs;
+        String result = logs.toString();
+        this.logger.debug(result);
+        return result;
     }
 
     private void wait(ResultCallbackTemplate template)

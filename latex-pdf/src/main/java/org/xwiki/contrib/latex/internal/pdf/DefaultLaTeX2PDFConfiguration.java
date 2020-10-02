@@ -60,10 +60,4 @@ public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
         return Arrays.asList("sh", "-c", this.configurationSource.getProperty(PREFIX + "dockerCommands",
             "pdflatex -shell-escape index.tex; pdflatex -shell-escape index.tex"));
     }
-
-    @Override
-    public boolean autoRemoveContainer()
-    {
-        return this.configurationSource.getProperty(PREFIX + "removeContainer", true);
-    }
 }

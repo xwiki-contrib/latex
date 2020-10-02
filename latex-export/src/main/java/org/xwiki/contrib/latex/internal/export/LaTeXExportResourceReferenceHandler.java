@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
@@ -39,6 +40,8 @@ import org.xwiki.resource.entity.EntityResourceReference;
 import org.xwiki.security.authorization.AccessDeniedException;
 import org.xwiki.security.authorization.ContextualAuthorizationManager;
 import org.xwiki.security.authorization.Right;
+
+import com.xpn.xwiki.XWikiContext;
 
 /**
  * Entry point to export a document as a LaTeX package.
@@ -61,7 +64,11 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
     public static final EntityResourceAction ACTION = new EntityResourceAction(ACTION_STRING);
 
     @Inject
-    private LaTeXExporter exporter;
+    private LaTeXExporter defaultExporter;
+
+    @Inject
+    @Named("pdf")
+    private LaTeXExporter pdfExporter;
 
     @Inject
     private ContextualAuthorizationManager authorization;
@@ -71,6 +78,9 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
 
     @Inject
     private Container container;
+
+    @Inject
+    private Provider<XWikiContext> xcontextProvider;
 
     @Override
     public List<EntityResourceAction> getSupportedResourceReferences()
@@ -97,7 +107,11 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
         if (request.getProperty("confirm") != null) {
             // Export the document
             try {
-                this.exporter.export(documentReference);
+                if (isPDF()) {
+                    this.pdfExporter.export(documentReference);
+                } else {
+                    this.defaultExporter.export(documentReference);
+                }
             } catch (Exception e) {
                 throw new ResourceReferenceHandlerException(
                     String.format("Failed to export document [%s] to LaTeX", documentReference), e);
@@ -110,5 +124,11 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
                 throw new ResourceReferenceHandlerException("Failed to render the LaTeX export properties UI", e);
             }
         }
+    }
+
+    private boolean isPDF()
+    {
+        String pdfQueryStringValue = this.xcontextProvider.get().getRequest().getParameter("pdf");
+        return pdfQueryStringValue == null ? false : Boolean.valueOf(pdfQueryStringValue);
     }
 }

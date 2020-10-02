@@ -1,4 +1,5 @@
-org.xwiki.contrib.latex.internal.export.LaTeXExporter
+org.xwiki.contrib.latex.internal.export.DefaultLaTeXExporter
+org.xwiki.contrib.latex.internal.export.PDFLaTeXExporter
 org.xwiki.contrib.latex.internal.export.LaTeXExportResourceReferenceHandler
 org.xwiki.contrib.latex.internal.export.LaTeXExportUIExtension
 org.xwiki.contrib.latex.internal.export.LaTeX2PDFExportUIExtension

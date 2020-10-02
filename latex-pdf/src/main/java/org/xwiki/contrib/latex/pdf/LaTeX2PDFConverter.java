@@ -38,8 +38,8 @@ public interface LaTeX2PDFConverter
      * Converts the passed directory containing LaTeX files to a PDF.
      *
      * @param latexDirectory the directory containing the LaTeX files (must contain a {@code index.tex} file)
-     * @return the generated PDF file
+     * @return the generated PDF file and the compilation logs
      * @throws LaTeX2PDFException when an error occurs during the conversion
      */
-    File convert(File latexDirectory) throws LaTeX2PDFException;
+    LaTeX2PDFResult convert(File latexDirectory) throws LaTeX2PDFException;
 }

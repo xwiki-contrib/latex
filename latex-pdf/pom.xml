@@ -31,7 +31,7 @@
   <name>LaTeX - PDF</name>
   <description>Converts from LaTeX to PDF</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.57</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.83</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX to PDF Converter</xwiki.extension.name>
     <!-- List it as a module containing a filter -->
@@ -124,6 +124,31 @@
           <includes>
             <include>**/*IT.java</include>
           </includes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.revapi</groupId>
+        <artifactId>revapi-maven-plugin</artifactId>
+        <configuration>
+          <analysisConfiguration><![CDATA[
+            {
+              "revapi": {
+                "ignore" : [
+                  {
+                    "code": "java.method.removed",
+                    "old": "method boolean org.xwiki.contrib.latex.pdf.LaTeX2PDFConfiguration::autoRemoveContainer()",
+                    "justification": "Just introduced the API a few hours ago. Not long enough to justify keeping it!"
+                  },
+                  {
+                    "code": "java.method.returnTypeChanged",
+                    "old": "method java.io.File org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter::convert(java.io.File) throws org.xwiki.contrib.latex.pdf.LaTeX2PDFException",
+                    "new": "method org.xwiki.contrib.latex.pdf.LaTeX2PDFResult org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter::convert(java.io.File) throws org.xwiki.contrib.latex.pdf.LaTeX2PDFException",
+                    "justification": "Just introduced the API a few hours ago. Not long enough to justify keeping it!"
+                  }
+                ]
+              }
+            }
+          ]]></analysisConfiguration>
         </configuration>
       </plugin>
     </plugins>
