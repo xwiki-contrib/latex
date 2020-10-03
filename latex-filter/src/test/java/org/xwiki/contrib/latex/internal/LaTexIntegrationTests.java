@@ -39,6 +39,7 @@ import org.xwiki.rendering.wiki.WikiModel;
 import org.xwiki.test.annotation.AllComponents;
 import org.xwiki.test.mockito.MockitoComponentManager;
 
+import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
 import com.xpn.xwiki.test.MockitoOldcore;
 import com.xpn.xwiki.web.XWikiServletRequest;
@@ -46,6 +47,10 @@ import com.xpn.xwiki.web.XWikiServletRequestStub;
 import com.xpn.xwiki.web.XWikiServletResponse;
 import com.xpn.xwiki.web.XWikiServletResponseStub;
 import com.xpn.xwiki.web.XWikiServletURLFactory;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in {@link
@@ -86,7 +91,7 @@ public class LaTexIntegrationTests
         this.oldcore.before(this.getClass());
 
         XWikiDocument document =
-            new XWikiDocument(new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "space", "document"));
+            new XWikiDocument(new DocumentReference("wiki", "space", "document"));
         document.setAttachment("attachment.txt", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
         document.setAttachment("image.png", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
@@ -95,7 +100,7 @@ public class LaTexIntegrationTests
             new byte[]{ '1', '2', '3', '4' }), this.oldcore.getXWikiContext());
 
         XWikiDocument document2 =
-            new XWikiDocument(new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "space2", "document2"));
+            new XWikiDocument(new DocumentReference("wiki", "space2", "document2"));
         document2.setAttachment("attachment.txt", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
 
@@ -103,7 +108,7 @@ public class LaTexIntegrationTests
         this.oldcore.getSpyXWiki().saveDocument(document2, this.oldcore.getXWikiContext());
 
         XWikiDocument otherdocument = new XWikiDocument(
-            new DocumentReference(this.oldcore.getXWikiContext().getWikiId(), "otherspace", "otherdocument"));
+            new DocumentReference("wiki", "otherspace", "otherdocument"));
         otherdocument.setAttachment("otherattachment.txt", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
             this.oldcore.getXWikiContext());
         otherdocument.setAttachment("otherimage.png", new ByteArrayInputStream(new byte[]{ '1', '2', '3', '4' }),
@@ -125,6 +130,9 @@ public class LaTexIntegrationTests
         XWikiServletResponseStub initialResponse = new XWikiServletResponseStub();
         XWikiServletResponse response = new XWikiServletResponse(initialResponse);
         this.oldcore.getXWikiContext().setResponse(response);
+
+        doReturn(new URL("https://localhost:8080")).when(
+            this.oldcore.getSpyXWiki()).getServerURL(eq("wiki"), any(XWikiContext.class));
     }
 
     @After

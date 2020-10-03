@@ -21,6 +21,7 @@ package org.xwiki.contrib.latex.internal.output;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -36,6 +37,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.xwiki.bridge.DocumentAccessBridge;
@@ -138,12 +140,40 @@ public class ConverterListener extends WrappingListener
                 convertedReference = convertURLReference(convertedReference, forceDownload);
             } else if (ResourceType.DOCUMENT.equals(reference.getType())) {
                 convertedReference = convertDOCUMENTReference(convertedReference);
+            } else if (ResourceType.PATH.equals(reference.getType())) {
+                convertedReference = convertPATHReference(convertedReference);
             }
         } catch (Exception e) {
             this.logger.error("Unexpected error when trying to convert resource reference [{}]", reference, e);
         }
 
         return convertedReference;
+    }
+
+    private ResourceReference convertPATHReference(ResourceReference reference)
+    {
+        // If the path doesn't start with "/" then consider that there's nothing to do: it's either already a URL
+        // or it's something weird that we can't convert.
+        String path = reference.getReference();
+        if (!path.startsWith("/")) {
+            return reference;
+        }
+
+        // Convert to an absolute URL.
+        ResourceReference convertedResourceReference;
+        try {
+            XWikiContext xcontext = this.xcontextProvider.get();
+            URL serverURL = xcontext.getWiki().getServerURL(
+                this.baseEntityReference.extractReference(EntityType.WIKI).getName(), xcontext);
+            convertedResourceReference = toURLReference(reference, new URL(serverURL, path).toString());
+        } catch (MalformedURLException e) {
+            // Error, log a warning and fall back to not doing any conversion
+            this.logger.warn("Failed to convert path [{}] to a URL. Root error: [{}]", path,
+                ExceptionUtils.getRootCauseMessage(e));
+            convertedResourceReference = reference;
+        }
+
+        return convertedResourceReference;
     }
 
     private ResourceReference convertATTACHMENTReference(ResourceReference reference)
@@ -159,7 +189,7 @@ public class ConverterListener extends WrappingListener
 
         String path = builder.toString();
 
-        ResourceReference convertedReference = toPathReference(reference, path);
+        ResourceReference convertedReference = toReference(reference, path);
 
         // Store attachment content
         if (!this.stored.contains(path)) {
@@ -207,7 +237,7 @@ public class ConverterListener extends WrappingListener
                     "files/downloaded/" + url.getHost() + '/' + reference.getReference().hashCode() + '/' + filename;
 
                 // Convert the reference
-                convertedReference = toPathReference(reference, path);
+                convertedReference = toReference(reference, path);
 
                 if (!this.stored.contains(path)) {
                     try (InputStream stream = url.openStream()) {
@@ -264,11 +294,17 @@ public class ConverterListener extends WrappingListener
         return getCurrentDocumentReference().equals(documentReference);
     }
 
-    private ResourceReference toPathReference(ResourceReference reference, String path)
+    private ResourceReference toReference(ResourceReference reference, String path)
     {
-        ResourceReference convertedReference = new ResourceReference(path, ResourceType.PATH);
+        ResourceReference convertedReference = new ResourceReference(path, reference.getType());
         convertedReference.setParameters(reference.getParameters());
+        return convertedReference;
+    }
 
+    private ResourceReference toURLReference(ResourceReference reference, String url)
+    {
+        ResourceReference convertedReference = new ResourceReference(url, ResourceType.URL);
+        convertedReference.setParameters(reference.getParameters());
         return convertedReference;
     }
 

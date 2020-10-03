@@ -301,7 +301,7 @@ XWiki allows you to create links to other pages in your wiki or on the web:
 
 You can also create links to attachments:
 
-XWikiLogo.png
+\attachfile{XWikiLogo.png}
 
 \label{HImages}
 \heading{1}{Images}

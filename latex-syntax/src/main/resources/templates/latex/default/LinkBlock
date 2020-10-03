@@ -17,8 +17,7 @@
       ${latex.processor.process($latex.block.getChildren())}##
     #end
   #end
-#elseif ($type == 'url')
-  ## If there's no children, use \url{...}
+#elseif ($type == 'url' || $type == 'path')
   #if ($latex.block.getChildren().isEmpty())
     \url{${reference}}##
   #else
@@ -30,19 +29,12 @@
   #else
     \href{mailto:${reference}}{${latex.processor.process($latex.block.getChildren())}}##
   #end
-#elseif ($type == 'path')
+#elseif ($type == 'attach')
   #set ($escapedReference = $latex.tool.escape($reference))
   #if ($latex.block.getChildren().isEmpty())
+    ## Use a default icon when no label is provided. Another option would be to use the filename as text.
     \attachfile{$latex.tool.escape($reference)}##
   #else
     \textattachfile{$latex.tool.escape($reference)}{${latex.processor.process($latex.block.getChildren())}}##
-  #end
-#elseif ($type == 'attach')
-  ## Link to an attachment. Add a footnote with the attachment name
-  ## If no label is specified, use the attachment name
-  #if ($latex.block.getChildren().isEmpty())
-    $latex.tool.escape($reference)##
-  #else
-    ${latex.processor.process($latex.block.getChildren())}\footnote{$latex.tool.escape($reference)}##
   #end
 #end

@@ -43,7 +43,9 @@ import org.xwiki.rendering.syntax.Syntax;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
+import com.xpn.xwiki.web.ExternalServletURLFactory;
 import com.xpn.xwiki.web.XWikiResponse;
+import com.xpn.xwiki.web.XWikiURLFactory;
 
 /**
  * Export a document in LaTeX.
@@ -80,8 +82,20 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
     @Override
     public void export(DocumentReference documentReference) throws Exception
     {
+        // Set the Servlet URL factor that generates full external URLs since we generate standalone content
+        // (LaTeX or PDF)
         XWikiContext xcontext = this.xcontextProvider.get();
+        XWikiURLFactory currentURLFactory = xcontext.getURLFactory();
+        try {
+            xcontext.setURLFactory(new ExternalServletURLFactory(xcontext));
+            exportInternal(documentReference, xcontext);
+        } finally {
+            xcontext.setURLFactory(currentURLFactory);
+        }
+    }
 
+    private void exportInternal(DocumentReference documentReference, XWikiContext xcontext) throws Exception
+    {
         // Get document
         XWikiDocument document = xcontext.getWiki().getDocument(documentReference, xcontext);
         xcontext.setDoc(document);
@@ -128,6 +142,7 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
 
             List<SpaceReference> spaces = documentReference.getSpaceReferences();
 
+            filter.beginWiki(documentReference.getWikiReference().getName(), FilterEventParameters.EMPTY);
             for (SpaceReference spaceElement : spaces) {
                 filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
             }
@@ -137,6 +152,7 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
             for (SpaceReference spaceElement : spaces) {
                 filter.endWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
             }
+            filter.endWiki(documentReference.getWikiReference().getName(), FilterEventParameters.EMPTY);
         }
     }
 

@@ -1,33 +1,45 @@
 .#------------------------------------------------------------------------------
 .input|filter+xml
 .#------------------------------------------------------------------------------
-<wikiSpace name="space">
-  <wikiDocument name="document">
-    <document metadata="">
-      <paragraph>
-        <word>word</word>
-
-        <link reference="attach:attachment.txt"><word>attachmentlabel</word></link>
-        <link reference="attach:otherspace.otherdocument@otherattachment.txt"><word>otherattachmentlabel</word></link>
-        <link reference="attach:space.document@attachment.txt"><word>currentattachmentlabel</word></link>
-
-        <image reference="attach:image.png"/>
-        <image reference="attach:otherspace.otherdocument@otherimage.png"/>
-        <image reference="attach:space.document@image.png"/>
-
-        <!-- This tests 2 things:
-             - that special characters are removed
-             - that non-ASCII chars are supported
-        -->
-        <image reference="attach:späce percent%dot.some.png"/>
-
-        <link reference="doc:OtherSpace.OtherDocument"><word>otherdocumentlink</word></link>
-        <link reference="doc:"><word>emptylink</word></link>
-        <link reference="doc:space.document"><word>currentdocument</word></link>
-      </paragraph>
-    </document>
-  </wikiDocument>
-</wikiSpace>
+<wiki name="wiki">
+	<wikiSpace name="space">
+		<wikiDocument name="document">
+			<document metadata="">
+				<paragraph>
+					<word>word</word>
+					<newLine/>
+					<link reference="attach:attachment.txt"><word>attachmentlabel</word></link>
+					<newLine/>
+					<link reference="attach:otherspace.otherdocument@otherattachment.txt"><word>otherattachmentlabel</word></link>
+					<newLine/>
+					<link reference="attach:space.document@attachment.txt"><word>currentattachmentlabel</word></link>
+					<newLine/>
+					<image reference="attach:image.png"/>
+					<newLine/>
+					<image reference="attach:otherspace.otherdocument@otherimage.png"/>
+					<newLine/>
+					<image reference="attach:space.document@image.png"/>
+					<newLine/>
+					<!-- This tests 2 things:
+							 - that special characters are removed
+							 - that non-ASCII chars are supported
+					-->
+					<image reference="attach:späce percent%dot.some.png"/>
+					<newLine/>
+					<link reference="doc:OtherSpace.OtherDocument"><word>otherdocumentlink</word></link>
+					<newLine/>
+					<link reference="doc:"><word>emptylink</word></link>
+					<newLine/>
+					<link reference="doc:space.document"><word>currentdocument</word></link>
+					<newLine/>
+					<link reference="path:/xwiki/whatever"><word>path</word></link>
+					<newLine/>
+					<link reference="path:http://localhost:8080/xwiki/whatever"><word>path</word></link>
+				</paragraph>
+			</document>
+		</wikiDocument>
+  </wikiSpace>
+</wiki>
 .#------------------------------------------------------------------------------
 .expect|latex
 .configuration.source=${{{extension.repository}}}/test1-1.0.zip
