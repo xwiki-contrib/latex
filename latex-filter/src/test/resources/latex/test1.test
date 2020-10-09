@@ -26,6 +26,7 @@
 					-->
 					<image reference="attach:späce percent%dot.some.png"/>
 					<newLine/>
+					<!-- Non existing doc reference -->
 					<link reference="doc:OtherSpace.OtherDocument"><word>otherdocumentlink</word></link>
 					<newLine/>
 					<link reference="doc:"><word>emptylink</word></link>

@@ -19,53 +19,34 @@
  */
 package org.xwiki.contrib.latex.internal.output;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.commons.io.IOUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.internal.TemplateRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
 
 /**
- * Create the index file.
+ * Create the LaTeX index file for the wiki document.
  * 
  * @version $Id$
  */
-@Component(roles = IndexSerializer.class)
+@Component(roles = IndexGenerator.class)
 @Singleton
-public class IndexSerializer
+public class IndexGenerator
 {
     @Inject
     private TemplateRenderer templateRenderer;
 
     /**
-     * @param stream the stream to write to
-     * @throws IOException when failing to create the index file
+     * @return the generated index LaTeX content
      */
-    public void serialize(OutputStream stream) throws IOException
+    public String generate()
     {
         // Get and execute the index template
         WikiPrinter wikiprinter = new DefaultWikiPrinter();
         this.templateRenderer.render("Index", wikiprinter);
-        writeln(stream, wikiprinter.toString());
+        return wikiprinter.toString();
     }
-
-    private void writeln(OutputStream stream, String txt) throws IOException
-    {
-        write(stream, txt, "\n");
-    }
-
-    private void write(OutputStream stream, String... strs) throws IOException
-    {
-        for (String str : strs) {
-            IOUtils.write(str, stream, StandardCharsets.UTF_8);
-        }
-    }
-
 }

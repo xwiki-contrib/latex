@@ -58,6 +58,8 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
 
     private boolean coverPage = true;
 
+    private String coverPageImage;
+
     private String title;
 
     private String subtitle;
@@ -196,7 +198,7 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     }
 
     /**
-     * @return true if there shoud be a page cover generated or false otherwise
+     * @return true if there should be a page cover generated or false otherwise
      */
     @PropertyName("Cover Page")
     @PropertyDescription("Whether a cover page (title, author, date, etc) should be generated or not")
@@ -211,6 +213,29 @@ public class LaTeXOutputProperties extends DefaultFilterStreamProperties
     public void setCoverPage(boolean coverPage)
     {
         this.coverPage = coverPage;
+    }
+
+    /**
+     * @return the xwiki syntax 2.1 ({@code xwiki/2.1} image reference of an image that should be displayed on the
+     *         cover page (i.e. the part after the {@code image:} prefix).
+     *         For example: {@code attach:space1.space2.page1@image.png}
+     * @since 1.11
+     */
+    @PropertyName("Cover Page Image")
+    @PropertyDescription("The XWiki Syntax 2.1 image reference of an image that should be displayed on the "
+        + "cover page. For example: 'attach:space1.space2.page1@image.png'")
+    public String getCoverPageImage()
+    {
+        return this.coverPageImage;
+    }
+
+    /**
+     * @param coverPageImage see {@link #getCoverPageImage()}
+     * @since 1.11
+     */
+    public void setCoverPageImage(String coverPageImage)
+    {
+        this.coverPageImage = coverPageImage;
     }
 
     /**

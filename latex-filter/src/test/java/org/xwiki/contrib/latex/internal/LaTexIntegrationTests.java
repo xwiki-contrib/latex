@@ -42,6 +42,7 @@ import org.xwiki.test.mockito.MockitoComponentManager;
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
 import com.xpn.xwiki.test.MockitoOldcore;
+import com.xpn.xwiki.util.XWikiStubContextProvider;
 import com.xpn.xwiki.web.XWikiServletRequest;
 import com.xpn.xwiki.web.XWikiServletRequestStub;
 import com.xpn.xwiki.web.XWikiServletResponse;
@@ -51,6 +52,8 @@ import com.xpn.xwiki.web.XWikiServletURLFactory;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Run all tests found in the classpath. These {@code *.test} files must follow the conventions described in {@link
@@ -88,6 +91,15 @@ public class LaTexIntegrationTests
     @Before
     public void before() throws Exception
     {
+        // Prevent this.oldcore.before() to initialize the real XWikiStubContextProvider since it would be initialized
+        // without a Request and thus without a ServletURLFactory. We simulate a clone of the oldcore's XWikiContext
+        // below with:
+        //  when(stubContextProvider.createStubContext()).thenReturn(this.oldcore.getXWikiContext());
+        // This ensures that the ServletURLFactory is set in the XWikiContext and thus is available when
+        // DefaultLaTeXResourceConverter executes (and thus DAB.getDocumentURL() can work as expected).
+        XWikiStubContextProvider stubContextProvider =
+            this.oldcore.getMocker().registerMockComponent(XWikiStubContextProvider.class);
+
         this.oldcore.before(this.getClass());
 
         XWikiDocument document =
@@ -124,8 +136,10 @@ public class LaTexIntegrationTests
 
         XWikiServletRequest request = new XWikiServletRequest(initialRequest);
         this.oldcore.getXWikiContext().setRequest(request);
+
         XWikiServletURLFactory urlFactory = new XWikiServletURLFactory(this.oldcore.getXWikiContext());
         this.oldcore.getXWikiContext().setURLFactory(urlFactory);
+        when(stubContextProvider.createStubContext()).thenReturn(this.oldcore.getXWikiContext());
 
         XWikiServletResponseStub initialResponse = new XWikiServletResponseStub();
         XWikiServletResponse response = new XWikiServletResponse(initialResponse);

@@ -21,22 +21,18 @@ package org.xwiki.contrib.latex.internal.output;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -44,7 +40,7 @@ import org.xwiki.bridge.DocumentAccessBridge;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
-import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
+import org.xwiki.contrib.latex.internal.LaTeXResourceConverter;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
@@ -52,8 +48,12 @@ import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.model.reference.EntityReferenceSerializer;
+import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.ImageBlock;
+import org.xwiki.rendering.block.LinkBlock;
+import org.xwiki.rendering.block.MetaDataBlock;
+import org.xwiki.rendering.block.match.MetadataBlockMatcher;
 import org.xwiki.rendering.listener.MetaData;
-import org.xwiki.rendering.listener.WrappingListener;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
@@ -62,13 +62,13 @@ import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiAttachment;
 import com.xpn.xwiki.doc.XWikiDocument;
 
-/**
- * @version $Id$
- */
-@Component(roles = ConverterListener.class)
+@Component
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
-public class ConverterListener extends WrappingListener
+public class DefaultLaTeXResourceConverter implements LaTeXResourceConverter
 {
+    @Inject
+    private Logger logger;
+
     @Inject
     private Provider<XWikiContext> xcontextProvider;
 
@@ -90,63 +90,64 @@ public class ConverterListener extends WrappingListener
     @Inject
     private DocumentAccessBridge bridge;
 
-    @Inject
-    private Logger logger;
-
     private Set<String> stored = new HashSet<>();
-
-    private Deque<ResourceReference> currentReference = new ArrayDeque<>();
-
-    private LaTeXOutputProperties properties;
 
     private ZipArchiveOutputStream zipStream;
 
-    private EntityReference baseEntityReference;
+    private EntityReference currentEntityReference;
 
     private DocumentReference currentDocumentReference;
 
-    private Deque<String> baseResourceMetadataQueue = new ArrayDeque<>();
-
-    /**
-     * @param properties the filter properties
-     * @param zipStream the zip to add entries to
-     */
-    public void initialize(LaTeXOutputProperties properties, ZipArchiveOutputStream zipStream)
+    @Override
+    public void initialize(EntityReference currentEntityReference, OutputStream outputStream)
     {
-        this.zipStream = zipStream;
-        this.properties = properties;
-    }
-
-    /**
-     * @param entityReference the current reference
-     */
-    public void setCurrentReference(EntityReference entityReference)
-    {
-        this.baseEntityReference = entityReference;
+        this.currentEntityReference = currentEntityReference;
         this.currentDocumentReference = null;
+        this.zipStream = (ZipArchiveOutputStream) outputStream;
     }
 
-    private ResourceReference convertReference(ResourceReference reference, boolean forceDownload)
+    @Override
+    public ResourceReference convert(ResourceReference reference, boolean forceDownload)
+    {
+        return convert(reference, null, forceDownload);
+    }
+
+    @Override
+    public ResourceReference convert(LinkBlock linkBlock)
+    {
+        return convert(linkBlock.getReference(), getBaseReference(linkBlock), false);
+    }
+
+    @Override
+    public ResourceReference convert(ImageBlock imageBlock)
+    {
+        return convert(imageBlock.getReference(), getBaseReference(imageBlock), true);
+    }
+
+    @Override
+    public ResourceReference convert(ResourceReference reference, String baseResourceReference,
+        boolean forceDownload)
     {
         ResourceReference convertedReference = reference;
-
+        EntityReference resolvedBaseReference = getResolvedBaseReference(baseResourceReference);
         try {
             // TODO: make all this extensible instead of if/else
             if (ResourceType.ATTACHMENT.equals(reference.getType())) {
-                convertedReference = convertATTACHMENTReference(convertedReference);
+                convertedReference = convertATTACHMENTReference(convertedReference, resolvedBaseReference);
             } else if (ResourceType.DATA.equals(reference.getType())) {
                 convertedReference = convertDATAReference(convertedReference);
             } else if (ResourceType.URL.equals(reference.getType())) {
                 convertedReference = convertURLReference(convertedReference, forceDownload);
             } else if (ResourceType.DOCUMENT.equals(reference.getType())) {
-                convertedReference = convertDOCUMENTReference(convertedReference);
+                convertedReference = convertDOCUMENTReference(convertedReference, resolvedBaseReference);
             } else if (ResourceType.PATH.equals(reference.getType())) {
                 convertedReference = convertPATHReference(convertedReference);
             }
         } catch (Exception e) {
-            this.logger.error("Unexpected error when trying to convert resource reference [{}]", reference, e);
+            this.logger.error(
+                "Unexpected error when trying to convert resource reference [{}] using base reference [{}]",
+                reference, resolvedBaseReference, e);
         }
-
         return convertedReference;
     }
 
@@ -164,7 +165,7 @@ public class ConverterListener extends WrappingListener
         try {
             XWikiContext xcontext = this.xcontextProvider.get();
             URL serverURL = xcontext.getWiki().getServerURL(
-                this.baseEntityReference.extractReference(EntityType.WIKI).getName(), xcontext);
+                this.currentEntityReference.extractReference(EntityType.WIKI).getName(), xcontext);
             convertedResourceReference = toURLReference(reference, new URL(serverURL, path).toString());
         } catch (MalformedURLException e) {
             // Error, log a warning and fall back to not doing any conversion
@@ -176,13 +177,13 @@ public class ConverterListener extends WrappingListener
         return convertedResourceReference;
     }
 
-    private ResourceReference convertATTACHMENTReference(ResourceReference reference)
+    private ResourceReference convertATTACHMENTReference(ResourceReference reference, EntityReference baseReference)
     {
         StringBuilder builder = new StringBuilder();
         builder.append("files/attachments/");
         // Convert reference
         AttachmentReference attachmentReference =
-            (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, getBaseReference());
+            (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, baseReference);
 
         String normalizedPath = this.latexPathSerializer.serialize(attachmentReference);
         builder.append(normalizedPath);
@@ -252,28 +253,24 @@ public class ConverterListener extends WrappingListener
         return convertedReference;
     }
 
-    private ResourceReference convertDOCUMENTReference(ResourceReference reference)
+    private ResourceReference convertDOCUMENTReference(ResourceReference reference, EntityReference baseReference)
     {
         ResourceReference convertedReference = reference;
 
         if (StringUtils.isNotEmpty(reference.getReference())) {
             DocumentReference documentReference =
-                (DocumentReference) this.resolver.resolve(reference, EntityType.DOCUMENT, getBaseReference());
+                (DocumentReference) this.resolver.resolve(reference, EntityType.DOCUMENT, baseReference);
 
             if (isCurrentDocument(documentReference)) {
                 convertedReference = new DocumentResourceReference("");
                 convertedReference.setParameters(reference.getParameters());
             } else {
-                if (this.properties.getEntities() != null && this.properties.getEntities().matches(documentReference)) {
-                    // TODO: ?
-                } else {
-                    // External URL
-                    String url = this.bridge.getDocumentURL(new DocumentReference(documentReference), "view",
-                        reference.getParameter(DocumentResourceReference.QUERY_STRING),
-                        reference.getParameter(DocumentResourceReference.ANCHOR), true);
+                // External URL
+                String url = this.bridge.getDocumentURL(new DocumentReference(documentReference), "view",
+                    reference.getParameter(DocumentResourceReference.QUERY_STRING),
+                    reference.getParameter(DocumentResourceReference.ANCHOR), true);
 
-                    convertedReference = new ResourceReference(url, ResourceType.URL);
-                }
+                convertedReference = new ResourceReference(url, ResourceType.URL);
             }
         }
 
@@ -283,7 +280,7 @@ public class ConverterListener extends WrappingListener
     private DocumentReference getCurrentDocumentReference()
     {
         if (this.currentDocumentReference == null) {
-            this.currentDocumentReference = this.currentDocumentResolver.resolve(this.baseEntityReference);
+            this.currentDocumentReference = this.currentDocumentResolver.resolve(this.currentEntityReference);
         }
 
         return this.currentDocumentReference;
@@ -310,80 +307,29 @@ public class ConverterListener extends WrappingListener
 
     private void store(String path, InputStream inputStream) throws IOException
     {
-        ZipArchiveEntry entry = new ZipArchiveEntry(path);
-
-        try {
-            this.zipStream.putArchiveEntry(entry);
-
-            IOUtils.copy(inputStream, this.zipStream);
-
-            this.stored.add(path);
-        } catch (IOException e) {
-            this.logger.error("Failed to store file at [{}]", path, e);
-        } finally {
-            this.zipStream.closeArchiveEntry();
-        }
+        ZipUtils.store(path, inputStream, this.zipStream);
+        this.stored.add(path);
     }
 
-    @Override
-    public void beginMetaData(MetaData metadata)
-    {
-        // Stack the BASE reference since we need it to resolve references
-        String baseReference = getBaseReference(metadata);
-        if (baseReference != null) {
-            this.baseResourceMetadataQueue.push(baseReference);
-        }
-    }
-
-    @Override
-    public void endMetaData(MetaData metadata)
-    {
-        String baseReference = getBaseReference(metadata);
-        if (baseReference != null) {
-            this.baseResourceMetadataQueue.pop();
-        }
-    }
-
-    private String getBaseReference(MetaData metadata)
-    {
-        String result = null;
-        Map<String, Object> metaData = metadata.getMetaData();
-        if (metaData != null) {
-            result = (String) metaData.get(MetaData.BASE);
-        }
-        return result;
-    }
-
-    private EntityReference getBaseReference()
+    private EntityReference getResolvedBaseReference(String baseReference)
     {
         EntityReference reference;
-        if (!this.baseResourceMetadataQueue.isEmpty()) {
-            reference = this.currentStringDocumentResolver.resolve(this.baseResourceMetadataQueue.peek());
+        if (!StringUtils.isEmpty(baseReference)) {
+            reference = this.currentStringDocumentResolver.resolve(baseReference);
         } else {
-            reference = this.baseEntityReference;
+            reference = this.currentEntityReference;
         }
         return reference;
     }
 
-    @Override
-    public void onImage(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
+    private String getBaseReference(Block currentBlock)
     {
-        super.onImage(convertReference(reference, true), freestanding, parameters);
-    }
-
-    @Override
-    public void beginLink(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
-    {
-        ResourceReference convertedReference = convertReference(reference, false);
-
-        this.currentReference.push(convertedReference);
-
-        super.beginLink(convertedReference, freestanding, parameters);
-    }
-
-    @Override
-    public void endLink(ResourceReference reference, boolean freestanding, Map<String, String> parameters)
-    {
-        super.endLink(this.currentReference.pop(), freestanding, parameters);
+        String reference = "";
+        MetaDataBlock metaDataBlock =
+            currentBlock.getFirstBlock(new MetadataBlockMatcher(MetaData.BASE), Block.Axes.ANCESTOR);
+        if (metaDataBlock != null) {
+            reference = (String) metaDataBlock.getMetaData().getMetaData(MetaData.BASE);
+        }
+        return reference;
     }
 }

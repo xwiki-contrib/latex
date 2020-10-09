@@ -20,6 +20,7 @@
 package org.xwiki.contrib.latex.internal.output;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -29,6 +30,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.script.ScriptContext;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -38,6 +40,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.contrib.latex.internal.LaTeXBlockRenderer;
+import org.xwiki.contrib.latex.internal.LaTeXResourceConverter;
 import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.filter.FilterDescriptorManager;
 import org.xwiki.filter.FilterEventParameters;
@@ -78,11 +81,10 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
      */
     private static final String LATEX_BINDING_PROPERTIES = "properties";
 
-    @Inject
-    private FilterDescriptorManager filterManager;
+    private static final String LATEX_BINDING_RESOURCE_CONVERTER = "resourceConverter";
 
     @Inject
-    private ConverterListener converterListener;
+    private FilterDescriptorManager filterManager;
 
     @Inject
     @Named("latexpath")
@@ -93,10 +95,13 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     private BlockRenderer renderer;
 
     @Inject
-    private IndexSerializer indexSerializer;
+    private IndexGenerator indexGenerator;
 
     @Inject
     private ScriptContextManager scriptContextManager;
+
+    @Inject
+    private Provider<LaTeXResourceConverter>resourceConverterProvider;
 
     private boolean contextInitialized;
 
@@ -115,23 +120,18 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
     private Set<String> includes = new LinkedHashSet<>();
 
-    private ZipArchiveOutputStream getZipStream() throws FilterException
+    private void initializeZipStream() throws FilterException
     {
-        if (this.zipStream == null) {
-            OutputTarget target = this.properties.getTarget();
-
-            if (target instanceof OutputStreamOutputTarget) {
-                try {
-                    this.zipStream = new ZipArchiveOutputStream(((OutputStreamOutputTarget) target).getOutputStream());
-                } catch (IOException e) {
-                    throw new FilterException("Failed to create zip output stream", e);
-                }
-            } else {
-                throw new FilterException("Unsupported target [" + target.getClass() + "]");
+        OutputTarget target = this.properties.getTarget();
+        if (target instanceof OutputStreamOutputTarget) {
+            try {
+                this.zipStream = new ZipArchiveOutputStream(((OutputStreamOutputTarget) target).getOutputStream());
+            } catch (IOException e) {
+                throw new FilterException("Failed to create zip output stream", e);
             }
+        } else {
+            throw new FilterException("Unsupported target [" + target.getClass() + "]");
         }
-
-        return this.zipStream;
     }
 
     /**
@@ -153,6 +153,11 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
             // Provide list of documents
             latex.put(LATEX_BINDING_INCLUDES, this.includes);
+
+            // Provide the resource reference converter
+            LaTeXResourceConverter resourceConverter = this.resourceConverterProvider.get();
+            resourceConverter.initialize(this.currentReference, this.zipStream);
+            latex.put(LATEX_BINDING_RESOURCE_CONVERTER, resourceConverter);
 
             scriptContext.setAttribute(LATEX_BINDING, latex, ScriptContext.ENGINE_SCOPE);
 
@@ -179,21 +184,18 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     @Override
     public void close() throws IOException
     {
+        this.zipStream.close();
+        this.properties.getTarget().close();
+    }
+
+    private void generateIndex() throws IOException
+    {
         checkPushContext();
 
-        ZipArchiveEntry entry = new ZipArchiveEntry("index.tex");
-
-        try {
-            this.zipStream.putArchiveEntry(entry);
-
-            this.indexSerializer.serialize(this.zipStream);
-        } finally {
-            this.zipStream.closeArchiveEntry();
+        String indexContent = this.indexGenerator.generate();
+        try (InputStream inputStream = IOUtils.toInputStream(indexContent, "UTF-8")) {
+            ZipUtils.store("index.tex", inputStream, this.zipStream);
         }
-
-        this.zipStream.close();
-
-        this.properties.getTarget().close();
 
         popContext();
     }
@@ -209,14 +211,9 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     {
         if (this.xdomGenerator == null) {
             this.xdomGenerator = new XDOMGeneratorListener();
-
-            this.converterListener.initialize(this.properties, getZipStream());
-            this.converterListener.setWrappedListener(this.xdomGenerator);
-
-            this.contentListener.setWrappedListener(this.converterListener);
+            this.contentListener.setWrappedListener(this.xdomGenerator);
+            initializeZipStream();
         }
-
-        this.converterListener.setCurrentReference(this.currentReference);
     }
 
     private void end() throws IOException
@@ -298,7 +295,10 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     public void endWikiDocument(String name, FilterEventParameters parameters) throws FilterException
     {
         try {
+            // Finish generating LaTeX content for the document.
             end();
+            // Generate the index for the document.
+            generateIndex();
         } catch (IOException e) {
             throw new FilterException(e);
         }

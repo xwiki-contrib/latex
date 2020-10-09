@@ -1,6 +1,9 @@
-#set ($type = $latex.block.reference.type.scheme)
+#set ($linkBlock = $latex.block)
+## Convert the image to a local image to embed it in the result
+#set ($resourceReference = $latex.resourceConverter.convert($linkBlock))
+#set ($type = $resourceReference.type.scheme)
 ## Consider that we're on a local link when the reference is empty and anchor is not empty
-#set ($reference = $latex.block.reference.reference)
+#set ($reference = $resourceReference.reference)
 #set ($anchor = $latex.block.reference.getParameter('anchor'))
 #if ($type == 'doc')
   #if ("$!reference" == '' && "$!anchor" != '')

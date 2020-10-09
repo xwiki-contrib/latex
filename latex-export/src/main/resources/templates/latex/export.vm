@@ -45,7 +45,7 @@
         #set($discard = $defaultValues.put('date', $datetool.format('yyyy-MM-dd', $datetool.date)))
         #set($discard = $defaultValues.put('title', $doc.getRenderedTitle('plain/1.0')))
         #set($descriptor = $services.filter.getOutputFilterStreamDescriptor('latex'))
-        #set ($propertiesOrder = ['documentClass', 'coverPage', 'title', 'subtitle', 'author', 'date', 'toc', 'pageNumbering', 'listOfFigures', 'listOfTables'])
+        #set ($propertiesOrder = ['documentClass', 'coverPage', 'coverPageImage', 'title', 'subtitle', 'author', 'date', 'toc', 'pageNumbering', 'listOfFigures', 'listOfTables'])
         #set ($propertiesMap = {})
         #foreach($property in $descriptor.properties)
           #set ($discard = $propertiesMap.put($property.id, $property))

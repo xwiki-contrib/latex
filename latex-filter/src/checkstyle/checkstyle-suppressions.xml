@@ -25,6 +25,6 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-  <suppress checks="FanOutComplexity" files="ConverterListener.java"/>
+  <suppress checks="FanOutComplexity" files="DefaultLaTeXResourceConverter.java"/>
   <suppress checks="FanOutComplexity" files="LaTeXOutputFilterStream.java"/>
 </suppressions>

@@ -1,5 +1,5 @@
-org.xwiki.contrib.latex.internal.output.ConverterListener
-org.xwiki.contrib.latex.internal.output.IndexSerializer
+900:org.xwiki.contrib.latex.internal.output.DefaultLaTeXResourceConverter
+org.xwiki.contrib.latex.internal.output.IndexGenerator
 org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStream
 org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStreamFactory
 org.xwiki.contrib.latex.internal.output.LaTeXPathEntityReferenceSerializer

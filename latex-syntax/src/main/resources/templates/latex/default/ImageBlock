@@ -1,55 +1,46 @@
-#set ($type = $latex.block.reference.type.scheme)
-#if ($type == 'path' || $type == 'attach')
-  ## Only center if the image is the only block in the parent since it doesn't make sense if the image is inline
-  ## (in a paragraph with other blocks for example).
-  ## However this is also only supported if not in a table cell. Otherwise it would need a group.
-  #set ($isImageStandalone = false)
-  #if ($latex.block.parent.children.size() == 1 && !$latex.tool.isTableCell($latex.tool.getParentBlock($latex.block)))
-    #set ($isImageStandalone = true)
-  #end
-  #if ($isImageStandalone)
-    \begin{center}
-  #end
-  ## Handle width and height
-  #set ($imageDimensions = [])
-  #if ("$!latex.block.getParameter('width')" != '')
-    #set ($width = $latex.block.getParameter('width'))
-    #if ($width.endsWith('%'))
-      #set ($imageNumber = $numbertool.toNumber($width).floatValue() / 100)
-      #set ($percent = $mathtool.roundTo(1, $imageNumber))
-      #set ($discard = $imageDimensions.add("width=${percent}\linewidth"))
-    #else
-      #set ($imageNumber = $numbertool.toNumber($width))
-      #set ($discard = $imageDimensions.add("width=${imageNumber}px"))
-    #end
-  #end
-  #if ("$!latex.block.getParameter('height')" != '')
-    #set ($height = $latex.block.getParameter('height'))
-    #if ($height.endsWith('%'))
-      #set ($imageNumber = $numbertool.toNumber($height).floatValue() / 100)
-      #set ($percent = $mathtool.roundTo(1, $imageNumber))
-      #set ($discard = $imageDimensions.add("height=${percent}\textheight"))
-    #else
-      #set ($imageNumber = $numbertool.toNumber($height))
-      #set ($discard = $imageDimensions.add("height=${imageNumber}px"))
-    #end
-  #end
-  #if ($imageDimensions.isEmpty())
-    \includegraphics{$latex.tool.escape($latex.block.reference.reference)}##
-  #else
-    \includegraphics[$stringtool.join($imageDimensions, ',')]{$latex.tool.escape($latex.block.reference.reference)}##
-  #end
-  #if ($isImageStandalone)
+#set ($imageBlock = $latex.block)
+## Only center if the image is the only block in the parent since it doesn't make sense if the image is inline
+## (in a paragraph with other blocks for example).
+## However this is also only supported if not in a table cell. Otherwise it would need a group.
+#set ($isImageStandalone = false)
+#if ($imageBlock.parent.children.size() == 1 && !$latex.tool.isTableCell($latex.tool.getParentBlock($imageBlock)))
+	#set ($isImageStandalone = true)
+#end
+#if ($isImageStandalone)
+	\begin{center}
+#end
+## Handle width and height
+#set ($imageDimensions = [])
+#if ("$!imageBlock.getParameter('width')" != '')
+	#set ($width = $imageBlock.getParameter('width'))
+	#if ($width.endsWith('%'))
+		#set ($imageNumber = $numbertool.toNumber($width).floatValue() / 100)
+		#set ($percent = $mathtool.roundTo(1, $imageNumber))
+		#set ($discard = $imageDimensions.add("width=${percent}\linewidth"))
+	#else
+		#set ($imageNumber = $numbertool.toNumber($width))
+		#set ($discard = $imageDimensions.add("width=${imageNumber}px"))
+	#end
+#end
+#if ("$!imageBlock.getParameter('height')" != '')
+	#set ($height = $imageBlock.getParameter('height'))
+	#if ($height.endsWith('%'))
+		#set ($imageNumber = $numbertool.toNumber($height).floatValue() / 100)
+		#set ($percent = $mathtool.roundTo(1, $imageNumber))
+		#set ($discard = $imageDimensions.add("height=${percent}\textheight"))
+	#else
+		#set ($imageNumber = $numbertool.toNumber($height))
+		#set ($discard = $imageDimensions.add("height=${imageNumber}px"))
+	#end
+#end
+## Convert the image to a local image to embed it in the result
+#set ($resourceReference = $latex.resourceConverter.convert($imageBlock))
+#if ($imageDimensions.isEmpty())
+	\includegraphics{$latex.tool.escape($resourceReference.reference)}##
+#else
+	\includegraphics[$stringtool.join($imageDimensions, ',')]{$latex.tool.escape($resourceReference.reference)}##
+#end
+#if ($isImageStandalone)
 
-    \end{center}##
-  #end
-#elseif ($type == 'url')
-  ## ConTeXt supports this natively using
-  ## \externalfigure[http://www.site.com/path/to/figure.png]
-  ## Since others don't, we don't support it natively.
-  ## Other options (but we can't use that by default since we can't be sure that wget is available):
-  ## \write18{wget http://www.some-site.com/path/to/image.png}
-  ## \includegraphics{image.png}
-  ## Yet another option would be for XWiki to download the image and have the exporter calling the LaTeX Renderer do
-  ## the replacement in the XDOM.
+	\end{center}##
 #end

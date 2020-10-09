@@ -42,6 +42,11 @@ $latex.processor.render('Preamble')
   #if ("$!latex.properties.date" != '')
     \xwikidate{$latex.tool.escape($datetool.format('yyyy-MM-dd', $latex.properties.date))}
   #end
+  #if ("$!latex.properties.coverPageImage" != '')
+    \begin{center}
+    \includegraphics{$latex.tool.escape($latex.resourceConverter.convert($latex.properties.coverPageImage, true).reference)}
+    \end{center}
+  #end
   \maketitle
 #end
 #if ($latex.properties.toc)

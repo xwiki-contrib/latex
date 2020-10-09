@@ -19,7 +19,6 @@
  */
 package org.xwiki.contrib.latex.internal;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.xwiki.context.ExecutionContextManager;
-import org.xwiki.contrib.latex.internal.output.IndexSerializer;
+import org.xwiki.contrib.latex.internal.output.IndexGenerator;
 import org.xwiki.contrib.latex.output.LaTeXOutputProperties;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.test.annotation.AllComponents;
@@ -44,7 +43,7 @@ import static org.junit.Assert.assertEquals;
  * @version $Id$
  */
 @AllComponents
-public class IndexSerializerTest
+public class IndexGeneratorTest
 {
     @Rule
     public MockitoComponentManagerRule componentManager = new MockitoComponentManagerRule();
@@ -158,7 +157,7 @@ public class IndexSerializerTest
             + "\\setcounter{page}{0}\n"
             + "\\pagenumbering{arabic}\n"
             + "\n"
-            + "\\end{document}\n";
+            + "\\end{document}";
 
         assertFullIndex(properties, expected);
     }
@@ -189,7 +188,7 @@ public class IndexSerializerTest
             + "\\setcounter{page}{0}\n"
             + "\\pagenumbering{arabic}\n"
             + "\n"
-            + "\\end{document}\n";
+            + "\\end{document}";
 
         assertFullIndex(properties, expected);
     }
@@ -202,7 +201,7 @@ public class IndexSerializerTest
             + "\n"
             + expected
             + "\n"
-            + "\\end{document}\n";
+            + "\\end{document}";
 
         assertFullIndex(properties, normalizedExpected);
     }
@@ -224,16 +223,13 @@ public class IndexSerializerTest
 
     private void assertFullIndex(LaTeXOutputProperties properties, String expected) throws Exception
     {
-        IndexSerializer serializer = this.componentManager.getInstance(IndexSerializer.class);
+        IndexGenerator generator = this.componentManager.getInstance(IndexGenerator.class);
         ScriptContextManager scm = this.componentManager.getInstance(ScriptContextManager.class);
         ScriptContext scriptContext = scm.getCurrentScriptContext();
         Map<String, Object> latex = new HashMap<>();
         scriptContext.setAttribute("latex", latex, ScriptContext.ENGINE_SCOPE);
         latex.put("properties", properties);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        serializer.serialize(baos);
-
-        assertEquals(expected, baos.toString());
+        assertEquals(expected, generator.generate());
     }
 }

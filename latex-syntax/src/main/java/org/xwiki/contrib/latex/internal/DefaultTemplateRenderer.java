@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.script.ScriptContext;
 
@@ -53,6 +54,8 @@ public class DefaultTemplateRenderer implements TemplateRenderer
 {
     static final String SC_LATEX = "latex";
 
+    private static final String LATEX_BINDING_RESOURCE_CONVERTER = "resourceConverter";
+
     @Inject
     private Logger logger;
 
@@ -74,6 +77,9 @@ public class DefaultTemplateRenderer implements TemplateRenderer
     @Inject
     @Named("indent")
     private VelocityMacroFilter filter;
+
+    @Inject
+    private Provider<LaTeXResourceConverter> resourceConverterProvider;
 
     @Override
     public void render(Collection<Block> blocks, WikiPrinter printer)
@@ -126,6 +132,12 @@ public class DefaultTemplateRenderer implements TemplateRenderer
         TemplateProcessor processor = new TemplateProcessor(this.templateManager, latexBinding, this.filter);
         latexBinding.put("processor", processor);
         latexBinding.put("tool", this.latexTool);
+
+        // If there's no resource converter in the latex binding then set up a no op one so that there's always the
+        // binding available (as it's used in the LaTeX templates).
+        if (!latexBinding.containsKey(LATEX_BINDING_RESOURCE_CONVERTER)) {
+            latexBinding.put(LATEX_BINDING_RESOURCE_CONVERTER, this.resourceConverterProvider.get());
+        }
 
         // Note: we don't put the SP binding inside the latex binding since we want to keep the way we use it as short
         // as possible. For example in Velocity: $SP vs $latex.SP.
