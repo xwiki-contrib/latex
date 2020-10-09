@@ -49,7 +49,7 @@ public class LaTeXPathEntityReferenceSerializer extends FSPathStringEntityRefere
     {
         String cleanedName = currentReference.getName();
 
-        // Start by removing spaces since the would be URL-encoded into "+" which would get again encoded into "%xx"
+        // Start by removing spaces since they would be URL-encoded into "+" which would get again encoded into "%xx"
         // which we don't want since % is a reserved LaTeX char
         cleanedName = StringUtils.remove(cleanedName, " ");
 
