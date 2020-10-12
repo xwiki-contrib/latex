@@ -27,30 +27,30 @@ $latex.processor.render('Preamble')
   \pagenumbering{gobble}
 #end
 #if ($latex.properties.coverPage && "$!latex.properties.title" != '')
-  #if ("$!latex.properties.title" != '')
-    #if ("$!latex.properties.subtitle" != '')
-      \xwikititle{%
-        ${SP}${SP}$latex.tool.escape($latex.properties.title)\\
-        ${SP}${SP}\large ${latex.properties.subtitle}}
-    #else
-      \xwikititle{$latex.tool.escape($latex.properties.title)}
+  \xwikititle{%
+    #if ("$!latex.properties.coverPageImage" != '')
+      ${SP}${SP}\includegraphics{$latex.tool.escape($latex.resourceConverter.convert($latex.properties.coverPageImage, true).reference)}\\\vspace{1cm}
     #end
-  #end
+    ${SP}${SP}$latex.tool.escape($latex.properties.title)##
+    #if ("$!latex.properties.subtitle" != '')
+      \\
+      ${SP}${SP}\large $latex.tool.escape($latex.properties.subtitle)}
+    #else
+      }
+    #end
   #if ("$!latex.properties.author" != '')
     \xwikiauthor{$latex.tool.escape($latex.properties.author)}
   #end
   #if ("$!latex.properties.date" != '')
     \xwikidate{$latex.tool.escape($datetool.format('yyyy-MM-dd', $latex.properties.date))}
   #end
-  #if ("$!latex.properties.coverPageImage" != '')
-    \begin{center}
-    \includegraphics{$latex.tool.escape($latex.resourceConverter.convert($latex.properties.coverPageImage, true).reference)}
-    \end{center}
-  #end
   \maketitle
 #end
 #if ($latex.properties.toc)
   \setcounter{tocdepth}{3}
+  #if ($latex.properties.coverPage && "$!latex.properties.title" != '')
+    \clearpage
+  #end
   \tableofcontents
   ## Make sure no page numbers are printed in the TOC
   #if (!$latex.properties.pageNumbering)

@@ -63,10 +63,12 @@ public class IndexGeneratorTest
         properties.setAuthor("Author");
 
         String expected = "\\pagenumbering{Roman}\n"
-            + "\\xwikititle{Title}\n"
+            + "\\xwikititle{%\n"
+            + "  Title}\n"
             + "\\xwikiauthor{Author}\n"
             + "\\maketitle\n"
             + "\\setcounter{tocdepth}{3}\n"
+            + "\\clearpage\n"
             + "\\tableofcontents\n"
             + "\\clearpage\n"
             + "\\setcounter{page}{0}\n"
@@ -113,6 +115,7 @@ public class IndexGeneratorTest
             + "  \\large Subtitle}\n"
             + "\\maketitle\n"
             + "\\setcounter{tocdepth}{3}\n"
+            + "\\clearpage\n"
             + "\\tableofcontents\n"
             + "\\clearpage\n"
             + "\\setcounter{page}{0}\n"
@@ -178,11 +181,51 @@ public class IndexGeneratorTest
             + "\\begin{document}\n"
             + "\n"
             + "\\pagenumbering{Roman}\n"
-            + "\\xwikititle{Title}\n"
+            + "\\xwikititle{%\n"
+            + "  Title}\n"
             + "\\xwikiauthor{Author}\n"
             + "\\xwikidate{2018-03-14}\n"
             + "\\maketitle\n"
             + "\\setcounter{tocdepth}{3}\n"
+            + "\\clearpage\n"
+            + "\\tableofcontents\n"
+            + "\\clearpage\n"
+            + "\\setcounter{page}{0}\n"
+            + "\\pagenumbering{arabic}\n"
+            + "\n"
+            + "\\end{document}";
+
+        assertFullIndex(properties, expected);
+    }
+
+    @Test
+    public void generateIndexWithCoverImage() throws Exception
+    {
+        LaTeXOutputProperties properties = new LaTeXOutputProperties();
+        properties.setTitle("Title");
+        properties.setSubtitle("SubTitle");
+        properties.setAuthor("Author");
+        properties.setDate(new DateTime(2018, 3, 14, 0, 0).toDate());
+        properties.setCoverPage(true);
+        properties.setCoverPageImage("image.png");
+
+        String expected = getPreamble("article")
+            + "\n"
+            + "% Used to format the date for the cover page\n"
+            + "\\usepackage[useregional]{datetime2}\n"
+            + "\n"
+            + "\\begin{document}\n"
+            + "\n"
+            + "\\pagenumbering{Roman}\n"
+            + "\\xwikititle{%\n"
+            + "  \\includegraphics{image.png}\\\\\\vspace{1cm}\n"
+            + "  Title\\\\\n"
+            + "  \\large SubTitle}\n"
+            + "\\xwikiauthor{Author}\n"
+            + "\\xwikidate{2018-03-14}\n"
+            + "\\maketitle\n"
+            + "\\setcounter{tocdepth}{3}\n"
+            + "\\clearpage\n"
             + "\\tableofcontents\n"
             + "\\clearpage\n"
             + "\\setcounter{page}{0}\n"
