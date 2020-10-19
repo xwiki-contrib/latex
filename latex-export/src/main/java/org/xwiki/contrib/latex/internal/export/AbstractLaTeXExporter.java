@@ -19,8 +19,10 @@
  */
 package org.xwiki.contrib.latex.internal.export;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,12 +32,12 @@ import org.xwiki.contrib.latex.internal.output.LaTeXOutputFilter;
 import org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStreamFactory;
 import org.xwiki.display.internal.DocumentDisplayer;
 import org.xwiki.display.internal.DocumentDisplayerParameters;
+import org.xwiki.environment.Environment;
 import org.xwiki.filter.FilterEventParameters;
 import org.xwiki.filter.output.OutputFilterStream;
 import org.xwiki.filter.output.OutputFilterStreamFactory;
-import org.xwiki.model.EntityType;
+import org.xwiki.job.event.status.JobProgressManager;
 import org.xwiki.model.reference.DocumentReference;
-import org.xwiki.model.reference.EntityReferenceProvider;
 import org.xwiki.model.reference.SpaceReference;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.listener.Listener;
@@ -44,7 +46,6 @@ import org.xwiki.rendering.syntax.Syntax;
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
 import com.xpn.xwiki.web.ExternalServletURLFactory;
-import com.xpn.xwiki.web.XWikiResponse;
 import com.xpn.xwiki.web.XWikiURLFactory;
 
 /**
@@ -55,6 +56,11 @@ import com.xpn.xwiki.web.XWikiURLFactory;
 public abstract class AbstractLaTeXExporter implements LaTeXExporter
 {
     protected static final String TARGET_PROPERTY = "target";
+
+    protected static final String ZIPFILENAME = "Index.zip";
+
+    @Inject
+    protected JobProgressManager progressManager;
 
     @Inject
     @Named("configured")
@@ -68,19 +74,10 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
     private OutputFilterStreamFactory factory;
 
     @Inject
-    private EntityReferenceProvider entityReferenceProvider;
+    private Environment environment;
 
-    @Inject
-    private LaTeXPropertiesExtractor propertiesGenerator;
-
-    /**
-     * Export passed document.
-     * 
-     * @param documentReference the document reference
-     * @throws Exception when failing to export
-     */
     @Override
-    public void export(DocumentReference documentReference) throws Exception
+    public File export(DocumentReference documentReference, Map<String, Object> exportOptions) throws Exception
     {
         // Set the Servlet URL factor that generates full external URLs since we generate standalone content
         // (LaTeX or PDF)
@@ -88,19 +85,24 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
         XWikiURLFactory currentURLFactory = xcontext.getURLFactory();
         try {
             xcontext.setURLFactory(new ExternalServletURLFactory(xcontext));
-            exportInternal(documentReference, xcontext);
+            return this.progressManager.call(()
+                -> exportInternal(documentReference, exportOptions, xcontext), 3, this);
         } finally {
             xcontext.setURLFactory(currentURLFactory);
         }
     }
 
-    private void exportInternal(DocumentReference documentReference, XWikiContext xcontext) throws Exception
+    private File exportInternal(DocumentReference documentReference, Map<String, Object> exportOptions,
+        XWikiContext xcontext) throws Exception
     {
         // Get document
+        this.progressManager.startStep(this, "Get the document to export");
         XWikiDocument document = xcontext.getWiki().getDocument(documentReference, xcontext);
         xcontext.setDoc(document);
+        this.progressManager.endStep(this);
 
         // Display document
+        this.progressManager.startStep(this, "Render the document to export");
         DocumentDisplayerParameters displayParameters = new DocumentDisplayerParameters();
         displayParameters.setExecutionContextIsolated(true);
         displayParameters.setTransformationContextIsolated(true);
@@ -108,31 +110,17 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
         displayParameters.setTargetSyntax(Syntax.PLAIN_1_0);
 
         XDOM xdom = this.documentDisplayer.display(document, displayParameters);
+        this.progressManager.endStep(this);
 
-        XWikiResponse response = xcontext.getResponse();
+        this.progressManager.startStep(this, "Perform the export");
+        File file = performExport(documentReference, xdom, exportOptions, xcontext);
+        this.progressManager.endStep(this);
 
-        String name = computeExportFileName(documentReference);
-
-        Map<String, Object> properties = this.propertiesGenerator.extract(xcontext.getRequest());
-
-        String outputFileName = getOutputFileName(name, xcontext);
-        setResponseContentType(outputFileName, response, xcontext);
-
-        performExport(name, documentReference, xdom, properties, response, xcontext);
+        return file;
     }
 
-    protected abstract void performExport(String name, DocumentReference documentReference, XDOM xdom,
-        Map<String, Object> properties, XWikiResponse response, XWikiContext xcontext) throws Exception;
-
-    protected String getLaTeXZipFileName(String outputFileNamePrefix)
-    {
-        return String.format("%s.zip", outputFileNamePrefix);
-    }
-
-    protected abstract String getOutputFileName(String outputFileNamePrefix, XWikiContext xcontext);
-
-    protected abstract void setResponseContentType(String outputFileName, XWikiResponse response,
-        XWikiContext xcontext);
+    protected abstract File performExport(DocumentReference documentReference, XDOM xdom,
+        Map<String, Object> exportOptions, XWikiContext xcontext) throws Exception;
 
     protected void performExport(DocumentReference documentReference, XDOM xdom, Map<String, Object> properties)
         throws Exception
@@ -156,14 +144,14 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
         }
     }
 
-    private String computeExportFileName(DocumentReference documentReference)
+    /**
+     * @return the unique (thread-safe) temporary directory to be used to put the exported files in
+     */
+    protected File generateTemporaryDirectory()
     {
-        String name = documentReference.getName();
-        if (this.entityReferenceProvider.getDefaultReference(EntityType.DOCUMENT).getName().equals(name)
-            && documentReference.getParent() != null)
-        {
-            name = documentReference.getParent().getName();
-        }
-        return name;
+        File latexDir = new File(this.environment.getTemporaryDirectory(), "latex");
+        File uniqueTmpDir = new File(latexDir, UUID.randomUUID().toString());
+        uniqueTmpDir.mkdirs();
+        return uniqueTmpDir;
     }
 }

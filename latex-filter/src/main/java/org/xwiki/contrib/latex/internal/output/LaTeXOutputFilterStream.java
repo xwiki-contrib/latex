@@ -48,6 +48,7 @@ import org.xwiki.filter.FilterException;
 import org.xwiki.filter.output.AbstractBeanOutputFilterStream;
 import org.xwiki.filter.output.OutputStreamOutputTarget;
 import org.xwiki.filter.output.OutputTarget;
+import org.xwiki.job.event.status.JobProgressManager;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceSerializer;
@@ -102,6 +103,9 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
     @Inject
     private Provider<LaTeXResourceConverter>resourceConverterProvider;
+
+    @Inject
+    private JobProgressManager progressManager;
 
     private boolean contextInitialized;
 
@@ -190,6 +194,8 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
     private void generateIndex() throws IOException
     {
+        this.progressManager.startStep(this, "Generate the LaTeX Index");
+
         checkPushContext();
 
         String indexContent = this.indexGenerator.generate();
@@ -198,6 +204,8 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
         }
 
         popContext();
+
+        this.progressManager.endStep(this);
     }
 
     @Override
@@ -209,6 +217,7 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
 
     private void begin() throws FilterException
     {
+        this.progressManager.pushLevelProgress(3, this);
         if (this.xdomGenerator == null) {
             this.xdomGenerator = new XDOMGeneratorListener();
             this.contentListener.setWrappedListener(this.xdomGenerator);
@@ -221,12 +230,15 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
         if (this.xdomGenerator != null) {
             checkPushContext();
 
+            this.progressManager.startStep(this, "Convert document to LaTeX");
             XDOM xdom = this.xdomGenerator.getXDOM();
             this.xdomGenerator = null;
 
             DefaultWikiPrinter printer = new DefaultWikiPrinter();
             this.renderer.render(xdom, printer);
+            this.progressManager.endStep(this);
 
+            this.progressManager.startStep(this, "Save LaTeX content in Zip");
             String latexContent = printer.toString();
 
             String path = "pages/" + this.latexPathSerializer.serialize(this.currentReference);
@@ -242,6 +254,8 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
             }
 
             this.includes.add(path);
+
+            this.progressManager.endStep(this);
         }
     }
 
@@ -301,6 +315,9 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
             generateIndex();
         } catch (IOException e) {
             throw new FilterException(e);
+        } finally {
+            // Note: calling the pop here and not inside end() since generateIndex() will also add some steps.
+            this.progressManager.popLevelProgress(this);
         }
 
         this.currentReference = this.currentReference.getParent();

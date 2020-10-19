@@ -29,6 +29,8 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.Container;
@@ -36,6 +38,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.utility.MountableFile;
 import org.xwiki.contrib.latex.test.po.LaTeXExportOptions;
+import org.xwiki.contrib.latex.test.po.LaTeXExportProgress;
 import org.xwiki.contrib.latex.test.po.LaTeXFormatPane;
 import org.xwiki.flamingo.skin.test.po.ExportModal;
 import org.xwiki.test.docker.internal.junit5.FileTestUtils;
@@ -46,6 +49,8 @@ import org.xwiki.test.ui.po.ViewPage;
 import org.xwiki.tree.test.po.TreeElement;
 import org.xwiki.tree.test.po.TreeNodeElement;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -96,11 +101,22 @@ class ExportIT
         LaTeXExportOptions leo = laTeXFormatPane.clickExportAsLaTeXButton();
         leo.clickExportButton();
 
+        // We're now supposed to be on the progress bar template. We need to wait till we get the success message to
+        // know if the export was successful. We also verify that the link is correct.
+        LaTeXExportProgress exportProgress = new LaTeXExportProgress();
+        WebElement successBox = exportProgress.waitAndGetSuccessBoxContent();
+        assertEquals("You can now download your export.", successBox.getText());
+        String expectedReportURLPrefix =
+            "/xwiki/bin/latexexport/LaTeX/WebHome?action=getExport&jobId=export&jobId=latex&jobId=";
+        String reportURL = successBox.findElement(By.tagName("a")).getAttribute("href");
+        assertThat(reportURL, containsString(expectedReportURLPrefix));
+
         // Since it's difficult to click on the browser save dialog or to configure the browsers to do automatic saves
         // we take the approach of downloading the zip directly from the client side (ie from this test) and to save
         // it on the host in the target/ directory.
-        FileUtils.copyURLToFile(new URL("http://localhost:8080/xwiki/bin/latexexport/LaTeX/WebHome?"
-            + "pages=LaTeX.WebHome&confirm=1"), new File("target/latex.zip"));
+        // Note: we have to use localhost part since host.testcontainers.internal is only for internal calls.
+        FileUtils.copyURLToFile(new URL(reportURL.replace("host.testcontainers.internal", "localhost")),
+            new File("target/latex.zip"));
 
         // Unzip
         FileTestUtils.unzip(new File("target/latex.zip"), new File("target/latex"));
@@ -150,11 +166,21 @@ class ExportIT
         LaTeXExportOptions leo = laTeXFormatPane.clickExportAsPDFButton();
         leo.clickExportButton();
 
+        // We're now supposed to be on the progress bar template. We need to wait till we get the success message to
+        // know if the export was successful. We also verify that the link is correct.
+        LaTeXExportProgress exportProgress = new LaTeXExportProgress();
+        WebElement successBox = exportProgress.waitAndGetSuccessBoxContent();
+        assertEquals("You can now download your export.", successBox.getText());
+        String expectedReportURLPrefix =
+            "/xwiki/bin/latexexport/LaTeX/WebHome?action=getExport&jobId=export&jobId=latex&jobId=";
+        String reportURL = successBox.findElement(By.tagName("a")).getAttribute("href");
+        assertThat(reportURL, containsString(expectedReportURLPrefix));
+
         // Since it's difficult to click on the browser save dialog or to configure the browsers to do automatic saves
         // we take the approach of downloading the PDF directly from the client side (ie from this test) and to save
         // it on the host in the target/ directory.
-        FileUtils.copyURLToFile(new URL("http://localhost:8080/xwiki/bin/latexexport/LaTeX/WebHome?"
-            + "pages=LaTeX.WebHome&pdf=true&confirm=1"), new File("target/latex.pdf"));
+        FileUtils.copyURLToFile(new URL(reportURL.replace("host.testcontainers.internal", "localhost")),
+            new File("target/latex.pdf"));
 
         // Assert the generated PDF
         assertTrue(getPDFContent(new File("target/latex.pdf")).contains("Hello world"));

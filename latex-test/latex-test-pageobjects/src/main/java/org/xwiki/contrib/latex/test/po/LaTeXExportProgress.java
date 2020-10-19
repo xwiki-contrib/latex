@@ -17,29 +17,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.xwiki.contrib.latex.internal.export;
+package org.xwiki.contrib.latex.test.po;
 
-import java.io.File;
-import java.util.Map;
-
-import org.xwiki.component.annotation.Role;
-import org.xwiki.model.reference.DocumentReference;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.xwiki.test.ui.po.BaseElement;
 
 /**
- * Export a document in LaTeX (either zip or PDF).
- * 
- * @version $Id:$
+ * Represents the LaTeX Export progress page.
+ *
+ * @version $Id$
+ * @since 1.12
  */
-@Role
-public interface LaTeXExporter
+public class LaTeXExportProgress extends BaseElement
 {
     /**
-     * Export passed document.
-     * 
-     * @param documentReference the document reference
-     * @param exportOptions the export options chosen by the user
-     * @return the exported file result
-     * @throws Exception when failing to export
+     * Waits for the success message to appear or time out.
+     *
+     * @return the success message box DIV
      */
-    File export(DocumentReference documentReference, Map<String, Object> exportOptions) throws Exception;
+    public WebElement waitAndGetSuccessBoxContent()
+    {
+        By location = By.xpath("//div[@class = 'box successmessage']");
+        getDriver().waitUntilElementIsVisible(location);
+        return getDriver().findElement(location);
+    }
 }

@@ -20,37 +20,42 @@
 package org.xwiki.contrib.latex.internal.export;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Map;
 
-import javax.inject.Singleton;
-
-import org.xwiki.component.annotation.Component;
-import org.xwiki.filter.output.DefaultOutputStreamOutputTarget;
-import org.xwiki.model.reference.DocumentReference;
-import org.xwiki.rendering.block.XDOM;
-
-import com.xpn.xwiki.XWikiContext;
+import org.xwiki.job.DefaultJobStatus;
+import org.xwiki.job.event.status.JobStatus;
+import org.xwiki.logging.LoggerManager;
+import org.xwiki.observation.ObservationManager;
 
 /**
- * Export a document in LaTeX.
- * 
+ * Job status holding the exported file result so that the caller of the job can use it to send it back to the browser
+ * for example.
+ *
  * @version $Id$
+ * @since 1.12
  */
-@Component
-@Singleton
-public class DefaultLaTeXExporter extends AbstractLaTeXExporter
+public class LaTeXExportJobStatus extends DefaultJobStatus<LaTeXExportJobRequest>
 {
-    @Override
-    protected File performExport(DocumentReference documentReference, XDOM xdom,
-        Map<String, Object> exportOptions, XWikiContext xcontext) throws Exception
+    private File resultFile;
+
+    LaTeXExportJobStatus(String jobType, LaTeXExportJobRequest request, JobStatus parentJobStatus,
+        ObservationManager observationManager, LoggerManager loggerManager)
     {
-        File outputDir = generateTemporaryDirectory();
-        File latexZip = new File(outputDir, ZIPFILENAME);
-        try (FileOutputStream fos = new FileOutputStream(latexZip)) {
-            exportOptions.put(TARGET_PROPERTY, new DefaultOutputStreamOutputTarget(fos, true));
-            performExport(documentReference, xdom, exportOptions);
-        }
-        return latexZip;
+        super(jobType, request, parentJobStatus, observationManager, loggerManager);
+    }
+
+    /**
+     * @param resultFile see {@link #getResultFile()}
+     */
+    public void setResultFile(File resultFile)
+    {
+        this.resultFile = resultFile;
+    }
+
+    /**
+     * @return the exported file
+     */
+    public File getResultFile()
+    {
+        return this.resultFile;
     }
 }

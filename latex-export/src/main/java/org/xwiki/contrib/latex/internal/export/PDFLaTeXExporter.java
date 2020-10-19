@@ -22,25 +22,20 @@ package org.xwiki.contrib.latex.internal.export;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFException;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
-import org.xwiki.environment.Environment;
 import org.xwiki.filter.output.DefaultOutputStreamOutputTarget;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.rendering.block.XDOM;
 
 import com.xpn.xwiki.XWikiContext;
-import com.xpn.xwiki.web.XWikiResponse;
 
 import static org.xwiki.contrib.latex.internal.export.Unzipper.unzip;
 
@@ -55,71 +50,43 @@ import static org.xwiki.contrib.latex.internal.export.Unzipper.unzip;
 public class PDFLaTeXExporter extends AbstractLaTeXExporter
 {
     @Inject
-    private Logger logger;
-
-    @Inject
     private LaTeX2PDFConverter laTeX2PDFConverter;
 
-    @Inject
-    private Environment environment;
-
     @Override
-    protected String getOutputFileName(String outputFileNamePrefix, XWikiContext xcontext)
+    protected File performExport(DocumentReference documentReference, XDOM xdom,
+        Map<String, Object> exportOptions, XWikiContext xcontext) throws Exception
     {
-        return String.format("%s.pdf", outputFileNamePrefix);
+        return this.progressManager.call(
+            () -> performExportInternal(documentReference, xdom, exportOptions), 3, this);
     }
 
-    @Override
-    protected void setResponseContentType(String outputFileName, XWikiResponse response, XWikiContext xcontext)
-    {
-        String contentDisposition;
-        response.setContentType("application/pdf");
-        // Display inline
-        contentDisposition = String.format("inline; filename=%s", outputFileName);
-        response.setHeader("Content-Disposition", contentDisposition);
-    }
-
-    @Override
-    protected void performExport(String name, DocumentReference documentReference, XDOM xdom,
-        Map<String, Object> properties, XWikiResponse response, XWikiContext xcontext) throws Exception
+    private File performExportInternal(DocumentReference documentReference, XDOM xdom,
+        Map<String, Object> exportOptions) throws Exception
     {
         // Step 1: Generate the latex zip
         File outputDir = generateTemporaryDirectory();
-        File latexZip = new File(outputDir, getLaTeXZipFileName(name));
+        File latexZip = new File(outputDir, ZIPFILENAME);
         try (FileOutputStream fos = new FileOutputStream(latexZip)) {
-            properties.put(TARGET_PROPERTY, new DefaultOutputStreamOutputTarget(fos, true));
-            performExport(documentReference, xdom, properties);
+            exportOptions.put(TARGET_PROPERTY, new DefaultOutputStreamOutputTarget(fos, true));
+            performExport(documentReference, xdom, exportOptions);
         }
         // Step 2: Unzip latex zip
-        File unzippedLaTeXDirectory = new File(outputDir, "latex");
+        this.progressManager.startStep(this, "Unzip the LaTex zip");
+        File unzippedLaTeXDirectory = new File(outputDir, "files");
         unzippedLaTeXDirectory.mkdirs();
         unzip(latexZip, unzippedLaTeXDirectory);
+        this.progressManager.endStep(this);
         // Step 3: Convert from latex to pdf
+        this.progressManager.startStep(this, "Convert LaTeX to PDF");
         LaTeX2PDFResult result = this.laTeX2PDFConverter.convert(unzippedLaTeXDirectory);
+        this.progressManager.endStep(this);
         // Step 4: Read the generated PDF and stream it back to the response output stream
-        if (result.getPDFFile() != null) {
-            FileUtils.copyFile(result.getPDFFile(), response.getOutputStream());
-            response.getOutputStream().close();
-            // Delete the temporary directory to not use too much space on disk, unless we're in debug mode.
-            if (xcontext.getRequest().getParameter("debug") != null) {
-                FileUtils.deleteDirectory(outputDir);
-            } else {
-                this.logger.info("LaTeX PDF export compilation files available at [{}]", unzippedLaTeXDirectory);
-            }
-        } else {
+        this.progressManager.startStep(this, "Copy PDF data to the output");
+        if (result.getPDFFile() == null) {
             throw new LaTeX2PDFException(String.format("Error when generating the PDF file in [%s]. Compilation "
                 + "logs: [\n%s\n]", unzippedLaTeXDirectory, result.getLogs()));
         }
-    }
-
-    /**
-     * @return the unique (thread-safe) temporary directory to be used to put the LaTeX files in
-     */
-    private File generateTemporaryDirectory()
-    {
-        File latex2pdfDir = new File(this.environment.getTemporaryDirectory(), "latex2pdf");
-        File uniqueTmpDir = new File(latex2pdfDir, UUID.randomUUID().toString());
-        uniqueTmpDir.mkdirs();
-        return uniqueTmpDir;
+        this.progressManager.endStep(this);
+        return result.getPDFFile();
     }
 }
