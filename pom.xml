@@ -29,7 +29,7 @@
   </parent>
   <groupId>org.xwiki.contrib.latex</groupId>
   <artifactId>latex</artifactId>
-  <version>1.12</version>
+  <version>1.13-SNAPSHOT</version>
   <name>LaTeX - Parent POM</name>
   <description>Parent POM for LaTeX modules</description>
   <url>http://extensions.xwiki.org/xwiki/bin/view/Extension/LaTeX/</url>
@@ -42,7 +42,7 @@
     <connection>scm:git:git://github.com/xwiki-contrib/latex.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/latex.git</developerConnection>
     <url>https://github.com/xwiki-contrib/latex/tree/master</url>
-    <tag>latex-1.12</tag>
+    <tag>HEAD</tag>
   </scm>
   <developers>
     <developer>
