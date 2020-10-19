@@ -30,7 +30,7 @@
   #outputJobStatusJSON($jobStatus, $translationPrefix)
 #else
   $response.setStatus(404)
-<div class="box errormessage">
-  $services.localization.render("${translationPrefix}.notFound")
-</div>
+  <div class="box errormessage">
+    $services.localization.render("${translationPrefix}.notFound")
+  </div>
 #end

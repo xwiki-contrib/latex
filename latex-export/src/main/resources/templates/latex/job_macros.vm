@@ -24,41 +24,41 @@
 $services.template.execute('logging_macros.vm')
 
 #macro (displayJobProgressBar $jobStatus)
-<div class="ui-progress">
-  <div class="box info hidden" id="state-none-hint">
-    $services.localization.render("job.state.NONE.hint")
-  </div>
-  <div class="ui-progress-background">
-    #set ($percent = $jobStatus.progress.offset)
-    ## There is no progress information if the job was scheduled but hasn't started yet.
-    #if (!$percent)
-      #set ($percent = 0)
+  <div class="ui-progress">
+    <div class="box info hidden" id="state-none-hint">
+      $services.localization.render("job.state.NONE.hint")
+    </div>
+    <div class="ui-progress-background">
+      #set ($percent = $jobStatus.progress.offset)
+      ## There is no progress information if the job was scheduled but hasn't started yet.
+      #if (!$percent)
+        #set ($percent = 0)
+      #end
+      #set ($percent = $numbertool.toNumber($mathtool.mul($percent, 100)).intValue())
+      <div class="ui-progress-bar green" style="width:${percent}%"></div>
+    </div>
+    #if ($jobStatus && $jobStatus.logTail.size() > 0)
+      <p class="ui-progress-message">
+        #printLogMessage($jobStatus.logTail.lastLogEvent)
+      </p>
     #end
-    #set ($percent = $mathtool.toInteger($mathtool.mul($percent, 100)))
-    <div class="ui-progress-bar green" style="width:${percent}%"></div>
   </div>
-  #if ($jobStatus && $jobStatus.logTail.size() > 0)
-    <p class="ui-progress-message">
-      #printLogMessage($jobStatus.logTail.lastLogEvent)
-    </p>
-  #end
-</div>
 #end
 
 #macro (displayJobStatusLog $status $collapsed)
-<dl class="xform">
-  ## Collapse the job log if the job is waiting for user input (leave more space for the job question).
-  <dt>
-    <label class="collapse-toggle#if ($collapsed || $status.state == 'WAITING') collapsed#end"
-           data-target-xpath="parent::*/following-sibling::*">
-      <span class="icon-closed">$services.icon.renderHTML('caret-right')</span>
-      <span class="icon-opened">$services.icon.renderHTML('caret-down')</span>
-      #set ($jobType = $status.jobType)
-      $services.localization.render(["job.log.label.$jobType", 'job.log.label'])
-    </label>
-  </dt>
-  <dd>#printStatusLog($status)</dd>
-</dl>
+  <dl class="xform">
+    ## Collapse the job log if the job is waiting for user input (leave more space for the job question).
+    <dt>
+      <label class="collapse-toggle#if ($collapsed || $status.state == 'WAITING') collapsed#end"
+          data-target-xpath="parent::*/following-sibling::*">
+        <span class="icon-closed">$services.icon.renderHTML('caret-right')</span>
+        <span class="icon-opened">$services.icon.renderHTML('caret-down')</span>
+        #set ($jobType = $status.jobType)
+        $services.localization.render(["job.log.label.$jobType", 'job.log.label'])
+      </label>
+    </dt>
+    <dd>#printStatusLog($status)</dd>
+  </dl>
 #end
 
 #macro (printStatusLog $status)
@@ -69,11 +69,11 @@ $services.template.execute('logging_macros.vm')
 #end
 
 #macro (displayJobQuestion $jobStatus)
-<div class="ui-question"></div>
+  <div class="ui-question"></div>
 #end
 
 #macro (getJobStatusJSON $status $json $translationPrefix)
-  #set ($logOffset = $mathtool.toInteger($request.logOffset))
+  #set ($logOffset = $numbertool.toNumber($request.logOffset).intValue())
   #if (!$logOffset)
     #set ($logOffset = 0)
   #else
@@ -91,12 +91,12 @@ $services.template.execute('logging_macros.vm')
     'id': $status.request.id,
     'state': $status.state,
     'progress': {
-    'offset': $status.progress.offset
-  },
+      'offset': $status.progress.offset
+    },
     'log': {
-    'offset': $logOffset,
-    'items': $log
-  },
+      'offset': $logOffset,
+      'items': $log
+    },
     'message' : "#displayJobStatusMessage($status, $NULL, $NULL, $NULL, $translationPrefix)",
     'questionTimeLeft' : $status.getQuestionTimeLeft('NANOSECONDS')
   })
@@ -136,9 +136,9 @@ $services.template.execute('logging_macros.vm')
     #set($messageParams = [$downloadURL])
     #set($messageClass = 'successmessage')
   #end
-<div class="box $messageClass">
-  $services.localization.render($messageKeys, $messageParams)
-</div>
+  <div class="box $messageClass">
+    $services.localization.render($messageKeys, $messageParams)
+  </div>
 #end
 
 #macro (displayJobFinishedMessage $status $successKey $errorKey $canceledKey $translationPrefix)
@@ -149,7 +149,7 @@ $services.template.execute('logging_macros.vm')
   #else
     #jobFinishedMessage($status, $translationPrefix, $successKey, $errorKey, $canceledKey)
     #if ($status.error)
-    <h4>$services.localization.render('detailedinformation')</h4>
+      <h4>$services.localization.render('detailedinformation')</h4>
       #printStatusLog($status)
     #end
   #end
@@ -175,22 +175,22 @@ $services.template.execute('logging_macros.vm')
       'translationPrefix': $translationPrefix
     })))
   #end
-<div class="xcontent job-status" data-url="$escapetool.xml($jobStatusURL)">
-  #set($titleKey = "${translationPrefix}.label")
-  #if ($services.localization.get($titleKey))
-    <h2>$services.localization.render($titleKey)</h2>
-    #set($titleHintKey = "${translationPrefix}.hint")
-    #if ($services.localization.get($titleHintKey))
-      <p class="text-muted small">$services.localization.render($titleHintKey)</p>
+  <div class="xcontent job-status" data-url="$escapetool.xml($jobStatusURL)">
+    #set($titleKey = "${translationPrefix}.label")
+    #if ($services.localization.get($titleKey))
+      <h2>$services.localization.render($titleKey)</h2>
+      #set($titleHintKey = "${translationPrefix}.hint")
+      #if ($services.localization.get($titleHintKey))
+        <p class="text-muted small">$services.localization.render($titleHintKey)</p>
+      #end
     #end
-  #end
-  #if (!$finished)
-    #displayJobProgressBar($jobStatus)
-  #else
-    #jobFinishedMessage($status, $translationPrefix)
-  #end
-  #if ($showLogs || $isAdvancedUser || $isSuperAdmin)
-    #displayJobStatusLog($jobStatus true)
-  #end
-</div>
+    #if (!$finished)
+      #displayJobProgressBar($jobStatus)
+    #else
+      #jobFinishedMessage($status, $translationPrefix)
+    #end
+    #if ($showLogs || $isAdvancedUser || $isSuperAdmin)
+      #displayJobStatusLog($jobStatus true)
+    #end
+  </div>
 #end
