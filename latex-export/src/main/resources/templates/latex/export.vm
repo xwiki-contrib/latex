@@ -28,18 +28,18 @@
 #elseif($doc.isNew())
   $response.setStatus(404)
   #template('startpage.vm')
-  #template('hierarchy.vm')
 <div class='main layoutsubsection'>
   <div id='mainContentArea'>
+    #template('hierarchy.vm')
     #error($services.localization.render('core.rename.nonexistingDocument'))
   </div>## mainContentArea
 </div>## main
   #template('endpage.vm')
 #else
   #template('startpage.vm')
-  #template('hierarchy.vm')
-<div class='main layoutsubsection'>
+  <div class='main layoutsubsection'>
   <div id='mainContentArea'>
+    #template('hierarchy.vm')
     #if ("$!request.pdf" == 'true')
       #set ($exportTitle = $services.localization.render('latex.exportToPDF.options.title'))
     #else
