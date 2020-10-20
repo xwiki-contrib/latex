@@ -25,7 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.bridge.DocumentAccessBridge;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.rendering.block.Block;
@@ -33,6 +35,8 @@ import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.uiextension.UIExtension;
+
+import com.xpn.xwiki.XWikiContext;
 
 /**
  * Inject a button in the standard export menu UI.
@@ -44,6 +48,9 @@ public abstract class AbstractLaTeXExportUIExtension implements UIExtension
 {
     @Inject
     private DocumentAccessBridge bridge;
+
+    @Inject
+    private Provider<XWikiContext> xcontextProvider;
 
     @Inject
     private ContextualLocalizationManager localizationManager;
@@ -63,8 +70,11 @@ public abstract class AbstractLaTeXExportUIExtension implements UIExtension
     @Override
     public Block execute()
     {
+        // Note: make sure to keep any existing query string since the user could need that to render its doc properly.
+        String queryString = addToQueryString(this.xcontextProvider.get().getRequest().getQueryString(),
+            getQueryString());
         String path = this.bridge.getDocumentURL(this.bridge.getCurrentDocumentReference(),
-            LaTeXExportResourceReferenceHandler.ACTION_STRING, getQueryString(), null);
+            LaTeXExportResourceReferenceHandler.ACTION_STRING, queryString, null);
         ResourceReference linkReference = new ResourceReference(path, ResourceType.PATH);
 
         Map<String, String> linkParameters = new HashMap<>();
@@ -77,4 +87,17 @@ public abstract class AbstractLaTeXExportUIExtension implements UIExtension
     protected abstract String getQueryString();
 
     protected abstract String getButtonLabelTranslationKey();
+
+    private String addToQueryString(String originalQueryString, String newPart)
+    {
+        String newQueryString;
+        if (StringUtils.isEmpty(newPart)) {
+            newQueryString = originalQueryString;
+        } else if (StringUtils.isEmpty(originalQueryString)) {
+            newQueryString = newPart;
+        } else {
+            newQueryString = String.format("%s&%s", originalQueryString, newPart);
+        }
+        return newQueryString;
+    }
 }

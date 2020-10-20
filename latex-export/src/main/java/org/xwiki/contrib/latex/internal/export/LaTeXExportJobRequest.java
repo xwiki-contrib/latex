@@ -19,7 +19,7 @@
  */
 package org.xwiki.contrib.latex.internal.export;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.Map;
 
 import org.xwiki.job.AbstractRequest;
@@ -33,16 +33,29 @@ public class LaTeXExportJobRequest extends AbstractRequest
 
     private static final String EXPORT_OPTIONS = "exportOptions";
 
+    private static final String QUERYSTRING_PARAMETERS = "queryStringParameters";
+
     /**
      * @param reference see {@link #getReference()}
      * @param isPDF see {@link #isPDF()}
      * @param exportOptions see {@link #getExportOptions()}
+     * @param contextEntries the list of special entries that need to be in the job context, see
+     * <a href=
+     * "https://extensions.xwiki.org/xwiki/bin/view/Extension/Rendering%20Module/Async/#HStandardcontextentries">
+     * standard context entries
+     * </a>
+     * @param queryStringParameters the query string parameters used to set them back in the stub request so that
+     *        exported pages can make use of the "request" script binding.
+     *
      */
-    public LaTeXExportJobRequest(DocumentReference reference, boolean isPDF, Map<String, Object> exportOptions)
+    public LaTeXExportJobRequest(DocumentReference reference, boolean isPDF, Map<String, Object> exportOptions,
+        Map<String, Serializable> contextEntries, Map<String, String[]> queryStringParameters)
     {
         setReference(reference);
         setPDF(isPDF);
         setExportOptions(exportOptions);
+        setContext(contextEntries);
+        setQuerystringParameters(queryStringParameters);
     }
 
     /**
@@ -93,13 +106,13 @@ public class LaTeXExportJobRequest extends AbstractRequest
         return getProperty(EXPORT_OPTIONS);
     }
 
-    static LaTeXExportJobRequest createJobRequest(DocumentReference documentReference, boolean isPDF,
-        Map<String, Object> exportOptions)
+    void setQuerystringParameters(Map<String, String[]> querystringParameters)
     {
-        LaTeXExportJobRequest jobRequest = new LaTeXExportJobRequest(documentReference, isPDF, exportOptions);
-        List<String> jobId = LaTeXExportUtils.generateJobId();
-        jobRequest.setId(jobId);
-        jobRequest.setStatusLogIsolated(true);
-        return jobRequest;
+        setProperty(QUERYSTRING_PARAMETERS, querystringParameters);
+    }
+
+    Map<String, String[]> getQueryStringParameters()
+    {
+        return getProperty(QUERYSTRING_PARAMETERS);
     }
 }

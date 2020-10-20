@@ -20,15 +20,21 @@
 package org.xwiki.contrib.latex.internal.export;
 
 import java.io.File;
+import java.net.URL;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentManager;
+import org.xwiki.context.Execution;
+import org.xwiki.context.ExecutionContext;
 import org.xwiki.job.AbstractJob;
 import org.xwiki.job.Job;
 import org.xwiki.job.event.status.JobStatus;
+
+import com.xpn.xwiki.XWikiContext;
+import com.xpn.xwiki.web.XWikiServletRequestStub;
 
 /**
  * Job to perform the LaTeX exports and be able to display a progress bar.
@@ -46,6 +52,9 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
     @Named("context")
     private ComponentManager componentManager;
 
+    @Inject
+    private Execution execution;
+
     @Override
     public String getType()
     {
@@ -55,6 +64,16 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
     @Override
     protected void runInternal() throws Exception
     {
+        // TODO: Remove this hack when the LaTeX extension starts depending on XWiki >= 12.9RC1
+        // (see https://jira.xwiki.org/browse/XWIKI-17961)
+        ExecutionContext econtext = this.execution.getContext();
+        XWikiContext xcontext = (XWikiContext) econtext.getProperty(XWikiContext.EXECUTIONCONTEXT_KEY);
+        XWikiServletRequestStub currentRequest = (XWikiServletRequestStub) xcontext.getRequest();
+        LaTeXXWikiServletRequestStub fixedRequest = new LaTeXXWikiServletRequestStub(
+            new URL(currentRequest.getRequestURL().toString()), currentRequest.getContextPath(),
+            getRequest().getQueryStringParameters());
+        xcontext.setRequest(fixedRequest);
+
         File result = getExporter().export(this.request.getReference(), this.request.getExportOptions());
 
         // Set the result file in the Job status so that it can be accessed from the export.vm template.

@@ -32,7 +32,6 @@ import javax.inject.Singleton;
 
 import org.xwiki.bridge.DocumentAccessBridge;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.job.JobExecutor;
 import org.xwiki.job.JobStatusStore;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.DocumentReference;
@@ -83,7 +82,7 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
     private Provider<XWikiContext> xcontextProvider;
 
     @Inject
-    private JobExecutor jobExecutor;
+    private LaTeXExportJobExecutor jobExecutor;
 
     @Inject
     private DocumentAccessBridge dab;
@@ -135,8 +134,7 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
         if (request.getParameter("confirm") != null && request.getParameter(JOB_ID_QUERY_STRING_KEY) == null) {
             // We're in case 2)
             // Start the job and don't wait.
-            List<String> jobId = LaTeXExportUtils.executeJob(documentReference, isPDF(), getExportOptions(request),
-                this.jobExecutor);
+            List<String> jobId = this.jobExecutor.execute(documentReference, isPDF(), getExportOptions(request));
             // Redirect and pass the jobId query string parameter this time.
             reference.addParameter(JOB_ID_QUERY_STRING_KEY, jobId);
             redirect(reference);
@@ -214,7 +212,7 @@ public class LaTeXExportResourceReferenceHandler extends AbstractResourceReferen
         // TODO: When a ResourceReferenceSerializer<EntityResourceReference, ExtendedURL> component is implemented
         // move to using it. In the meantime use the "old" way.
         EntityResourceReference err = (EntityResourceReference) reference;
-        String queryString = LaTeXExportUtils.computeQueryString(err);
+        String queryString = LaTeXExportUtils.extractQueryString(err);
         return this.dab.getDocumentURL(err.getEntityReference(), ACTION_STRING, queryString, null);
     }
 

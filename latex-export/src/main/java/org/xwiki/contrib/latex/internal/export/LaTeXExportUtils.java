@@ -24,13 +24,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.io.FileUtils;
-import org.xwiki.job.JobException;
-import org.xwiki.job.JobExecutor;
-import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.resource.ResourceReferenceHandlerException;
 import org.xwiki.resource.entity.EntityResourceReference;
 import org.xwiki.velocity.tools.EscapeTool;
@@ -73,7 +69,7 @@ public final class LaTeXExportUtils
         return Arrays.asList(request.getParameterValues(JOB_ID_QUERY_STRING_KEY));
     }
 
-    static String computeQueryString(EntityResourceReference reference)
+    static String extractQueryString(EntityResourceReference reference)
     {
         return ESCAPE_TOOL.url(reference.getParameters());
     }
@@ -86,21 +82,5 @@ public final class LaTeXExportUtils
             throw new ResourceReferenceHandlerException(
                 String.format("Failed to send the exported file [%s]", resultFile), e);
         }
-    }
-
-    static List<String> executeJob(DocumentReference documentReference, boolean isPDF,
-        Map<String, Object> exportOptions, JobExecutor jobExecutor) throws ResourceReferenceHandlerException
-    {
-        // Export the document by starting the LaTeX export job
-        LaTeXExportJobRequest jobRequest =
-            LaTeXExportJobRequest.createJobRequest(documentReference, isPDF, exportOptions);
-        try {
-            // Start the export but don't wait since we want to display a progress bar.
-            jobExecutor.execute(LaTeXExportJob.JOB_TYPE, jobRequest);
-        } catch (JobException e) {
-            throw new ResourceReferenceHandlerException(
-                String.format("Failed to export document [%s] to LaTeX", documentReference), e);
-        }
-        return jobRequest.getId();
     }
 }
