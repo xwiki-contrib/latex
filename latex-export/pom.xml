@@ -57,6 +57,13 @@
       <version>${platform.version}</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- Remove when https://jira.xwiki.org/browse/XCOMMONS-2064 is fixed and the LaTeX extension starts depending on
+         XWiki >= the version where it's fixed.-->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-classloader-xwiki</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
