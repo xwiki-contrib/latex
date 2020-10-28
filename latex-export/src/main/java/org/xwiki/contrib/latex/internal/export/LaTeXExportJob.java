@@ -21,10 +21,12 @@ package org.xwiki.contrib.latex.internal.export;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.context.Execution;
@@ -74,6 +76,10 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
             getRequest().getQueryStringParameters());
         xcontext.setRequest(fixedRequest);
 
+        if (this.logger.isDebugEnabled()) {
+            displayDebugLogs();
+        }
+
         File result = getExporter().export(this.request.getReference(), this.request.getExportOptions());
 
         // Set the result file in the Job status so that it can be accessed from the export.vm template.
@@ -109,5 +115,13 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
                 LaTeXExporter.class), e);
         }
         return exporter;
+    }
+
+    private void displayDebugLogs()
+    {
+        this.logger.info("Query string parameters passed to export job:");
+        for (Map.Entry<String, String[]> entry : getRequest().getQueryStringParameters().entrySet()) {
+            this.logger.info("- [{}] = [{}]", entry.getKey(), StringUtils.join(entry.getValue(), ","));
+        }
     }
 }
