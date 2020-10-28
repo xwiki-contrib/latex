@@ -27,6 +27,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.xwiki.classloader.ClassLoaderManager;
+import org.xwiki.classloader.xwiki.internal.ContextNamespaceURLClassLoader;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.context.Execution;
@@ -34,6 +36,7 @@ import org.xwiki.context.ExecutionContext;
 import org.xwiki.job.AbstractJob;
 import org.xwiki.job.Job;
 import org.xwiki.job.event.status.JobStatus;
+import org.xwiki.wiki.descriptor.WikiDescriptorManager;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.web.XWikiServletRequestStub;
@@ -57,6 +60,12 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
     @Inject
     private Execution execution;
 
+    @Inject
+    private WikiDescriptorManager wikiDescriptorManager;
+
+    @Inject
+    private ClassLoaderManager classLoaderManager;
+
     @Override
     public String getType()
     {
@@ -66,6 +75,12 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
     @Override
     protected void runInternal() throws Exception
     {
+        // Overwrite the Thread Context CL to work around the https://jira.xwiki.org/browse/XCOMMONS-2064 bug.
+        // Remove this hack once it's fixed and the LaTeX extension starts depending on XWiki >= the version where
+        // it's fixed.
+        Thread.currentThread().setContextClassLoader(
+            new ContextNamespaceURLClassLoader(this.wikiDescriptorManager, this.classLoaderManager));
+
         // TODO: Remove this hack when the LaTeX extension starts depending on XWiki >= 12.9RC1
         // (see https://jira.xwiki.org/browse/XWIKI-17961)
         ExecutionContext econtext = this.execution.getContext();
