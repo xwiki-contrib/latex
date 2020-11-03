@@ -82,8 +82,11 @@ class ExportIT
     {
         setup.loginAsSuperAdmin();
 
-        String content = "Hello **world** {{velocity}}$xcontext.action{{/velocity}}";
-        ViewPage viewPage = setup.createPage("LaTeX", "WebHome", content, "Sample Page for LaTeX export");
+        // Verify that the content can use $xcontext.action and $request query string parameters.
+        String content = "Hello **world** {{velocity}}$xcontext.action $request.name{{/velocity}}";
+        setup.createPage("LaTeX", "WebHome", content, "Sample Page for LaTeX export");
+        setup.gotoPage("LaTeX", "WebHome", "view", "name=Vincent");
+        ViewPage viewPage = new ViewPage();
 
         // Modal created before the opening to avoid fade effect. (see BaseModal)
         ExportModal exportModal = new ExportModal();
@@ -141,14 +144,15 @@ class ExportIT
         }
 
         // Assert the generated PDF
-        assertTrue(getPDFContent(new File("target/latex/index.pdf")).contains("Hello world latexexport"));
+        assertTrue(getPDFContent(new File("target/latex/index.pdf")).contains("Hello world latexexport Vincent"));
     }
 
     @Test
     @Order(2)
     void exportToPDF(TestUtils setup) throws Exception
     {
-        ViewPage viewPage = setup.gotoPage("LaTeX", "WebHome");
+        setup.gotoPage("LaTeX", "WebHome", "view", "name=Vincent");
+        ViewPage viewPage = new ViewPage();
 
         // Modal created before the opening to avoid fade effect. (see BaseModal)
         ExportModal exportModal = new ExportModal();
@@ -184,7 +188,7 @@ class ExportIT
             new File("target/latex.pdf"));
 
         // Assert the generated PDF
-        assertTrue(getPDFContent(new File("target/latex.pdf")).contains("Hello world latexexport"));
+        assertTrue(getPDFContent(new File("target/latex.pdf")).contains("Hello world latexexport Vincent"));
     }
 
     private String getPDFContent(File pdfFile) throws Exception
