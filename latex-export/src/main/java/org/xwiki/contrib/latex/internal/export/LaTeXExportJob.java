@@ -91,6 +91,10 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
             getRequest().getQueryStringParameters());
         xcontext.setRequest(fixedRequest);
 
+        // TODO: Remove once https://jira.xwiki.org/browse/XCOMMONS-2069 is implemented and the LaTeX extension starts
+        // depending on XWiki >= the version where it's fixed.
+        xcontext.setAction(LaTeXExportResourceReferenceHandler.ACTION_STRING);
+
         if (this.logger.isDebugEnabled()) {
             displayDebugLogs();
         }

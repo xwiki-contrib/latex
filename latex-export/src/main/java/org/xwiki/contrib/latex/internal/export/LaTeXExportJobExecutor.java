@@ -82,8 +82,10 @@ public class LaTeXExportJobExecutor
     {
         LaTeXExportJobRequest jobRequest;
         try {
+            // Preserve all request data in the new xwiki context for the job, so that scripts in the exported page
+            // can use them.
             Map<String, Serializable> contextEntries = this.contextStoreManager.save(
-                Arrays.asList("request.parameters", "request.wiki"));
+                Arrays.asList("request.*"));
             jobRequest = new LaTeXExportJobRequest(documentReference, isPDF, exportOptions, contextEntries,
                 this.xwikiContextProvider.get().getRequest().getParameterMap());
             List<String> jobId = LaTeXExportUtils.generateJobId();

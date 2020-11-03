@@ -82,7 +82,8 @@ class ExportIT
     {
         setup.loginAsSuperAdmin();
 
-        ViewPage viewPage = setup.createPage("LaTeX", "WebHome", "Hello **world**", "Sample Page for LaTeX export");
+        String content = "Hello **world** {{velocity}}$xcontext.action{{/velocity}}";
+        ViewPage viewPage = setup.createPage("LaTeX", "WebHome", content, "Sample Page for LaTeX export");
 
         // Modal created before the opening to avoid fade effect. (see BaseModal)
         ExportModal exportModal = new ExportModal();
@@ -140,7 +141,7 @@ class ExportIT
         }
 
         // Assert the generated PDF
-        assertTrue(getPDFContent(new File("target/latex/index.pdf")).contains("Hello world"));
+        assertTrue(getPDFContent(new File("target/latex/index.pdf")).contains("Hello world latexexport"));
     }
 
     @Test
@@ -183,7 +184,7 @@ class ExportIT
             new File("target/latex.pdf"));
 
         // Assert the generated PDF
-        assertTrue(getPDFContent(new File("target/latex.pdf")).contains("Hello world"));
+        assertTrue(getPDFContent(new File("target/latex.pdf")).contains("Hello world latexexport"));
     }
 
     private String getPDFContent(File pdfFile) throws Exception
