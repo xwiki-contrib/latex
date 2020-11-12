@@ -24,11 +24,15 @@ import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
+import org.xwiki.test.LogLevel;
 import org.xwiki.test.annotation.AllComponents;
+import org.xwiki.test.junit5.LogCaptureExtension;
 import org.xwiki.test.junit5.XWikiTempDir;
 import org.xwiki.test.junit5.mockito.ComponentTest;
 import org.xwiki.test.junit5.mockito.InjectComponentManager;
@@ -55,6 +59,17 @@ class LaTeX2PDFIT
     @XWikiTempDir
     private File tmpDir;
 
+    @RegisterExtension
+    LogCaptureExtension logCapture = new LogCaptureExtension(LogLevel.DEBUG);
+
+    @AfterEach
+    void after()
+    {
+        // We only capture the DEBUG logs to debug an issue on the CI and display the dbeug logs in this case. Thus
+        // we don't care about asserting them
+        logCapture.ignoreAllMessages();
+    }
+
     @Test
     void convert() throws Exception
     {
@@ -63,7 +78,8 @@ class LaTeX2PDFIT
         LaTeX2PDFConverter converter = this.componentManager.getInstance(LaTeX2PDFConverter.class);
         LaTeX2PDFResult result = converter.convert(this.tmpDir);
         File fullPdfFile = new File(this.tmpDir, "index.pdf");
-        assertEquals(fullPdfFile, result.getPDFFile());
+        assertEquals(fullPdfFile, result.getPDFFile(), "PDF File not generated properly. Debug logs:[\n"
+            + getDebugLogs() + "\n]");
         assertTrue(result.getPDFFile().exists());
 
         // Assert the generated PDF
@@ -95,5 +111,14 @@ class LaTeX2PDFIT
             }
         }
         return text;
+    }
+
+    private String getDebugLogs()
+    {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < logCapture.size(); i++) {
+            builder.append(logCapture.getMessage(i)).append('\n');
+        }
+        return builder.toString();
     }
 }

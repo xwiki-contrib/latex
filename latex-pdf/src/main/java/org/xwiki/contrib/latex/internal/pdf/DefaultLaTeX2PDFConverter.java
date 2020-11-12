@@ -115,7 +115,7 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         // Example docker run command line that we're simulating:
         //   docker run -v <local dir>:/data blang/latex:ubuntu <cmd>
         CreateContainerResponse container = null;
-        String logs = null;
+        String logs;
         try {
             container = dockerClient.createContainerCmd(this.configuration.getDockerImageName())
                 .withCmd(this.configuration.getDockerCommands())
