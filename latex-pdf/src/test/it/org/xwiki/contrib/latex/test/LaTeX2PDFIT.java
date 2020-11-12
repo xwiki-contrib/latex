@@ -78,8 +78,8 @@ class LaTeX2PDFIT
         LaTeX2PDFConverter converter = this.componentManager.getInstance(LaTeX2PDFConverter.class);
         LaTeX2PDFResult result = converter.convert(this.tmpDir);
         File fullPdfFile = new File(this.tmpDir, "index.pdf");
-        assertEquals(fullPdfFile, result.getPDFFile(), "PDF File not generated properly. Debug logs:[\n"
-            + getDebugLogs() + "\n]");
+        assertEquals(fullPdfFile, result.getPDFFile(), String.format("PDF File not generated properly from LaTeX "
+            + "files in [%s]. Debug logs:[\n%s\n]", this.tmpDir.toString(), getDebugLogs()));
         assertTrue(result.getPDFFile().exists());
 
         // Assert the generated PDF
