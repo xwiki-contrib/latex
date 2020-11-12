@@ -57,12 +57,12 @@
           #set ($propertiesOrder = ['documentClass', 'coverPage', 'coverPageImage', 'title', 'subtitle', 'author', 'date', 'toc', 'pageNumbering', 'listOfFigures', 'listOfTables'])
           #set ($propertiesMap = {})
           #foreach($property in $descriptor.properties)
-          #set ($discard = $propertiesMap.put($property.id, $property))
-        #end
+            #set ($discard = $propertiesMap.put($property.id, $property))
+          #end
           #foreach($id in $propertiesOrder)
-          #set ($property = $propertiesMap.get($id))
-          #displayProperty($property, $defaultValues)
-        #end
+            #set ($property = $propertiesMap.get($id))
+            #displayProperty($property, $defaultValues)
+          #end
         </dl>
         <div class="buttons">
           <span class="buttonwrapper"><input type="submit" name="confirm" value="$services.localization.render('export')" class="button" /></span>
