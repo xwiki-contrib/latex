@@ -22,6 +22,7 @@ package org.xwiki.contrib.latex.internal;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.script.ScriptContext;
 
@@ -31,8 +32,9 @@ import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.xwiki.component.manager.ComponentManager;
+import org.xwiki.configuration.ConfigurationSource;
 import org.xwiki.localization.LocalizationContext;
+import org.xwiki.logging.LoggerConfiguration;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.Template;
@@ -40,9 +42,8 @@ import org.xwiki.template.TemplateContent;
 import org.xwiki.template.TemplateManager;
 import org.xwiki.test.mockito.MockitoComponentManager;
 import org.xwiki.text.StringUtils;
-import org.xwiki.velocity.introspection.DeprecatedCheckUberspector;
-import org.xwiki.velocity.introspection.MethodArgumentsUberspector;
-import org.xwiki.velocity.introspection.SecureUberspector;
+import org.xwiki.velocity.VelocityEngine;
+import org.xwiki.velocity.VelocityFactory;
 import org.xwiki.velocity.tools.ComparisonDateTool;
 import org.xwiki.velocity.tools.EscapeTool;
 
@@ -70,34 +71,26 @@ public class MockSetup
         // Mock the TemplateManager in order to not depend on oldcore. We implement a TemplateManager
         // using a Velocity Engine.
         TemplateManager templateManager = componentManager.registerMockComponent(TemplateManager.class);
-        when(templateManager.getTemplate(any(String.class))).thenAnswer(new Answer<Object>()
-        {
-            @Override public Object answer(InvocationOnMock invocation) throws Exception
-            {
-                String templateName = invocation.getArgument(0);
-                String location = String.format("templates/%s", templateName);
-                InputStream templateStream =
-                    Thread.currentThread().getContextClassLoader().getResourceAsStream(location);
-                if (templateStream != null) {
-                    Template template = mock(Template.class, templateName);
-                    TemplateContent templateContent = mock(TemplateContent.class, templateName);
-                    when(templateContent.getContent()).thenReturn(IOUtils.toString(templateStream, "UTF-8"));
-                    when(template.getContent()).thenReturn(templateContent);
-                    return template;
-                }
-                return null;
+        when(templateManager.getTemplate(any(String.class))).thenAnswer(invocation -> {
+            String templateName = invocation.getArgument(0);
+            String location = String.format("templates/%s", templateName);
+            InputStream templateStream =
+                Thread.currentThread().getContextClassLoader().getResourceAsStream(location);
+            if (templateStream != null) {
+                Template template = mock(Template.class, templateName);
+                TemplateContent templateContent = mock(TemplateContent.class, templateName);
+                when(templateContent.getContent()).thenReturn(IOUtils.toString(templateStream, "UTF-8"));
+                when(template.getContent()).thenReturn(templateContent);
+                return template;
             }
+            return null;
         });
 
-        org.apache.velocity.app.VelocityEngine velocityEngine = new org.apache.velocity.app.VelocityEngine();
+        componentManager.registerMockComponent(ConfigurationSource.class);
+        componentManager.registerMockComponent(LoggerConfiguration.class);
 
-        // This is required so that Velocity templates can find the right method to call. For example for:
-        //   $block.root.getBlocks('class:MacroMarkerBlock', 'DESCENDANT')
-        velocityEngine.setApplicationAttribute(ComponentManager.class.getName(), componentManager);
-        velocityEngine.setProperty("runtime.introspector.uberspect", StringUtils.join(
-            new String[] { SecureUberspector.class.getName(), DeprecatedCheckUberspector.class.getName(),
-                MethodArgumentsUberspector.class.getName() }, ','));
-        velocityEngine.init();
+        VelocityFactory velocityFactory = componentManager.getInstance(VelocityFactory.class);
+        VelocityEngine velocityEngine = velocityFactory.createVelocityEngine("somekey", new Properties());
 
         VelocityContext vcontext = new VelocityContext();
         vcontext.put("escapetool", new EscapeTool());
@@ -110,23 +103,15 @@ public class MockSetup
         ScriptContextManager scriptContextManager = componentManager.registerMockComponent(ScriptContextManager.class);
         ScriptContext scriptContext = mock(ScriptContext.class);
         when(scriptContextManager.getCurrentScriptContext()).thenReturn(scriptContext);
-        doAnswer(new Answer<Object>()
-        {
-            @Override public Object answer(InvocationOnMock invocation) throws Exception
-            {
-                String key = invocation.getArgument(0);
-                Object value = invocation.getArgument(1);
-                vcontext.put(key, value);
-                return null;
-            }
+        doAnswer((Answer<Object>) invocation -> {
+            String key = invocation.getArgument(0);
+            Object value = invocation.getArgument(1);
+            vcontext.put(key, value);
+            return null;
         }).when(scriptContext).setAttribute(any(String.class), any(Object.class), anyInt());
-        doAnswer(new Answer<Object>()
-        {
-            @Override public Object answer(InvocationOnMock invocation) throws Exception
-            {
-                String key = invocation.getArgument(0);
-                return vcontext.get(key);
-            }
+        doAnswer((Answer<Object>) invocation -> {
+            String key = invocation.getArgument(0);
+            return vcontext.get(key);
         }).when(scriptContext).getAttribute(any(String.class));
 
         // Simulate a "doc" in the Script Context to verify that the index template can have access to the
@@ -136,15 +121,11 @@ public class MockSetup
         contextDoc.setTitle("Some title");
         scriptContext.setAttribute("doc", contextDoc, ScriptContext.ENGINE_SCOPE);
 
-        doAnswer(new Answer<Object>()
-        {
-            @Override public Object answer(InvocationOnMock invocation) throws Exception
-            {
-                Template template = invocation.getArgument(0);
-                Writer writer = invocation.getArgument(1);
-                velocityEngine.evaluate(vcontext, writer, "velocity template", template.getContent().getContent());
-                return null;
-            }
+        doAnswer((Answer<Object>) invocation -> {
+            Template template = invocation.getArgument(0);
+            Writer writer = invocation.getArgument(1);
+            velocityEngine.evaluate(vcontext, writer, "velocity template", template.getContent().getContent());
+            return null;
         }).when(templateManager).render(any(Template.class), any(Writer.class));
 
         // Mock to get the current locale

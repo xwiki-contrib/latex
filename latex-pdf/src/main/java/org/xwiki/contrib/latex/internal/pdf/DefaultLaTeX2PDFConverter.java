@@ -184,7 +184,8 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
             .withTimestamps(true);
         wait(logContainerCmd.exec(new LogContainerResultCallback() {
                 @Override
-                public void onNext(Frame item) {
+                public void onNext(Frame item)
+                {
                     logs.append(item.toString()).append('\n');
                 }
             }));

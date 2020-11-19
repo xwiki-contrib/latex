@@ -29,6 +29,12 @@ import org.xwiki.rendering.block.ImageBlock;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 
+/**
+ * Provide a default converter that does nothing so that the LaTeX Syntax can be used even without using the Exporter
+ * (in that case the resource references are not converted).
+ *
+ * @version $Id$
+ */
 @Component
 @Singleton
 public class NoOpLaTeXResourceConverter implements LaTeXResourceConverter

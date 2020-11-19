@@ -20,13 +20,10 @@
 package org.xwiki.contrib.latex.internal.export;
 
 import java.io.File;
-import java.net.URL;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.xwiki.classloader.ClassLoaderManager;
 import org.xwiki.classloader.xwiki.internal.ContextNamespaceURLClassLoader;
 import org.xwiki.component.annotation.Component;
@@ -39,7 +36,6 @@ import org.xwiki.job.event.status.JobStatus;
 import org.xwiki.wiki.descriptor.WikiDescriptorManager;
 
 import com.xpn.xwiki.XWikiContext;
-import com.xpn.xwiki.web.XWikiServletRequestStub;
 
 /**
  * Job to perform the LaTeX exports and be able to display a progress bar.
@@ -81,23 +77,11 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
         Thread.currentThread().setContextClassLoader(
             new ContextNamespaceURLClassLoader(this.wikiDescriptorManager, this.classLoaderManager));
 
-        // TODO: Remove this hack when the LaTeX extension starts depending on XWiki >= 12.9RC1
-        // (see https://jira.xwiki.org/browse/XWIKI-17961)
-        ExecutionContext econtext = this.execution.getContext();
-        XWikiContext xcontext = (XWikiContext) econtext.getProperty(XWikiContext.EXECUTIONCONTEXT_KEY);
-        XWikiServletRequestStub currentRequest = (XWikiServletRequestStub) xcontext.getRequest();
-        LaTeXXWikiServletRequestStub fixedRequest = new LaTeXXWikiServletRequestStub(
-            new URL(currentRequest.getRequestURL().toString()), currentRequest.getContextPath(),
-            getRequest().getQueryStringParameters());
-        xcontext.setRequest(fixedRequest);
-
         // TODO: Remove once https://jira.xwiki.org/browse/XCOMMONS-2069 is implemented and the LaTeX extension starts
         // depending on XWiki >= the version where it's fixed.
+        ExecutionContext econtext = this.execution.getContext();
+        XWikiContext xcontext = (XWikiContext) econtext.getProperty(XWikiContext.EXECUTIONCONTEXT_KEY);
         xcontext.setAction(LaTeXExportResourceReferenceHandler.ACTION_STRING);
-
-        if (this.logger.isDebugEnabled()) {
-            displayDebugLogs();
-        }
 
         File result = getExporter().export(this.request.getReference(), this.request.getExportOptions());
 
@@ -134,13 +118,5 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
                 LaTeXExporter.class), e);
         }
         return exporter;
-    }
-
-    private void displayDebugLogs()
-    {
-        this.logger.info("Query string parameters passed to export job:");
-        for (Map.Entry<String, String[]> entry : getRequest().getQueryStringParameters().entrySet()) {
-            this.logger.info("- [{}] = [{}]", entry.getKey(), StringUtils.join(entry.getValue(), ","));
-        }
     }
 }

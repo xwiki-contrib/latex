@@ -62,6 +62,11 @@ import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiAttachment;
 import com.xpn.xwiki.doc.XWikiDocument;
 
+/**
+ * Converts resource references. See {@link #convert(ResourceReference, boolean)}.
+ *
+ * @version $Id$
+ */
 @Component
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class DefaultLaTeXResourceConverter implements LaTeXResourceConverter

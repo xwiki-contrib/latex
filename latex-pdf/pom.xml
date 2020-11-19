@@ -82,14 +82,6 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
     </dependency>
-    <!-- TODO: Remove when https://jira.xwiki.org/browse/XCOMMONS-2039 is fixed and the parent pom depend on the version
-         of XWiki where it's fixed. Note that this dep needs to come before docker-java-transport-httpclient5 -->
-    <dependency>
-      <groupId>org.apache.httpcomponents.core5</groupId>
-      <artifactId>httpcore5-h2</artifactId>
-      <!-- TODO: Adjust the version whenever ${dockerJava.version} is modified -->
-      <version>5.0</version>
-    </dependency>
     <dependency>
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java-transport-httpclient5</artifactId>

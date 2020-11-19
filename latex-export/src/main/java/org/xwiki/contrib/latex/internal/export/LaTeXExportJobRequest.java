@@ -25,6 +25,11 @@ import java.util.Map;
 import org.xwiki.job.AbstractRequest;
 import org.xwiki.model.reference.DocumentReference;
 
+/**
+ * Holds request data for the Export job.
+ *
+ * @version $Id$
+ */
 public class LaTeXExportJobRequest extends AbstractRequest
 {
     private static final String IS_PDF = "isPDF";
@@ -32,8 +37,6 @@ public class LaTeXExportJobRequest extends AbstractRequest
     private static final String REFERENCE = "reference";
 
     private static final String EXPORT_OPTIONS = "exportOptions";
-
-    private static final String QUERYSTRING_PARAMETERS = "queryStringParameters";
 
     /**
      * @param reference see {@link #getReference()}
@@ -44,18 +47,14 @@ public class LaTeXExportJobRequest extends AbstractRequest
      * "https://extensions.xwiki.org/xwiki/bin/view/Extension/Rendering%20Module/Async/#HStandardcontextentries">
      * standard context entries
      * </a>
-     * @param queryStringParameters the query string parameters used to set them back in the stub request so that
-     *        exported pages can make use of the "request" script binding.
-     *
      */
     public LaTeXExportJobRequest(DocumentReference reference, boolean isPDF, Map<String, Object> exportOptions,
-        Map<String, Serializable> contextEntries, Map<String, String[]> queryStringParameters)
+        Map<String, Serializable> contextEntries)
     {
         setReference(reference);
         setPDF(isPDF);
         setExportOptions(exportOptions);
         setContext(contextEntries);
-        setQuerystringParameters(queryStringParameters);
     }
 
     /**
@@ -104,15 +103,5 @@ public class LaTeXExportJobRequest extends AbstractRequest
     public Map<String, Object> getExportOptions()
     {
         return getProperty(EXPORT_OPTIONS);
-    }
-
-    void setQuerystringParameters(Map<String, String[]> querystringParameters)
-    {
-        setProperty(QUERYSTRING_PARAMETERS, querystringParameters);
-    }
-
-    Map<String, String[]> getQueryStringParameters()
-    {
-        return getProperty(QUERYSTRING_PARAMETERS);
     }
 }

@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
@@ -44,6 +45,7 @@ import com.xpn.xwiki.XWikiContext;
  * @since 1.12.1
  */
 @Component(roles = LaTeXExportJobExecutor.class)
+@Singleton
 public class LaTeXExportJobExecutor
 {
     @Inject
@@ -84,10 +86,11 @@ public class LaTeXExportJobExecutor
         try {
             // Preserve all request data in the new xwiki context for the job, so that scripts in the exported page
             // can use them.
+            // TODO: Remove "request.parameters" once https://jira.xwiki.org/browse/XWIKI-18082 is fixed and this
+            //  extension depends on the version where it's fixed.
             Map<String, Serializable> contextEntries = this.contextStoreManager.save(
-                Arrays.asList("request.*"));
-            jobRequest = new LaTeXExportJobRequest(documentReference, isPDF, exportOptions, contextEntries,
-                this.xwikiContextProvider.get().getRequest().getParameterMap());
+                Arrays.asList("request.*", "request.parameters"));
+            jobRequest = new LaTeXExportJobRequest(documentReference, isPDF, exportOptions, contextEntries);
             List<String> jobId = LaTeXExportUtils.generateJobId();
             jobRequest.setId(jobId);
             jobRequest.setStatusLogIsolated(true);
