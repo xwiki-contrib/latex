@@ -93,6 +93,7 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
             dockerClient.pingCmd().exec();
             isReady = true;
         } catch (Exception e) {
+            this.logger.debug("Docker is not ready!", e);
             isReady = false;
         }
         return isReady;
