@@ -153,7 +153,6 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
     private DockerClient getDockerClient()
     {
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
-            .withApiVersion(RemoteApiVersion.create(1, 41))
             .build();
         DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
             .dockerHost(config.getDockerHost())
