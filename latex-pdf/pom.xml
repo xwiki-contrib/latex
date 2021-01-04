@@ -36,7 +36,7 @@
     <xwiki.extension.name>LaTeX to PDF Converter</xwiki.extension.name>
     <!-- List it as a module containing a filter -->
     <xwiki.extension.category>api</xwiki.extension.category>
-    <dockerJava.version>3.2.5</dockerJava.version>
+    <dockerJava.version>3.2.7</dockerJava.version>
   </properties>
   <dependencies>
     <dependency>

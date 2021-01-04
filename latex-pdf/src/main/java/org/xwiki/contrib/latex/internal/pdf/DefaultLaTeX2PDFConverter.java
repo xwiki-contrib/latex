@@ -20,6 +20,7 @@
 package org.xwiki.contrib.latex.internal.pdf;
 
 import java.io.File;
+import java.rmi.Remote;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,9 +37,11 @@ import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectImageResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.command.WaitContainerResultCallback;
+import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.AccessMode;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Frame;
@@ -48,6 +51,7 @@ import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.core.RemoteApiVersion;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
@@ -104,9 +108,7 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         DockerClient dockerClient = getDockerClient();
 
         // If the image doesn't exist locally, pull it.
-        List<Image> images =
-            dockerClient.listImagesCmd().withImageNameFilter(this.configuration.getDockerImageName()).exec();
-        if (images.isEmpty()) {
+        if (!isLocalImagePresent(this.configuration.getDockerImageName(), dockerClient)) {
             PullImageResultCallback pullImageResultCallback =
                 dockerClient.pullImageCmd(this.configuration.getDockerImageName())
                 .exec(new PullImageResultCallback());
@@ -154,12 +156,25 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
 
     private DockerClient getDockerClient()
     {
-        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
+        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+            .withApiVersion(RemoteApiVersion.create(1, 41))
+            .build();
         DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
             .dockerHost(config.getDockerHost())
             .sslConfig(config.getSSLConfig())
             .build();
         return DockerClientImpl.getInstance(config, httpClient);
+    }
+
+    private boolean isLocalImagePresent(String imageName, DockerClient dockerClient)
+    {
+        boolean exists = true;
+        try {
+            dockerClient.inspectImageCmd(imageName).exec();
+        } catch (NotFoundException e) {
+            exists = false;
+        }
+        return exists;
     }
 
     private void startContainer(DockerClient dockerClient, String containerId)
