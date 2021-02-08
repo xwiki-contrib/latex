@@ -41,6 +41,8 @@ public class TemplateProcessor
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(TemplateProcessor.class);
 
+    private static final String BLOCK = "block";
+
     private TemplateManager templateManager;
 
     private VelocityMacroFilter filter;
@@ -71,8 +73,9 @@ public class TemplateProcessor
     {
         StringWriter writer = new StringWriter();
         for (Block block : blocks) {
+            Block currentBlock = (Block) this.latexBinding.get(BLOCK);
             try {
-                this.latexBinding.put("block", block);
+                this.latexBinding.put(BLOCK, block);
                 Template template = getTemplate(block);
                 if (template != null) {
                     writer.write(render(template));
@@ -83,6 +86,13 @@ public class TemplateProcessor
             } catch (Exception e) {
                 LOGGER.warn("Failed to evaluate template for Block [{}]. Reason [{}]. Skipping template",
                     block.getClass().getName(), ExceptionUtils.getRootCauseMessage(e));
+            } finally {
+                // Put back the block from the latex binding context
+                if (currentBlock == null) {
+                    this.latexBinding.remove(BLOCK);
+                } else {
+                    this.latexBinding.put(BLOCK, currentBlock);
+                }
             }
         }
         return writer.toString();
