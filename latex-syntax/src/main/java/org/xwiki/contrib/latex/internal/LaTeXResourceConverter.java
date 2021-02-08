@@ -19,6 +19,8 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.xwiki.component.annotation.Role;
@@ -84,4 +86,14 @@ public interface LaTeXResourceConverter
      * @return the converted reference
      */
     ResourceReference convert(ImageBlock imageBlock);
+
+    /**
+     * Store some content into an entry in the generated zip file.
+     *
+     * @param path the path at which the entry will be added in the zip file
+     * @param inputStream the entry content to store in the zip file
+     * @throws IOException in case of an error when saving the content into the zip file
+     * @since 1.13
+     */
+    void store(String path, InputStream inputStream) throws IOException;
 }

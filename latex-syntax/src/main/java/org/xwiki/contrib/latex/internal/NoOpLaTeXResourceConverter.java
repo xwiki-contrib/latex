@@ -19,6 +19,8 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.inject.Singleton;
@@ -68,5 +70,11 @@ public class NoOpLaTeXResourceConverter implements LaTeXResourceConverter
     public ResourceReference convert(ImageBlock imageBlock)
     {
         return imageBlock.getReference();
+    }
+
+    @Override
+    public void store(String path, InputStream inputStream) throws IOException
+    {
+        // Nothing to do
     }
 }

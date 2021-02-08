@@ -156,6 +156,13 @@ public class DefaultLaTeXResourceConverter implements LaTeXResourceConverter
         return convertedReference;
     }
 
+    @Override
+    public void store(String path, InputStream inputStream) throws IOException
+    {
+        ZipUtils.store(path, inputStream, this.zipStream);
+        this.stored.add(path);
+    }
+
     private ResourceReference convertPATHReference(ResourceReference reference)
     {
         // If the path doesn't start with "/" then consider that there's nothing to do: it's either already a URL
@@ -308,12 +315,6 @@ public class DefaultLaTeXResourceConverter implements LaTeXResourceConverter
         ResourceReference convertedReference = new ResourceReference(url, ResourceType.URL);
         convertedReference.setParameters(reference.getParameters());
         return convertedReference;
-    }
-
-    private void store(String path, InputStream inputStream) throws IOException
-    {
-        ZipUtils.store(path, inputStream, this.zipStream);
-        this.stored.add(path);
     }
 
     private EntityReference getResolvedBaseReference(String baseReference)
