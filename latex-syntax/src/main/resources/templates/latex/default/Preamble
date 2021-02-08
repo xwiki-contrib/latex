@@ -1,3 +1,11 @@
+## Allows extensions to contribute some content at the beginning of the preamble
+#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.before'))
+#if ($uixs)
+  #foreach ($uix in $uixs)
+    $services.rendering.render($uix.execute(), 'latex/1.0')
+  #end
+
+#end
 %% Language and font encodings
 \usepackage[$latex.tool.language]{babel}
 \usepackage[utf8]{inputenc}
@@ -26,6 +34,11 @@
 \usepackage{hyperref}
 %% For the container macro
 \usepackage{multicol}
+## Allows extensions to contribute some additional packages after default ones
+#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.usepackage.after'))
+#foreach ($uix in $uixs)
+  $services.rendering.render($uix.execute(), 'latex/1.0')
+#end
 
 %% Message macro environments
 
@@ -116,4 +129,13 @@ ${SP}${SP}\fi}
 }
 
 %% Use LaTeX quotes by default
-\MakeOuterQuote{"}
+\MakeOuterQuote{"}##
+##
+## Allows extensions to contribute some content at the end of the preamble
+#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.after'))
+#if ($uixs)
+
+  #foreach ($uix in $uixs)
+    $services.rendering.render($uix.execute(), 'latex/1.0')
+  #end
+#end

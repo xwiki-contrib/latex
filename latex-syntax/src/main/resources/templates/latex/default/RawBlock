@@ -1,4 +1,4 @@
-#if ($latex.block.syntax.type.id == 'tex')
+#if ($latex.block.syntax.type.id == 'tex' || $latex.block.syntax.type.id == 'latex')
   ## Since there's no info if the RawBlock is inline or not, we need to check if it's inside an inline MacroMarkerBlock
   ## or not...
   #if ("$!latex.block.parent.class.simpleName" == 'MacroMarkerBlock')
