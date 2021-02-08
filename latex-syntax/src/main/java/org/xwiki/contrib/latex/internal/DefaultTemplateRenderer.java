@@ -117,8 +117,8 @@ public class DefaultTemplateRenderer implements TemplateRenderer
         Map<String, Object> latexBinding = (Map<String, Object>) currentScriptContext.getAttribute(SC_LATEX);
 
         ExecutionContext context = new ExecutionContext();
-        this.executionContextManager.initialize(context);
         this.execution.pushContext(context);
+        this.executionContextManager.initialize(context);
 
         ScriptContext scriptContext = this.scriptContextManager.getCurrentScriptContext();
 
