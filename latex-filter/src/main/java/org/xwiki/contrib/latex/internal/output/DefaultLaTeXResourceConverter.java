@@ -59,6 +59,7 @@ import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 
 import com.xpn.xwiki.XWikiContext;
+import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiAttachment;
 import com.xpn.xwiki.doc.XWikiDocument;
 
@@ -193,9 +194,22 @@ public class DefaultLaTeXResourceConverter implements LaTeXResourceConverter
     {
         StringBuilder builder = new StringBuilder();
         builder.append("files/attachments/");
-        // Convert reference
+
+        // Resolve the reference to have an absolute reference
         AttachmentReference attachmentReference =
             (AttachmentReference) this.resolver.resolve(reference, EntityType.ATTACHMENT, baseReference);
+        // Get the matching attachment from the list of attachments in the target doc.
+        XWikiContext xcontext = this.xcontextProvider.get();
+        XWikiAttachment attachment = getAttachment(attachmentReference, xcontext);
+        if (attachment != null) {
+            // Create a new attachment reference since the user could have used an attachment reference file name
+            // without a suffix and the XWikiAttachment object would have found the first attachment matching the
+            // name and thus contains the full file name.
+            attachmentReference = new AttachmentReference(attachment.getFilename(),
+                attachmentReference.getDocumentReference());
+        } else {
+            this.logger.warn("Can't find attachment with reference [{}]", attachmentReference);
+        }
 
         String normalizedPath = this.latexPathSerializer.serialize(attachmentReference);
         builder.append(normalizedPath);
@@ -206,24 +220,28 @@ public class DefaultLaTeXResourceConverter implements LaTeXResourceConverter
 
         // Store attachment content
         if (!this.stored.contains(path)) {
-            try {
-                XWikiContext xcontext = this.xcontextProvider.get();
-                XWikiDocument document =
-                    xcontext.getWiki().getDocument(attachmentReference.getDocumentReference(), xcontext);
-                XWikiAttachment attachment = document.getAttachment(attachmentReference.getName());
-                if (attachment != null) {
-                    try (InputStream inputStream = attachment.getContentInputStream(xcontext)) {
-                        store(path, inputStream);
-                    }
-                } else {
-                    this.logger.warn("Can't find attachment with reference [{}]", attachmentReference);
-                }
+            try (InputStream inputStream = attachment.getContentInputStream(xcontext)) {
+                store(path, inputStream);
             } catch (Exception e) {
                 this.logger.error("Failed to store attachment [{}]", attachmentReference, e);
             }
         }
 
         return convertedReference;
+    }
+
+    private XWikiAttachment getAttachment(AttachmentReference attachmentReference, XWikiContext xcontext)
+    {
+        XWikiAttachment result;
+        try {
+            XWikiDocument document =
+                xcontext.getWiki().getDocument(attachmentReference.getDocumentReference(), xcontext);
+            result = document.getAttachment(attachmentReference.getName());
+        } catch (XWikiException e) {
+            this.logger.error("Failed to find attachment [{}]", attachmentReference, e);
+            result = null;
+        }
+        return result;
     }
 
     private ResourceReference convertDATAReference(ResourceReference reference)

@@ -16,6 +16,9 @@
 					<newLine/>
 					<image reference="attach:image.png"/>
 					<newLine/>
+					<!-- Test an image attachment without a suffix to verify it's resolved correctly -->
+					<image reference="attach:image"/>
+					<newLine/>
 					<image reference="attach:otherspace.otherdocument@otherimage.png"/>
 					<newLine/>
 					<image reference="attach:space.document@image.png"/>
