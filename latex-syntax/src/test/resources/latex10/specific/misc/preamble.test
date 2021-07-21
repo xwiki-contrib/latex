@@ -85,23 +85,23 @@
 \makeatother
 
 %% Define heading command so that it can be overridden easily
-\newcommand{\heading}[2]{
-  \ifx#11
-    \section{#2}
+\newcommand{\heading}[3][]{
+  \ifx#21
+    \section#1{#3}
   \else
-  \ifx#12
-    \subsection{#2}
+  \ifx#22
+    \subsection#1{#3}
   \else
-  \ifx#13
-    \subsubsection{#2}
+  \ifx#23
+    \subsubsection#1{#3}
   \else
-  \ifx#14
-    \paragraph{#2}
+  \ifx#24
+    \paragraph#1{#3}
   \else
-  \ifx#15
-    \subparagraph{#2}
-  \ifnum#1>5
-    \subparagraph{#2}
+  \ifx#25
+    \subparagraph#1{#3}
+  \ifnum#2>5
+    \subparagraph#1{#3}
   \fi
   \fi
   \fi

@@ -34,7 +34,7 @@ ${{{regex:.*\\begin\{document\}}}}
 See section \ref{A}
 
 \label{HheadingA}
-\heading{1}{1 \label{A}headingA}
+\heading{1}{\label{A}headingA}
 
 See figure \ref{B}
 

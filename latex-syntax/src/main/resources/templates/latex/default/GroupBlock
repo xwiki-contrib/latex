@@ -1,5 +1,14 @@
+#set ($groupBlock = $latex.block)
 #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
+## If the GroupBlock has a parameter of "data-xwiki-rendering-protected" then save it because the Heading block
+## template will use it to not number the heading.
+#if ("$!groupBlock.getParameter('data-xwiki-rendering-protected'))" != '')
+  #set ($discard = $latex.tool.getStack('isInProtectedBlock').push(true))
+#end
 \begin{varwidth}[t]{\linewidth}
-${latex.processor.process($latex.block.getChildren())}
+${latex.processor.process($groupBlock.getChildren())}
 \end{varwidth}##
 #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())
+#if ("$!groupBlock.getParameter('data-xwiki-rendering-protected'))" != '')
+  #set ($discard = $latex.tool.getStack('isInProtectedBlock').pop())
+#end

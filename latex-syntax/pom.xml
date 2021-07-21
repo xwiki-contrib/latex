@@ -132,7 +132,7 @@
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>macro-numbered-references</artifactId>
-      <version>1.1</version>
+      <version>1.4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -1,14 +1,29 @@
-.#-------------------------------------------------------
+.#-----------------------------------------------------------------
 .input|xwiki/2.1
-.# Ignore generated numbered headings by transformations.
-.#-------------------------------------------------------
-= (% class="wikigeneratedheadingnumber" %)1 (%%)heading =
+.# Don't number headings that have "data-xwiki-rendering-protected"
+.# or are in a protected group block.
+.#-----------------------------------------------------------------
+(% data-xwiki-rendering-protected='true' %)
+= heading =
+
+(% data-xwiki-rendering-protected='true' %)(((
+= heading1 =
+= heading2 =
+)))
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\label{H1heading}
-\heading{1}{heading}
+\label{Hheading}
+\heading[*]{1}{heading}\begin{varwidth}[t]{\linewidth}
+
+
+\label{Hheading1}
+\heading[*]{1}{heading1}
+
+\label{Hheading2}
+\heading[*]{1}{heading2}
+\end{varwidth}
 
 \end{document}

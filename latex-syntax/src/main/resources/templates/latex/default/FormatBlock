@@ -1,5 +1,7 @@
-## Ignore generated numebred headings/figures/tables
+## Ignore generated numbered headings/figures/tables
 #set ($class = $latex.block.getParameter('class'))
+## TODO: Introduce an extension point to move this to the Numbered Reference Extension, the LaTeX extension shouldn't
+## know about this
 #if ($class.contains('wikigeneratedfigurenumber') || $class.contains('wikigeneratedtablenumber') || $class.contains('wikigeneratedheadingnumber'))
   #break
 #end
