@@ -1,0 +1,11 @@
+.runTransformations:macro
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Verify that the preamble is not added and only a
+.# fragment is rendered
+.#-----------------------------------------------------
+Hello **world**
+.#-----------------------------------------------------
+.expect|latex+fragment/1.0
+.#-----------------------------------------------------
+Hello \textbf{world}

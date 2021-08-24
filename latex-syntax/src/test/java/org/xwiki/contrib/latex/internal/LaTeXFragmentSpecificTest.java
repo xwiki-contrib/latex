@@ -29,12 +29,12 @@ import org.xwiki.test.mockito.MockitoComponentManager;
  * Run all specific tests found in {@code *.test} files located in the classpath. These {@code *.test} files must follow
  * the conventions described in {@link org.xwiki.rendering.test.integration.TestDataParser}.
  *
- * @version $Id: a4b49961bb701fdc376e677e0358fbe16ba1c1ee $
+ * @version $Id$
  */
 @RunWith(RenderingTestSuite.class)
-@RenderingTestSuite.Scope(value = "latex10.specific")
+@RenderingTestSuite.Scope(value = "latex+fragment10.specific")
 @AllComponents
-public class LaTeXSpecificTest
+public class LaTeXFragmentSpecificTest
 {
     @RenderingTestSuite.Initialized
     public void initialize(MockitoComponentManager componentManager) throws Exception

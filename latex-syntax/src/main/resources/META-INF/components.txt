@@ -1,4 +1,5 @@
 org.xwiki.contrib.latex.internal.LaTeXBlockRenderer
+org.xwiki.contrib.latex.internal.LaTeXFragmentBlockRenderer
 org.xwiki.contrib.latex.internal.DefaultLaTeXTool
 org.xwiki.contrib.latex.internal.DefaultFigureTool
 org.xwiki.contrib.latex.internal.DefaultTemplateRenderer
