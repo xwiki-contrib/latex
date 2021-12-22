@@ -94,6 +94,54 @@ ${SP}${SP}\Gin@nat@width
 #else
   #set ($isBook = false)
 #end
+
+%% Reset the headings counter to a fixed value.
+%% This command takes two parameters. The first one is the new value of the counter.
+%% The second one is the level of the heading to be reset. 
+\newcommand{\setheadingcounter}[2]{
+${SP}${SP}\ifx#21
+#if ($isBook)
+${SP}${SP}${SP}${SP}\setcounter{chapter}{#1}\addtocounter{chapter}{-1}
+#else
+${SP}${SP}${SP}${SP}\setcounter{section}{#1}\addtocounter{section}{-1}
+#end
+${SP}${SP}\else
+${SP}${SP}\ifx#22
+#if ($isBook)
+${SP}${SP}${SP}${SP}\setcounter{section}{#1}\addtocounter{section}{-1}
+#else
+${SP}${SP}${SP}${SP}\setcounter{subsection}{#1}\addtocounter{subsection}{-1}
+#end
+${SP}${SP}\else
+${SP}${SP}\ifx#23
+#if ($isBook)
+${SP}${SP}${SP}${SP}\setcounter{subsection}{#1}\addtocounter{subsection}{-1}
+#else
+${SP}${SP}${SP}${SP}\setcounter{subsubsection}{#1}\addtocounter{subsubsection}{-1}
+#end
+${SP}${SP}\else
+${SP}${SP}\ifx#24
+#if ($isBook)
+${SP}${SP}${SP}${SP}\setcounter{subsubsection}{#1}\addtocounter{subsubsection}{-1}
+#else
+${SP}${SP}${SP}${SP}\setcounter{paragraph}{#1}\addtocounter{paragraph}{-1}
+#end
+${SP}${SP}\else
+${SP}${SP}\ifx#25
+#if ($isBook)
+${SP}${SP}${SP}${SP}\setcounter{paragraph}{#1}\addtocounter{paragraph}{-1}
+#else
+${SP}${SP}${SP}${SP}\setcounter{subparagraph}{#1}\addtocounter{subparagraph}{-1}
+#end
+${SP}${SP}\ifnum#2>5
+${SP}${SP}${SP}${SP}\setcounter{subparagraph}{#1}\addtocounter{subparagraph}{-1}
+${SP}${SP}\fi
+${SP}${SP}\fi
+${SP}${SP}\fi
+${SP}${SP}\fi
+${SP}${SP}\fi
+${SP}${SP}\fi}
+
 \newcommand{\heading}[3][]{
 ${SP}${SP}\ifx#21
 ${SP}${SP}${SP}${SP}#if ($isBook)\chapter#1\{#3}#else\section#1{#3}#end

@@ -85,6 +85,34 @@
 \makeatother
 
 %% Define heading command so that it can be overridden easily
+
+%% Reset the headings counter to a fixed value.
+%% This command takes two parameters. The first one is the new value of the counter.
+%% The second one is the level of the heading to be reset. 
+\newcommand{\setheadingcounter}[2]{
+  \ifx#21
+    \setcounter{section}{#1}\addtocounter{section}{-1}
+  \else
+  \ifx#22
+    \setcounter{subsection}{#1}\addtocounter{subsection}{-1}
+  \else
+  \ifx#23
+    \setcounter{subsubsection}{#1}\addtocounter{subsubsection}{-1}
+  \else
+  \ifx#24
+    \setcounter{paragraph}{#1}\addtocounter{paragraph}{-1}
+  \else
+  \ifx#25
+    \setcounter{subparagraph}{#1}\addtocounter{subparagraph}{-1}
+  \ifnum#2>5
+    \setcounter{subparagraph}{#1}\addtocounter{subparagraph}{-1}
+  \fi
+  \fi
+  \fi
+  \fi
+  \fi
+  \fi}
+
 \newcommand{\heading}[3][]{
   \ifx#21
     \section#1{#3}

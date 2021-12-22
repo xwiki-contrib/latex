@@ -1,14 +1,27 @@
 
 
 #set ($headingLevel = $latex.block.getLevel().ordinal() + 1)
+## Test if the numberedheadings script service from the Numbered Headings Application is present, and in this case,
+## check if numbered headings are enabled.
+#if ($services.numberedheadings)
+  #set ($numberedHeadings = $services.numberedheadings.isNumberedHeadingsEnabled())
+#else
+  #set ($numberedHeadings = false)
+#end
 #if ("$!latex.block.getId()" != '')
   \label{${latex.block.getId()}}
 #end
 ## If there's a "data-xwiki-rendering-protected" parameter then the heading must not be numbered. Same if we're already
-## in a protected block
-#if ("$!latex.block.getParameter('data-xwiki-rendering-protected')" != '' || !$latex.tool.getStack('isInProtectedBlock').empty())
+## in a protected block. Headings are also not numbered if a "data-numbered-headings-skip" from the Numbered Headings 
+## Application is defined.
+#if ("$!latex.block.getParameter('data-xwiki-rendering-protected')" != '' || !$latex.tool.getStack('isInProtectedBlock').empty() || "$!latex.block.getParameter('data-numbered-headings-skip')" != '')
   #set ($star = '[*]')
 #else
   #set ($star = '')
+#end
+## When numbered headings is activated and a "data-numbered-headings-start" parameter is found, the "setheadingcounter" 
+## command is called to set the counter of the current heading level to the new value.  
+#if ($numberedHeadings && "$!latex.block.getParameter('data-numbered-headings-start')" != '')
+  \setheadingcounter{$latex.block.getParameter('data-numbered-headings-start')}{$headingLevel}
 #end
 \heading${star}{$headingLevel}{${latex.processor.process($latex.block.getChildren())}}##
