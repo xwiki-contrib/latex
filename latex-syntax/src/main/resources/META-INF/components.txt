@@ -5,3 +5,4 @@ org.xwiki.contrib.latex.internal.DefaultFigureTool
 org.xwiki.contrib.latex.internal.DefaultTemplateRenderer
 org.xwiki.contrib.latex.internal.DefaultIdBlockManager
 org.xwiki.contrib.latex.internal.NoOpLaTeXResourceConverter
+org.xwiki.contrib.latex.internal.UIExtensionSupplier

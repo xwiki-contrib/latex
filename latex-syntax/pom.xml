@@ -59,6 +59,11 @@
       <version>${platform.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-uiextension-api</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-properties</artifactId>
       <version>${commons.version}</version>
@@ -133,6 +138,12 @@
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>macro-numbered-references</artifactId>
       <version>1.4</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Needed because oldcore is required through xwiki-platform-uiextension-api. -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

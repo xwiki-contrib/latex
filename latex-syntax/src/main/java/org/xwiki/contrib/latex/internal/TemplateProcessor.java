@@ -21,15 +21,20 @@ package org.xwiki.contrib.latex.internal;
 
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.macro.velocity.filter.VelocityMacroFilter;
+import org.xwiki.rendering.renderer.BlockRenderer;
+import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import org.xwiki.template.Template;
 import org.xwiki.template.TemplateManager;
+import org.xwiki.uiextension.UIExtension;
 
 /**
  * Locate and evaluate the LaTeX templates.
@@ -43,24 +48,32 @@ public class TemplateProcessor
 
     private static final String BLOCK = "block";
 
-    private TemplateManager templateManager;
+    private final TemplateManager templateManager;
 
-    private VelocityMacroFilter filter;
+    private final VelocityMacroFilter filter;
 
-    private Map<String, Object> latexBinding;
+    private final Map<String, Object> latexBinding;
+
+    private final UIExtensionSupplier uiExtensionSupplier;
+
+    private final BlockRenderer blockRenderer;
 
     /**
      * @param templateManager the template manager used to locate, get and execute template content
-     * @param latexBinding the script context "latex" binding into which we can inject new "bindings" for the template
-     *        evaluation
+     * @param latexBinding the script context "latex" binding into which we can inject new "bindings" for the
+     *     template evaluation
      * @param filter the Velocity filter to apply to the template content if the source is written in Velocity
+     * @param uiExtensionSupplier the UI extension supplier to resolve the {@link UIExtension}s for the templates
+     * @param blockRenderer the block renderer used to render the {@link UIExtension}s for the templates
      */
     public TemplateProcessor(TemplateManager templateManager, Map<String, Object> latexBinding,
-        VelocityMacroFilter filter)
+        VelocityMacroFilter filter, UIExtensionSupplier uiExtensionSupplier, BlockRenderer blockRenderer)
     {
         this.templateManager = templateManager;
         this.latexBinding = latexBinding;
         this.filter = filter;
+        this.uiExtensionSupplier = uiExtensionSupplier;
+        this.blockRenderer = blockRenderer;
     }
 
     /**
@@ -76,13 +89,16 @@ public class TemplateProcessor
             Block currentBlock = (Block) this.latexBinding.get(BLOCK);
             try {
                 this.latexBinding.put(BLOCK, block);
-                Template template = getTemplate(block);
+                String templateName = getTemplateName(block);
+                renderUIXPs(templateName, "before").ifPresent(writer::write);
+                Template template = getTemplateByName(templateName);
                 if (template != null) {
                     writer.write(render(template));
                 } else {
                     // Ignore the template and render children
                     writer.write(process(block.getChildren()));
                 }
+                renderUIXPs(templateName, "after").ifPresent(writer::write);
             } catch (Exception e) {
                 LOGGER.warn("Failed to evaluate template for Block [{}]. Reason [{}]. Skipping template",
                     block.getClass().getName(), ExceptionUtils.getRootCauseMessage(e));
@@ -98,18 +114,8 @@ public class TemplateProcessor
         return writer.toString();
     }
 
-    /**
-     * @param block the block for which to find a template
-     * @return the template for the passed block
-     * @throws Exception if the template cannot be found
-     */
-    public Template getTemplate(Block block) throws Exception
+    private Template getTemplateByName(String templateName) throws Exception
     {
-        // If there's a custom template defined in the Block parameter's, use it!
-        String templateName = block.getParameter("latex-template");
-        if (templateName == null) {
-            templateName = block.getClass().getSimpleName();
-        }
         return getTemplate(templateName);
     }
 
@@ -158,5 +164,39 @@ public class TemplateProcessor
     public String render(String templateName) throws Exception
     {
         return render(getTemplate(templateName));
+    }
+
+    private String getTemplateName(Block block)
+    {
+        // If there's a custom template defined in the Block parameter's, use it!
+        String templateName = block.getParameter("latex-template");
+        if (templateName == null) {
+            templateName = block.getClass().getSimpleName();
+        }
+        return templateName;
+    }
+
+    private Optional<String> renderUIXPs(String templateName, String suffix)
+    {
+        // The XDOM template case is particular, the after UIXP needs to be located before "\end{document}" which closes
+        // the latex document. To do so, the UIXP of XDOM are directly integrated in the template in Velocity.
+        Optional<String> ret;
+        if (!templateName.equals("XDOM")) {
+            List<UIExtension> extensions =
+                this.uiExtensionSupplier.getExtensions(
+                    String.format("org.xwiki.contrib.latex.%s.%s", templateName, suffix));
+            if (extensions.isEmpty()) {
+                ret = Optional.empty();
+            } else {
+                DefaultWikiPrinter printer = new DefaultWikiPrinter();
+                for (UIExtension extension : extensions) {
+                    this.blockRenderer.render(extension.execute(), printer);
+                }
+                ret = Optional.of(printer.toString());
+            }
+        } else {
+            ret = Optional.empty();
+        }
+        return ret;
     }
 }
