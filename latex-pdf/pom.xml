@@ -31,7 +31,7 @@
   <name>LaTeX - PDF</name>
   <description>Converts from LaTeX to PDF</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.77</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.76</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX to PDF Converter</xwiki.extension.name>
     <!-- List it as a module containing a filter -->

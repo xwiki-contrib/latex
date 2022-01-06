@@ -24,7 +24,6 @@ import java.io.File;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConfiguration;
@@ -33,21 +32,14 @@ import org.xwiki.contrib.latex.pdf.LaTeX2PDFException;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.LogContainerCmd;
-import com.github.dockerjava.api.command.PullImageResultCallback;
-import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.exception.NotFoundException;
-import com.github.dockerjava.api.model.AccessMode;
 import com.github.dockerjava.api.model.Bind;
-import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 
@@ -98,16 +90,14 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         return isReady;
     }
 
-    private LaTeX2PDFResult convertInternal(File latexDirectory)
+    private LaTeX2PDFResult convertInternal(File latexDirectory) throws LaTeX2PDFException
     {
         DockerClient dockerClient = getDockerClient();
+        ContainerManager manager = new ContainerManager(dockerClient);
 
         // If the image doesn't exist locally, pull it.
         if (!isLocalImagePresent(this.configuration.getDockerImageName(), dockerClient)) {
-            PullImageResultCallback pullImageResultCallback =
-                dockerClient.pullImageCmd(this.configuration.getDockerImageName())
-                .exec(new PullImageResultCallback());
-            wait(pullImageResultCallback);
+            manager.pullImage(this.configuration.getDockerImageName());
         }
 
         // Example docker run command line that we're simulating:
@@ -116,19 +106,32 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
         String logs;
         try {
             container = dockerClient.createContainerCmd(this.configuration.getDockerImageName())
+                //.withUser(System.getProperty("user.name"))
                 .withCmd(this.configuration.getDockerCommands())
                 .withHostConfig(HostConfig.newHostConfig()
                     .withBinds(
                         // Make sure it also works when XWiki is running in Docker
-                        new Bind(DOCKER_SOCK, new Volume(DOCKER_SOCK)),
-                        // Make the LaTeX source visible to the container, in the right place
-                        new Bind(latexDirectory.getAbsolutePath(), new Volume("/data"), AccessMode.rw))
+                        new Bind(DOCKER_SOCK, new Volume(DOCKER_SOCK))
+                    )
                 )
                 .exec();
+            // Copy the latex sources in the container so that they are visible to pdflatex.
+            // Note: we don't use a volume binding such as:
+            //   new Bind(latexDirectory.getAbsolutePath(), new Volume("/data"), AccessMode.rw)
+            // The reason is that the generated files would be created as root on the host on linux OSes. One
+            // solution would be to run docker with "--user" but that requires to create the user in the image and
+            // since we want to use an existing image, we can't do this. Thus we are choosing the slower option to
+            // copy files from the container to the host and back to get the generated PDF and other ancillary files.
+            manager.copyToContainer(container.getId(), latexDirectory);
             // Perform the compilation
-            startContainer(dockerClient, container.getId());
+            manager.startContainer(container.getId());
             // Get container logs & display them in debug mode
-            logs = getLogs(container.getId(), dockerClient);
+            logs = manager.getLogs(container.getId());
+            // Copy the generated files back to the host. For simplicity we copy all the files.
+            // One option would be to control pdflatex and use the "--output-directory" option but that would force
+            // users who want to tweak the configuration to understand they need to output the results to a specific
+            // directory (and break backward compatibility). Thus we have chosen the transparent route FTM.
+            manager.copyToHost(container.getId(), latexDirectory);
         } finally {
             // Remove the container. Note that we cannot use autoremove since we need to get the logs and that works
             // only if the container is still running.
@@ -169,50 +172,5 @@ public class DefaultLaTeX2PDFConverter implements LaTeX2PDFConverter
             exists = false;
         }
         return exists;
-    }
-
-    private void startContainer(DockerClient dockerClient, String containerId)
-    {
-        // Start (and stop and remove automatically when the conversion is finished, thanks to the autoremove above).
-        dockerClient.startContainerCmd(containerId).exec();
-
-        // Wait for the container to have fully finished before continuing (to be sure that the PDF file is output
-        // completely).
-        WaitContainerResultCallback resultCallback = new WaitContainerResultCallback();
-        dockerClient.waitContainerCmd(containerId).exec(resultCallback);
-        wait(resultCallback);
-    }
-
-    private String getLogs(String containerId, DockerClient dockerClient)
-    {
-        StringBuilder logs = new StringBuilder();
-        LogContainerCmd logContainerCmd = dockerClient.logContainerCmd(containerId)
-            .withStdErr(true)
-            .withStdOut(true)
-            .withFollowStream(true)
-            .withTailAll()
-            .withTimestamps(true);
-        wait(logContainerCmd.exec(new LogContainerResultCallback() {
-                @Override
-                public void onNext(Frame item)
-                {
-                    logs.append(item.toString()).append('\n');
-                }
-            }));
-        String result = logs.toString();
-        this.logger.debug(result);
-        return result;
-    }
-
-    private void wait(ResultCallbackTemplate template)
-    {
-        try {
-            template.awaitCompletion();
-        } catch (InterruptedException e) {
-            this.logger.warn("Interrupted thread [{}]. Root cause: [{}]", Thread.currentThread().getName(),
-                ExceptionUtils.getRootCauseMessage(e));
-            // Restore interrupted state to be a good citizen...
-            Thread.currentThread().interrupt();
-        }
     }
 }
