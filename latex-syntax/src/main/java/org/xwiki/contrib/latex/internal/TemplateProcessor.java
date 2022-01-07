@@ -179,6 +179,7 @@ public class TemplateProcessor
         // the latex document. To do so, the UIXP of XDOM are directly integrated in the template in Velocity.
         Optional<String> result;
         if (!templateName.equals("XDOM")) {
+            // Get the extensions sorted by their "order" parameter.
             List<UIExtension> extensions =
                 this.uiExtensionManager.getExtensions(
                     String.format("org.xwiki.contrib.latex.%s.%s", templateName, suffix),
@@ -187,8 +188,6 @@ public class TemplateProcessor
                 result = Optional.empty();
             } else {
                 DefaultWikiPrinter printer = new DefaultWikiPrinter();
-                // Sort the extensions by their "order" parameter, the values with the highest order value first.
-                // Missing or invalid order values are considered to be 0.
                 for (UIExtension extension : extensions) {
                     this.blockRenderer.render(extension.execute(), printer);
                     printer.println("");
