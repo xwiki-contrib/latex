@@ -20,6 +20,7 @@
 package org.xwiki.contrib.latex.test;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -81,6 +82,10 @@ class LaTeX2PDFIT
         assertEquals(fullPdfFile, result.getPDFFile(), String.format("PDF File not generated properly from LaTeX "
             + "files in [%s]. Debug logs:[\n%s\n]", this.tmpDir.toString(), getDebugLogs()));
         assertTrue(result.getPDFFile().exists());
+
+        // Make sure that the generated PDF has the same owner as the current user. There used to be a bug where the
+        // PDF file was created as root.
+        assertEquals(System.getProperty("user.name"), Files.getOwner(fullPdfFile.toPath()).getName());
 
         // Assert the generated PDF
         assertTrue(getPDFContent(fullPdfFile).contains(
