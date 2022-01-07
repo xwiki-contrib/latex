@@ -48,20 +48,20 @@ public class TemplateProcessor
 
     private static final String BLOCK = "block";
 
-    private final TemplateManager templateManager;
+    private TemplateManager templateManager;
 
-    private final VelocityMacroFilter filter;
+    private VelocityMacroFilter filter;
 
-    private final Map<String, Object> latexBinding;
+    private Map<String, Object> latexBinding;
 
-    private final UIExtensionSupplier uiExtensionSupplier;
+    private UIExtensionSupplier uiExtensionSupplier;
 
-    private final BlockRenderer blockRenderer;
+    private BlockRenderer blockRenderer;
 
     /**
      * @param templateManager the template manager used to locate, get and execute template content
-     * @param latexBinding the script context "latex" binding into which we can inject new "bindings" for the
-     *     template evaluation
+     * @param latexBinding the script context "latex" binding into which we can inject new "bindings" for the template
+     *        evaluation
      * @param filter the Velocity filter to apply to the template content if the source is written in Velocity
      * @param uiExtensionSupplier the UI extension supplier to resolve the {@link UIExtension}s for the templates
      * @param blockRenderer the block renderer used to render the {@link UIExtension}s for the templates
@@ -91,7 +91,7 @@ public class TemplateProcessor
                 this.latexBinding.put(BLOCK, block);
                 String templateName = getTemplateName(block);
                 renderUIXPs(templateName, "before").ifPresent(writer::write);
-                Template template = getTemplateByName(templateName);
+                Template template = getTemplate(templateName);
                 if (template != null) {
                     writer.write(render(template));
                 } else {
@@ -112,11 +112,6 @@ public class TemplateProcessor
             }
         }
         return writer.toString();
-    }
-
-    private Template getTemplateByName(String templateName) throws Exception
-    {
-        return getTemplate(templateName);
     }
 
     /**
@@ -180,23 +175,47 @@ public class TemplateProcessor
     {
         // The XDOM template case is particular, the after UIXP needs to be located before "\end{document}" which closes
         // the latex document. To do so, the UIXP of XDOM are directly integrated in the template in Velocity.
-        Optional<String> ret;
+        Optional<String> result;
         if (!templateName.equals("XDOM")) {
             List<UIExtension> extensions =
                 this.uiExtensionSupplier.getExtensions(
                     String.format("org.xwiki.contrib.latex.%s.%s", templateName, suffix));
             if (extensions.isEmpty()) {
-                ret = Optional.empty();
+                result = Optional.empty();
             } else {
                 DefaultWikiPrinter printer = new DefaultWikiPrinter();
+                // Sort the extensions by their "order" parameter, the values with the highest order value first.
+                // Missing or invalid order values are considered to be 0.
+                extensions.sort((e1, e2) -> getOrderParameter(e2) - getOrderParameter(e1));
                 for (UIExtension extension : extensions) {
                     this.blockRenderer.render(extension.execute(), printer);
                 }
-                ret = Optional.of(printer.toString());
+                result = Optional.of(printer.toString());
             }
         } else {
-            ret = Optional.empty();
+            result = Optional.empty();
         }
-        return ret;
+        return result;
+    }
+
+    private Integer getOrderParameter(UIExtension uiExtension)
+    {
+        int order;
+        String orderParameter = uiExtension.getParameters().get("order");
+        if (orderParameter == null) {
+            LOGGER.warn("The [order] parameter is missing for the [{}] UIExtension. Using default value [0].",
+                uiExtension);
+            order = 0;
+        } else {
+            try {
+                order = Integer.parseInt(orderParameter);
+            } catch (NumberFormatException e) {
+                LOGGER.warn(
+                    "Failed to parse the [order] parameter [{}] for the [{}] UIExtension. Using default value [0].",
+                    orderParameter, uiExtension);
+                order = 0;
+            }
+        }
+        return order;
     }
 }
