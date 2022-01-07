@@ -117,6 +117,6 @@ class UIExtensionSupplierTest
         
         assertEquals(1, this.logCapture.size());
         assertEquals(Level.ERROR, this.logCapture.getLogEvent(0).getLevel());
-        assertEquals("Failed to initialize UI extension manager", this.logCapture.getMessage(0));
+        assertEquals("Failed to initialize UI extension manager with hint [uixp.id].", this.logCapture.getMessage(0));
     }
 }

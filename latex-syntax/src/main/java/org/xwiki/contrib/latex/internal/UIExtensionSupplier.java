@@ -40,9 +40,9 @@ import org.xwiki.uiextension.script.UIExtensionScriptService;
  * {@link UIExtensionScriptService#getExtensions(String)} outside of a {@link ScriptService}.
  *
  * @version $Id$
- * @see <a href="https://jira.xwiki.org/browse/XWIKI-19272">XWIKI-19272</a>
  * @since 1.16
  */
+// TODO: Remove this class once XWIKI-19272 is fixed.
 @Component(roles = UIExtensionSupplier.class)
 @Singleton
 public class UIExtensionSupplier
@@ -84,7 +84,8 @@ public class UIExtensionSupplier
                 // Look for a specific UI extension manager for the given extension point.
                 manager = componentManager.getInstance(UIExtensionManager.class, extensionPointId);
             } catch (ComponentLookupException e) {
-                this.logger.error("Failed to initialize UI extension manager", e);
+                // Note: this should never happen since we already checked for the presence of the component.
+                this.logger.error("Failed to initialize UI extension manager with hint [{}].", extensionPointId, e);
             }
         }
 
