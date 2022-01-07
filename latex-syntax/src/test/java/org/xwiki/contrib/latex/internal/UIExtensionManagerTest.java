@@ -33,35 +33,39 @@ import org.xwiki.test.junit5.LogCaptureExtension;
 import org.xwiki.test.junit5.mockito.ComponentTest;
 import org.xwiki.test.junit5.mockito.InjectMockComponents;
 import org.xwiki.test.junit5.mockito.MockComponent;
-import org.xwiki.uiextension.UIExtensionManager;
+import org.xwiki.uiextension.UIExtension;
+import org.xwiki.uiextension.UIExtensionFilter;
 
 import ch.qos.logback.classic.Level;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Test of {@link UIExtensionSupplier}.
+ * Test of {@link UIExtensionManager}.
  *
  * @version $Id$
  * @since 1.16
  */
 @ComponentTest
-class UIExtensionSupplierTest
+class UIExtensionManagerTest
 {
     public static final String FAKE_UIXP_ID = "uixp.id";
 
     @InjectMockComponents
-    private UIExtensionSupplier uiExtensionSupplier;
-
-    @MockComponent
     private UIExtensionManager uiExtensionManager;
 
+    @MockComponent
+    private org.xwiki.uiextension.UIExtensionManager xWikiIiExtensionManager;
+
     @Mock
-    private UIExtensionManager uixpIdUIUiExtensionManager;
+    private org.xwiki.uiextension.UIExtensionManager uixpIdUIUiExtensionManager;
 
     /**
      * We use the Context Component Manager to lookup UI Extensions registered as components. The Context Component
@@ -86,37 +90,54 @@ class UIExtensionSupplierTest
     @Test
     void getExtensions()
     {
-        this.uiExtensionSupplier.getExtensions(FAKE_UIXP_ID);
+        this.uiExtensionManager.getExtensions(FAKE_UIXP_ID);
 
-        verify(this.componentManager).hasComponent(UIExtensionManager.class, FAKE_UIXP_ID);
-        verify(this.uiExtensionManager).get(FAKE_UIXP_ID);
+        verify(this.componentManager).hasComponent(org.xwiki.uiextension.UIExtensionManager.class, FAKE_UIXP_ID);
+        verify(this.xWikiIiExtensionManager).get(FAKE_UIXP_ID);
     }
 
     @Test
     void getExtensionsOverridden() throws Exception
     {
-        doReturn(true).when(this.componentManager).hasComponent(UIExtensionManager.class, FAKE_UIXP_ID);
-        when(this.componentManager.getInstance(UIExtensionManager.class, FAKE_UIXP_ID))
+        doReturn(true).when(this.componentManager)
+            .hasComponent(org.xwiki.uiextension.UIExtensionManager.class, FAKE_UIXP_ID);
+        when(this.componentManager.getInstance(org.xwiki.uiextension.UIExtensionManager.class, FAKE_UIXP_ID))
             .thenReturn(this.uixpIdUIUiExtensionManager);
-        this.uiExtensionSupplier.getExtensions(FAKE_UIXP_ID);
+        this.uiExtensionManager.getExtensions(FAKE_UIXP_ID);
 
-        verify(this.uiExtensionManager, never()).get(FAKE_UIXP_ID);
+        verify(this.xWikiIiExtensionManager, never()).get(FAKE_UIXP_ID);
         verify(this.uixpIdUIUiExtensionManager).get(FAKE_UIXP_ID);
     }
 
     @Test
     void getExtensionsGetExtensionsFails() throws Exception
     {
-        doReturn(true).when(this.componentManager).hasComponent(UIExtensionManager.class, FAKE_UIXP_ID);
-        when(this.componentManager.getInstance(UIExtensionManager.class, FAKE_UIXP_ID))
+        doReturn(true).when(this.componentManager)
+            .hasComponent(org.xwiki.uiextension.UIExtensionManager.class, FAKE_UIXP_ID);
+        when(this.componentManager.getInstance(org.xwiki.uiextension.UIExtensionManager.class, FAKE_UIXP_ID))
             .thenThrow(ComponentLookupException.class);
-        this.uiExtensionSupplier.getExtensions(FAKE_UIXP_ID);
+        this.uiExtensionManager.getExtensions(FAKE_UIXP_ID);
 
-        verify(this.uiExtensionManager).get(FAKE_UIXP_ID);
+        verify(this.xWikiIiExtensionManager).get(FAKE_UIXP_ID);
         verify(this.uixpIdUIUiExtensionManager, never()).get(FAKE_UIXP_ID);
         
         assertEquals(1, this.logCapture.size());
         assertEquals(Level.ERROR, this.logCapture.getLogEvent(0).getLevel());
         assertEquals("Failed to initialize UI extension manager with hint [uixp.id].", this.logCapture.getMessage(0));
+    }
+
+    @Test
+    void getExtensionsWithFilter() throws Exception
+    {
+        UIExtension uiExtensionA = mock(UIExtension.class);
+        UIExtension uiExtensionB = mock(UIExtension.class);
+        UIExtensionFilter uiExtensionFilter = mock(UIExtensionFilter.class);
+        
+        when(this.xWikiIiExtensionManager.get(FAKE_UIXP_ID)).thenReturn(asList(uiExtensionA, uiExtensionB));
+        when(this.componentManager.getInstance(UIExtensionFilter.class, "filterKey")).thenReturn(uiExtensionFilter);
+
+        this.uiExtensionManager.getExtensions(FAKE_UIXP_ID, singletonMap("filterKey", "filterValue"));
+
+        verify(uiExtensionFilter).filter(asList(uiExtensionA, uiExtensionB), "filterValue");
     }
 }

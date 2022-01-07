@@ -83,7 +83,7 @@ public class DefaultTemplateRenderer implements TemplateRenderer
     private Provider<LaTeXResourceConverter> resourceConverterProvider;
 
     @Inject
-    private UIExtensionSupplier uiExtensionSupplier;
+    private UIExtensionManager uiExtensionManager;
 
     @Inject
     @Named("plain/1.0")
@@ -138,7 +138,7 @@ public class DefaultTemplateRenderer implements TemplateRenderer
         scriptContext.setAttribute(SC_LATEX, latexBinding, ScriptContext.ENGINE_SCOPE);
 
         TemplateProcessor processor =
-            new TemplateProcessor(this.templateManager, latexBinding, this.filter, this.uiExtensionSupplier,
+            new TemplateProcessor(this.templateManager, latexBinding, this.filter, this.uiExtensionManager,
                 this.blockRender);
         latexBinding.put("processor", processor);
         latexBinding.put("tool", this.latexTool);

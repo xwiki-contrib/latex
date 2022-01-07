@@ -36,6 +36,8 @@ import org.xwiki.template.Template;
 import org.xwiki.template.TemplateManager;
 import org.xwiki.uiextension.UIExtension;
 
+import static java.util.Collections.singletonMap;
+
 /**
  * Locate and evaluate the LaTeX templates.
  *
@@ -54,7 +56,7 @@ public class TemplateProcessor
 
     private Map<String, Object> latexBinding;
 
-    private UIExtensionSupplier uiExtensionSupplier;
+    private UIExtensionManager uiExtensionManager;
 
     private BlockRenderer blockRenderer;
 
@@ -63,16 +65,16 @@ public class TemplateProcessor
      * @param latexBinding the script context "latex" binding into which we can inject new "bindings" for the template
      *        evaluation
      * @param filter the Velocity filter to apply to the template content if the source is written in Velocity
-     * @param uiExtensionSupplier the UI extension supplier to resolve the {@link UIExtension}s for the templates
+     * @param uiExtensionManager the UI extension manager to resolve the {@link UIExtension}s for the templates
      * @param blockRenderer the block renderer used to render the {@link UIExtension}s for the templates
      */
     public TemplateProcessor(TemplateManager templateManager, Map<String, Object> latexBinding,
-        VelocityMacroFilter filter, UIExtensionSupplier uiExtensionSupplier, BlockRenderer blockRenderer)
+        VelocityMacroFilter filter, UIExtensionManager uiExtensionManager, BlockRenderer blockRenderer)
     {
         this.templateManager = templateManager;
         this.latexBinding = latexBinding;
         this.filter = filter;
-        this.uiExtensionSupplier = uiExtensionSupplier;
+        this.uiExtensionManager = uiExtensionManager;
         this.blockRenderer = blockRenderer;
     }
 
@@ -90,7 +92,7 @@ public class TemplateProcessor
             try {
                 this.latexBinding.put(BLOCK, block);
                 String templateName = getTemplateName(block);
-                renderUIXPs(templateName, "before").ifPresent(writer::write);
+                renderUIXs(templateName, "before").ifPresent(writer::write);
                 Template template = getTemplate(templateName);
                 if (template != null) {
                     writer.write(render(template));
@@ -98,7 +100,7 @@ public class TemplateProcessor
                     // Ignore the template and render children
                     writer.write(process(block.getChildren()));
                 }
-                renderUIXPs(templateName, "after").ifPresent(writer::write);
+                renderUIXs(templateName, "after").ifPresent(writer::write);
             } catch (Exception e) {
                 LOGGER.warn("Failed to evaluate template for Block [{}]. Reason [{}]. Skipping template",
                     block.getClass().getName(), ExceptionUtils.getRootCauseMessage(e));
@@ -171,24 +173,25 @@ public class TemplateProcessor
         return templateName;
     }
 
-    private Optional<String> renderUIXPs(String templateName, String suffix)
+    private Optional<String> renderUIXs(String templateName, String suffix)
     {
         // The XDOM template case is particular, the after UIXP needs to be located before "\end{document}" which closes
         // the latex document. To do so, the UIXP of XDOM are directly integrated in the template in Velocity.
         Optional<String> result;
         if (!templateName.equals("XDOM")) {
             List<UIExtension> extensions =
-                this.uiExtensionSupplier.getExtensions(
-                    String.format("org.xwiki.contrib.latex.%s.%s", templateName, suffix));
+                this.uiExtensionManager.getExtensions(
+                    String.format("org.xwiki.contrib.latex.%s.%s", templateName, suffix),
+                    singletonMap("sortByParameter", "order"));
             if (extensions.isEmpty()) {
                 result = Optional.empty();
             } else {
                 DefaultWikiPrinter printer = new DefaultWikiPrinter();
                 // Sort the extensions by their "order" parameter, the values with the highest order value first.
                 // Missing or invalid order values are considered to be 0.
-                extensions.sort((e1, e2) -> getOrderParameter(e2) - getOrderParameter(e1));
                 for (UIExtension extension : extensions) {
                     this.blockRenderer.render(extension.execute(), printer);
+                    printer.println("");
                 }
                 result = Optional.of(printer.toString());
             }
@@ -196,26 +199,5 @@ public class TemplateProcessor
             result = Optional.empty();
         }
         return result;
-    }
-
-    private Integer getOrderParameter(UIExtension uiExtension)
-    {
-        int order;
-        String orderParameter = uiExtension.getParameters().get("order");
-        if (orderParameter == null) {
-            LOGGER.warn("The [order] parameter is missing for the [{}] UIExtension. Using default value [0].",
-                uiExtension);
-            order = 0;
-        } else {
-            try {
-                order = Integer.parseInt(orderParameter);
-            } catch (NumberFormatException e) {
-                LOGGER.warn(
-                    "Failed to parse the [order] parameter [{}] for the [{}] UIExtension. Using default value [0].",
-                    orderParameter, uiExtension);
-                order = 0;
-            }
-        }
-        return order;
     }
 }
