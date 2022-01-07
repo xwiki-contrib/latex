@@ -22,6 +22,7 @@ package org.xwiki.contrib.latex.internal;
 import org.junit.runner.RunWith;
 import org.xwiki.rendering.test.MockWikiModel;
 import org.xwiki.rendering.test.integration.RenderingTestSuite;
+import org.xwiki.skinx.SkinExtension;
 import org.xwiki.test.annotation.AllComponents;
 import org.xwiki.test.mockito.MockitoComponentManager;
 
@@ -42,5 +43,6 @@ public class LaTeXSpecificTest
         MockSetup.setUp(componentManager);
 
         componentManager.registerComponent(MockWikiModel.getComponentDescriptor());
+        componentManager.registerMockComponent(SkinExtension.class, "ssfx");
     }
 }

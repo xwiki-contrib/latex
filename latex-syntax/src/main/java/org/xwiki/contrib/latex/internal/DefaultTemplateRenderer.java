@@ -38,6 +38,7 @@ import org.xwiki.context.ExecutionContextException;
 import org.xwiki.context.ExecutionContextManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.macro.velocity.filter.VelocityMacroFilter;
+import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.TemplateManager;
@@ -80,6 +81,13 @@ public class DefaultTemplateRenderer implements TemplateRenderer
 
     @Inject
     private Provider<LaTeXResourceConverter> resourceConverterProvider;
+
+    @Inject
+    private UIExtensionManager uiExtensionManager;
+
+    @Inject
+    @Named("plain/1.0")
+    private BlockRenderer blockRender;
 
     @Override
     public void render(Collection<Block> blocks, WikiPrinter printer)
@@ -129,7 +137,9 @@ public class DefaultTemplateRenderer implements TemplateRenderer
         }
         scriptContext.setAttribute(SC_LATEX, latexBinding, ScriptContext.ENGINE_SCOPE);
 
-        TemplateProcessor processor = new TemplateProcessor(this.templateManager, latexBinding, this.filter);
+        TemplateProcessor processor =
+            new TemplateProcessor(this.templateManager, latexBinding, this.filter, this.uiExtensionManager,
+                this.blockRender);
         latexBinding.put("processor", processor);
         latexBinding.put("tool", this.latexTool);
 
