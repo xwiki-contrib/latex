@@ -134,12 +134,6 @@
       <version>${rendering.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.xwiki.contrib</groupId>
-      <artifactId>macro-numbered-references</artifactId>
-      <version>1.4</version>
-      <scope>test</scope>
-    </dependency>
     <!-- Needed because oldcore is required through xwiki-platform-uiextension-api. -->
     <dependency>
       <groupId>javax.servlet</groupId>
