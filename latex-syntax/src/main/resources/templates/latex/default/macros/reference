@@ -1,5 +1,0 @@
-#if (!$latex.block.isInline())
-
-
-#end
-\ref{$latex.block.getParameters().values().iterator().next()}##
