@@ -15,15 +15,15 @@
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\label{Hheading}
-\heading[*]{1}{heading}\begin{varwidth}[t]{\linewidth}
+\heading[*]{1}{heading}
+\label{Hheading}\begin{varwidth}[t]{\linewidth}
 
 
-\label{Hheading1}
 \heading[*]{1}{heading1}
+\label{Hheading1}
 
-\label{Hheading2}
 \heading[*]{1}{heading2}
+\label{Hheading2}
 \end{varwidth}
 
 \end{document}

@@ -1,9 +1,6 @@
 
 
 #set ($headingLevel = $latex.block.getLevel().ordinal() + 1)
-#if ("$!latex.block.getId()" != '')
-  \label{${latex.block.getId()}}
-#end
 ## If there's a "data-xwiki-rendering-protected" parameter then the heading must not be numbered. Same if we're already
 ## in a protected block
 #if ("$!latex.block.getParameter('data-xwiki-rendering-protected')" != '' || !$latex.tool.getStack('isInProtectedBlock').empty())
@@ -11,4 +8,7 @@
 #else
   #set ($star = '')
 #end
-\heading${star}{$headingLevel}{${latex.processor.process($latex.block.getChildren())}}##
+\heading${star}{$headingLevel}{${latex.processor.process($latex.block.getChildren())}}
+#if ("$!latex.block.getId()" != '')
+\label{${latex.block.getId()}}##
+#end

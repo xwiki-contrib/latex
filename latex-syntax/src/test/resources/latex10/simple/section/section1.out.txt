@@ -1,21 +1,21 @@
 ${{{regex:.*\\begin\{document\}}}}
 
-\label{HTitlelevel1}
 \heading{1}{Title level 1}
+\label{HTitlelevel1}
 
-\label{HTitlelevel2}
 \heading{2}{Title level 2}
+\label{HTitlelevel2}
 
-\label{HTitlelevel3}
 \heading{3}{Title level 3}
+\label{HTitlelevel3}
 
-\label{HTitlelevel4}
 \heading{4}{Title level 4}
+\label{HTitlelevel4}
 
-\label{HTitlelevel5}
 \heading{5}{Title level 5}
+\label{HTitlelevel5}
 
-\label{HTitlelevel6}
 \heading{6}{Title level 6}
+\label{HTitlelevel6}
 
 \end{document}
