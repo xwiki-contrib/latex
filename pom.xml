@@ -69,4 +69,18 @@
       </modules>
     </profile>
   </profiles>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <!-- TODO: Remove when the parent depends on a version of XWiki >= 14.0 (Java 11) -->
+            <source>8</source>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>
