@@ -1,4 +1,5 @@
 #set ($figureCaptionBlock = $latex.block)
+#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
 ## If the caption is last then add a NL before the caption so that the caption is on a new line
 #if ($latex.tool.figureTool.isFigureCaptionLast($figureCaptionBlock))
 
@@ -8,3 +9,4 @@
 #if (!$latex.tool.figureTool.isFigureCaptionLast($figureCaptionBlock))
 
 #end
+#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())
