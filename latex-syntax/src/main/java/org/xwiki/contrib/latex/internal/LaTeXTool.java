@@ -86,6 +86,12 @@ public interface LaTeXTool
     boolean isTableCell(Block block);
 
     /**
+     * @param block the block to check
+     * @return true if the block is a figure block.
+     */
+    boolean isFigure(Block block);
+
+    /**
      * @param current the current block for which to find the parent
      * @return the parent of the passed block, ignoring MacroMarkerBlocks
      */

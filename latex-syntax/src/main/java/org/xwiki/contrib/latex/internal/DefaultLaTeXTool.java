@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.FigureBlock;
 import org.xwiki.rendering.block.IdBlock;
 import org.xwiki.rendering.block.MacroMarkerBlock;
 import org.xwiki.rendering.block.TableCellBlock;
@@ -143,6 +144,12 @@ public class DefaultLaTeXTool implements LaTeXTool
     public boolean isTableCell(Block block)
     {
         return (block instanceof TableCellBlock) || (block instanceof TableHeadCellBlock);
+    }
+
+    @Override
+    public boolean isFigure(Block block)
+    {
+        return (block instanceof FigureBlock);
     }
 
     @Override

@@ -80,6 +80,18 @@ public class DefaultFigureTool implements FigureTool
         //        |_ MetaDataBlock
         //          |_ FigureCaptionBlock
         //
+        // XWiki >= 14.1RC1 (see XRENDERING-629)
+        //  MacroMarkerBlock (Figure)
+        //  |_ FigureBlock
+        //    |_ MetaDataBlock
+        //      |_ MacroMarkerBlock (FigureCaption)
+        //        |_ FigureCaptionBlock
+        //          |_ MetaDataBlock
+        //
+        // XWiki >= 14.1RC1 (see XRENDERING-628)
+        // FigureBlock
+        // |_ FigureCaptionBlock
+        //
         // Note: XWIKI-16916 is still open and when closed it may put back the stripped MacroMarkerBlock inside the
         // Figure Macro MacroMarkerBlock.
         Block parentBlock = figureCaptionBlock.getParent();

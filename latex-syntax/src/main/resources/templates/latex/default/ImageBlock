@@ -3,7 +3,8 @@
 ## (in a paragraph with other blocks for example).
 ## However this is also only supported if not in a table cell. Otherwise it would need a group.
 #set ($isImageStandalone = false)
-#if ($imageBlock.parent.children.size() == 1 && !$latex.tool.isTableCell($latex.tool.getParentBlock($imageBlock)))
+#if (($imageBlock.parent.children.size() == 1 && !$latex.tool.isTableCell($latex.tool.getParentBlock($imageBlock)))
+	|| $latex.tool.isFigure($imageBlock.parent))
 	#set ($isImageStandalone = true)
 #end
 #if ($isImageStandalone)
