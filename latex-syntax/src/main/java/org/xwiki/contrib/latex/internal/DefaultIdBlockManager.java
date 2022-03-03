@@ -124,7 +124,7 @@ public class DefaultIdBlockManager implements IdBlockManager, Initializable
         if (nextSibling != null) {
             BlockType type = blockTypes.get(nextSibling.getClass());
             if (type != null) {
-                isInline = type == inline ? true : false;
+                isInline = type == inline;
             } else {
                 // TODO: Improve this. For example to handle the case when the next sibling is a MetaDataBlock.
                 isInline = false;
