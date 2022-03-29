@@ -1,6 +1,7 @@
 .runTransformations:macro
 .#-----------------------------------------------------
 .input|xwiki/2.1
+.# Test a caption with several paragraphs and lists.
 .#-----------------------------------------------------
 {{figure}}
 image:image.png
