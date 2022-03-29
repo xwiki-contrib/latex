@@ -3,26 +3,33 @@
 .input|xwiki/2.1
 .#-----------------------------------------------------
 {{figure}}
-{{figureCaption}}
-Table **caption**
-{{/figureCaption}}
+image:image.png
 
-|a|b
+{{figureCaption}}{{id name="test"/}}Image **caption**.
+
+With several paragraphs.
+
+* And a
+* list!
+{{/figureCaption}}
 {{/figure}}
 .#-----------------------------------------------------
 .expect|latex/1.0
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\begin{table}[h]
-\caption[Table caption]{Table \textbf{caption}}
+\begin{figure}[h]
 \begin{center}
-\begin{tabular}{|l|l|}
-\hline
-a & b\\
-\hline
-\end{tabular}
+\includegraphics{image.png}
 \end{center}
-\end{table}
+\caption[Image caption. With several paragraphs. And a list!]{\label{test}Image \textbf{caption}.
+
+With several paragraphs.
+
+\begin{itemize}
+ \item And a
+ \item list!
+\end{itemize}}
+\end{figure}
 
 \end{document}

@@ -109,4 +109,11 @@ public interface LaTeXTool
      * @return true if inline, false otherwise
      */
     boolean isIdBlockInline(IdBlock idBLock);
+
+    /**
+     * @param block the block for which we should get plain text descendants
+     * @return all descendants of the block that represent plain text (i.e., word, special character or space)
+     * @since 1.17
+     */
+    List<Block> getPlainTextDescendants(Block block);
 }

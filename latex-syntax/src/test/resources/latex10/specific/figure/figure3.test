@@ -24,12 +24,12 @@ whatever
 ${{{regex:.*\\begin\{document\}}}}
 
 \begin{figure}[h]
-\caption{caption}
+\caption[caption]{caption}
 whatever
 \end{figure}
 
 \begin{table}[h]
-\caption{caption}
+\caption[caption]{caption}
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline

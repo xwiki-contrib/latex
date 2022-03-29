@@ -16,7 +16,7 @@ ${{{regex:.*\\begin\{document\}}}}
 \begin{center}
 \includegraphics{image.png}
 \end{center}
-\caption{\label{test}Image \textbf{caption}}
+\caption[Image caption]{\label{test}Image \textbf{caption}}
 \end{figure}
 
 \end{document}
