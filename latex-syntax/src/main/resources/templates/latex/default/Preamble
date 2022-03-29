@@ -29,6 +29,8 @@
 \usepackage{attachfile}
 %% For putting standalone blocks inside table cells and keeping table cells to a minimal width
 \usepackage{varwidth}
+%% For multiline captions including fragile commands
+\usepackage[justification=centering, singlelinecheck=off]{caption}
 %% Used for links
 %% Note: Should be loaded last
 \usepackage{hyperref}

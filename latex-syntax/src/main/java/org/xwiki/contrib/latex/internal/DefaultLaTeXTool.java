@@ -26,10 +26,13 @@ import java.util.Map;
 import java.util.Stack;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.phase.Initializable;
+import org.xwiki.component.phase.InitializationException;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.FigureBlock;
@@ -37,6 +40,8 @@ import org.xwiki.rendering.block.IdBlock;
 import org.xwiki.rendering.block.MacroMarkerBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
+import org.xwiki.rendering.parser.Parser;
+import org.xwiki.rendering.renderer.reference.link.LinkLabelGenerator;
 import org.xwiki.script.ScriptContextManager;
 
 /**
@@ -47,7 +52,7 @@ import org.xwiki.script.ScriptContextManager;
  */
 @Component
 @Singleton
-public class DefaultLaTeXTool implements LaTeXTool
+public class DefaultLaTeXTool implements LaTeXTool, Initializable
 {
     private static final String BACKSLASH = "\\";
 
@@ -83,6 +88,36 @@ public class DefaultLaTeXTool implements LaTeXTool
 
     @Inject
     private IdBlockManager idBlockManager;
+
+    /**
+     * A parser that knows how to parse plain text; this is used to transform link labels into plain text.
+     *
+     * @since 1.17
+     */
+    @Inject
+    @Named("plain/1.0")
+    private Parser plainTextParser;
+
+    /**
+     * Generate link label.
+     *
+     * @since 1.17
+     */
+    @Inject
+    private LinkLabelGenerator linkLabelGenerator;
+
+    /**
+     * Plain text filter to extract text content of, e.g., figure captions.
+     *
+     * @since 1.17
+     */
+    private LaTeXPlainTextBlockFilter plainTextBlockFilter;
+
+    @Override
+    public void initialize() throws InitializationException
+    {
+        this.plainTextBlockFilter = new LaTeXPlainTextBlockFilter(this.plainTextParser, this.linkLabelGenerator);
+    }
 
     @Override
     public String escape(String input)
@@ -186,5 +221,11 @@ public class DefaultLaTeXTool implements LaTeXTool
     public boolean isIdBlockInline(IdBlock idBLock)
     {
         return this.idBlockManager.isInline(idBLock);
+    }
+
+    @Override
+    public List<Block> getPlainTextDescendants(Block block)
+    {
+        return this.plainTextBlockFilter.getPlainTextDescendants(block);
     }
 }

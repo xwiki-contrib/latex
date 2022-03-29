@@ -1,11 +1,18 @@
 .runTransformations:macro
 .#-----------------------------------------------------
 .input|xwiki/2.1
+.# Test a caption with several paragraphs and lists.
 .#-----------------------------------------------------
 {{figure}}
 image:image.png
 
-{{figureCaption}}{{id name="test"/}}Image **caption**{{/figureCaption}}
+{{figureCaption}}{{id name="test"/}}Image **caption**.
+
+With several paragraphs.
+
+* And a
+* list!
+{{/figureCaption}}
 {{/figure}}
 .#-----------------------------------------------------
 .expect|latex/1.0
@@ -16,7 +23,14 @@ ${{{regex:.*\\begin\{document\}}}}
 \begin{center}
 \includegraphics{image.png}
 \end{center}
-\caption[Image caption]{\label{test}Image \textbf{caption}}
+\caption[Image caption. With several paragraphs. And a list!]{\label{test}Image \textbf{caption}.
+
+With several paragraphs.
+
+\begin{itemize}
+ \item And a
+ \item list!
+\end{itemize}}
 \end{figure}
 
 \end{document}

@@ -15,7 +15,7 @@ Table **caption**
 ${{{regex:.*\\begin\{document\}}}}
 
 \begin{table}[h]
-\caption{Table \textbf{caption}}
+\caption[Table caption]{Table \textbf{caption}}
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline
