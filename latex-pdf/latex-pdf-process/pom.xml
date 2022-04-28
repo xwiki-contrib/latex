@@ -28,7 +28,7 @@
     <version>1.18-SNAPSHOT</version>
   </parent>
   <artifactId>latex-pdf-process</artifactId>
-  <name>LaTeX - PDF - Docker</name>
+  <name>LaTeX - PDF - Process</name>
   <description>Converts from LaTeX to PDF using local process</description>
   <properties>
     <xwiki.jacoco.instructionRatio>1.00</xwiki.jacoco.instructionRatio>
