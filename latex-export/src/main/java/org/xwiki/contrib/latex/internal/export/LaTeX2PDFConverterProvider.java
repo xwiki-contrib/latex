@@ -25,58 +25,37 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.manager.ComponentManager;
+import org.xwiki.contrib.latex.export.LaTeXExportConfiguration;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
-import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.CompositeBlock;
 
 /**
- * Inject a button in the standard export menu UI to export to PDF (i.e. convert the LaTeX results to PDF
- * automatically), but only if Docker is available.
- * 
+ * Provides the {@link LaTeX2PDFConverter} implementing matching the
+ * {@link LaTeXExportConfiguration#getPDFExportHint()} set.
+ *
  * @version $Id$
- * @since 1.10
  */
 @Component
 @Singleton
-@Named(LaTeX2PDFExportUIExtension.ID)
-public class LaTeX2PDFExportUIExtension extends AbstractLaTeXExportUIExtension
+public class LaTeX2PDFConverterProvider implements Provider<LaTeX2PDFConverter>
 {
-    /**
-     * The ID of this UI extension.
-     */
-    public static final String ID = "latex2pdfexport";
+    @Inject
+    @Named("context")
+    private ComponentManager componentManager;
 
     @Inject
-    private Provider<LaTeX2PDFConverter> converterProvider;
+    private LaTeXExportConfiguration configuration;
 
     @Override
-    public String getId()
+    public LaTeX2PDFConverter get()
     {
-        return ID;
-    }
-
-    @Override
-    protected String getQueryString()
-    {
-        return "pdf=true";
-    }
-
-    @Override
-    protected String getButtonLabelTranslationKey()
-    {
-        return "latex.exportToPDF.button.label";
-    }
-
-    @Override
-    public Block execute()
-    {
-        Block result;
-        if (this.converterProvider.get().isReady()) {
-            result = super.execute();
-        } else {
-            // If the converter is not ready, don't display the export to PDF button!
-            result = new CompositeBlock();
+        try {
+            return this.componentManager.getInstance(LaTeX2PDFConverter.class, this.configuration.getPDFExportHint());
+        } catch (ComponentLookupException e) {
+            // Failed to find an exporter for the specific eporter hint, fail the execution
+            throw new RuntimeException(String.format("Cannot find LaTeX exporter for hint [%s]",
+                this.configuration.getPDFExportHint()), e);
         }
-        return result;
     }
 }

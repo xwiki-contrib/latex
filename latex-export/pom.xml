@@ -43,7 +43,7 @@
     </dependency>
     <dependency>
       <groupId>org.xwiki.contrib.latex</groupId>
-      <artifactId>latex-pdf</artifactId>
+      <artifactId>latex-pdf-docker</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

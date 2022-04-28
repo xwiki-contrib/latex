@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
@@ -50,7 +51,7 @@ import static org.xwiki.contrib.latex.internal.export.Unzipper.unzip;
 public class PDFLaTeXExporter extends AbstractLaTeXExporter
 {
     @Inject
-    private LaTeX2PDFConverter laTeX2PDFConverter;
+    private Provider<LaTeX2PDFConverter> converterProvider;
 
     @Override
     protected File performExport(DocumentReference documentReference, XDOM xdom,
@@ -78,13 +79,16 @@ public class PDFLaTeXExporter extends AbstractLaTeXExporter
         this.progressManager.endStep(this);
         // Step 3: Convert from latex to pdf
         this.progressManager.startStep(this, "Convert LaTeX to PDF");
-        LaTeX2PDFResult result = this.laTeX2PDFConverter.convert(unzippedLaTeXDirectory);
+        LaTeX2PDFResult result = this.converterProvider.get().convert(unzippedLaTeXDirectory);
         this.progressManager.endStep(this);
         // Step 4: Read the generated PDF and stream it back to the response output stream
         this.progressManager.startStep(this, "Copy PDF data to the output");
         if (result.getPDFFile() == null) {
-            throw new LaTeX2PDFException(String.format("Error when generating the PDF file in [%s]. Compilation "
-                + "logs: [\n%s\n]", unzippedLaTeXDirectory, result.getLogs()));
+            String message = String.format("Error when generating the PDF file in [%s].", unzippedLaTeXDirectory);
+            if (result.getLogs() != null) {
+                message = String.format("%s Compilation logs: [\n%s\n]", result.getLogs());
+            }
+            throw new LaTeX2PDFException(message);
         }
         this.progressManager.endStep(this);
         return result.getPDFFile();

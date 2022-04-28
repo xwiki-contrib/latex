@@ -7,3 +7,5 @@ org.xwiki.contrib.latex.internal.export.LaTeXTemplate
 org.xwiki.contrib.latex.internal.export.LaTeXPropertiesExtractor
 org.xwiki.contrib.latex.internal.export.LaTeXExportJob
 org.xwiki.contrib.latex.internal.export.LaTeXExportJobExecutor
+org.xwiki.contrib.latex.internal.export.DefaultLaTeXExportConfiguration
+org.xwiki.contrib.latex.internal.export.LaTeX2PDFConverterProvider

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
+/*
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -18,23 +16,36 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
+ */
+package org.xwiki.contrib.latex.internal.export;
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.xwiki.contrib.latex</groupId>
-    <artifactId>latex</artifactId>
-    <version>1.18-SNAPSHOT</version>
-  </parent>
-  <artifactId>latex-pdf</artifactId>
-  <name>LaTeX - PDF - Parent POM</name>
-  <packaging>pom</packaging>
-  <description>Converts from LaTeX to PDF</description>
-  <modules>
-    <!-- Sorted alphabetically -->
-    <module>latex-pdf-api</module>
-    <module>latex-pdf-docker</module>
-    <module>latex-pdf-process</module>
-  </modules>
-</project>
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import org.xwiki.component.annotation.Component;
+import org.xwiki.configuration.ConfigurationSource;
+import org.xwiki.contrib.latex.export.LaTeXExportConfiguration;
+
+/**
+ * Default configuration options for exporting to LaTeX and PDF.
+ *
+ * @version $Id$
+ * @since 1.10
+ */
+@Component
+@Singleton
+public class DefaultLaTeXExportConfiguration implements LaTeXExportConfiguration
+{
+    private static final String PREFIX = "latex.pdf.export.";
+
+    @Inject
+    @Named("xwikiproperties")
+    private ConfigurationSource configurationSource;
+
+    @Override
+    public String getPDFExportHint()
+    {
+        return this.configurationSource.getProperty(PREFIX + "hint", "docker");
+    }
+}
