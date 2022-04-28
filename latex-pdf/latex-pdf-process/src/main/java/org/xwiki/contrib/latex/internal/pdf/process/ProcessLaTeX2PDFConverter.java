@@ -19,6 +19,7 @@
  */
 package org.xwiki.contrib.latex.internal.pdf.process;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.exec.ShutdownHookProcessDestroyer;
 import org.apache.commons.exec.environment.EnvironmentUtils;
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.latex.pdf.process.LaTeX2PDFConfiguration;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
@@ -50,20 +52,16 @@ import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
 public class ProcessLaTeX2PDFConverter implements LaTeX2PDFConverter
 {
     @Inject
+    private Logger logger;
+
+    @Inject
     private LaTeX2PDFConfiguration configuration;
 
     @Override
     public LaTeX2PDFResult convert(File latexDirectory) throws LaTeX2PDFException
     {
         for (String command : this.configuration.getCommands()) {
-            try {
-                executeCommand(command, latexDirectory);
-            } catch (Exception e) {
-                throw new LaTeX2PDFException(String.format("Failed to execute command [%s]", command), e);
-            }
-            // Note: we don't need to check for the result of the execution since the process output and any error
-            // would already have been logged by the executeCommand. These logs are captured by the job and displayed
-            // in the job logs.
+            executeCommand(command, latexDirectory);
         }
 
         // Check if there's a PDF file to return.
@@ -85,17 +83,14 @@ public class ProcessLaTeX2PDFConverter implements LaTeX2PDFConverter
         return true;
     }
 
-    private XWikiDefaultExecuteResultHandler executeCommand(String commandLine, File workingDirectory) throws Exception
+    private void executeCommand(String commandLine, File workingDirectory) throws LaTeX2PDFException
     {
         // The command line to execute
         CommandLine command = CommandLine.parse(commandLine);
 
-        // Execute the process asynchronously so that we don't block.
-        XWikiDefaultExecuteResultHandler resultHandler = new XWikiDefaultExecuteResultHandler(commandLine);
-
         // Send Process output and error streams to our logger.
-        XWikiLogOutputStream logOutputStream = new XWikiLogOutputStream();
-        PumpStreamHandler streamHandler = new PumpStreamHandler(logOutputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
 
         // Make sure we end the process when the JVM exits
         ShutdownHookProcessDestroyer processDestroyer = new ShutdownHookProcessDestroyer();
@@ -105,17 +100,26 @@ public class ProcessLaTeX2PDFConverter implements LaTeX2PDFConverter
 
         // The executor to execute the command
         DefaultExecutor executor = new DefaultExecutor();
-        executor.setStreamHandler(streamHandler);
         executor.setWorkingDirectory(workingDirectory);
+        executor.setStreamHandler(streamHandler);
         executor.setProcessDestroyer(processDestroyer);
         executor.setWatchdog(watchDog);
 
-        // Inherit the current process's environment variables
-        @SuppressWarnings("unchecked")
-        Map<String, String> newEnvironment = EnvironmentUtils.getProcEnvironment();
+        try {
+            // Inherit the current process's environment variables
+            @SuppressWarnings("unchecked")
+            Map<String, String> newEnvironment = EnvironmentUtils.getProcEnvironment();
 
-        executor.execute(command, newEnvironment, resultHandler);
+            executor.execute(command, newEnvironment);
+        } catch (Exception e) {
+            // Since we don't force an exit value with executor.setExitValue() the call to execute() will throw an
+            // Exception if the exit code is non-zero. We catch the exception here to provide additional information
+            // and pass it upstream.
+            throw new LaTeX2PDFException(String.format("Failed to execute command [%s] in [%s]. Logs: [%s]", command,
+                workingDirectory, outputStream), e);
+        }
 
-        return resultHandler;
+        // For debugging information, log the output of the command's execution.
+        this.logger.info(outputStream.toString());
     }
 }
