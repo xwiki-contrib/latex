@@ -24,18 +24,11 @@ import java.io.File;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.xwiki.classloader.ClassLoaderManager;
-import org.xwiki.classloader.xwiki.internal.ContextNamespaceURLClassLoader;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentManager;
-import org.xwiki.context.Execution;
-import org.xwiki.context.ExecutionContext;
 import org.xwiki.job.AbstractJob;
 import org.xwiki.job.Job;
 import org.xwiki.job.event.status.JobStatus;
-import org.xwiki.wiki.descriptor.WikiDescriptorManager;
-
-import com.xpn.xwiki.XWikiContext;
 
 /**
  * Job to perform the LaTeX exports and be able to display a progress bar.
@@ -53,15 +46,6 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
     @Named("context")
     private ComponentManager componentManager;
 
-    @Inject
-    private Execution execution;
-
-    @Inject
-    private WikiDescriptorManager wikiDescriptorManager;
-
-    @Inject
-    private ClassLoaderManager classLoaderManager;
-
     @Override
     public String getType()
     {
@@ -71,18 +55,6 @@ public class LaTeXExportJob extends AbstractJob<LaTeXExportJobRequest, LaTeXExpo
     @Override
     protected void runInternal() throws Exception
     {
-        // Overwrite the Thread Context CL to work around the https://jira.xwiki.org/browse/XCOMMONS-2064 bug.
-        // Remove this hack once it's fixed and the LaTeX extension starts depending on XWiki >= the version where
-        // it's fixed.
-        Thread.currentThread().setContextClassLoader(
-            new ContextNamespaceURLClassLoader(this.wikiDescriptorManager, this.classLoaderManager));
-
-        // TODO: Remove once https://jira.xwiki.org/browse/XCOMMONS-2069 is implemented and the LaTeX extension starts
-        // depending on XWiki >= the version where it's fixed.
-        ExecutionContext econtext = this.execution.getContext();
-        XWikiContext xcontext = (XWikiContext) econtext.getProperty(XWikiContext.EXECUTIONCONTEXT_KEY);
-        xcontext.setAction(LaTeXExportResourceReferenceHandler.ACTION_STRING);
-
         File result = getExporter().export(this.request.getReference(), this.request.getExportOptions());
 
         // Set the result file in the Job status so that it can be accessed from the export.vm template.

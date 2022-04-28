@@ -85,11 +85,10 @@ public class LaTeXExportJobExecutor
         LaTeXExportJobRequest jobRequest;
         try {
             // Preserve all request data in the new xwiki context for the job, so that scripts in the exported page
-            // can use them.
-            // TODO: Remove "request.parameters" once https://jira.xwiki.org/browse/XWIKI-18082 is fixed and this
-            //  extension depends on the version where it's fixed.
+            // can use them. Also preserve the action since it could be checked in velocity scripts when rendering the
+            // page.
             Map<String, Serializable> contextEntries = this.contextStoreManager.save(
-                Arrays.asList("request.*", "request.parameters"));
+                Arrays.asList("request.*", "action"));
             jobRequest = new LaTeXExportJobRequest(documentReference, isPDF, exportOptions, contextEntries);
             List<String> jobId = LaTeXExportUtils.generateJobId();
             jobRequest.setId(jobId);
