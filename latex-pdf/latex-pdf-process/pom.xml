@@ -31,7 +31,7 @@
   <name>LaTeX - PDF - Process</name>
   <description>Converts from LaTeX to PDF using local process</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>1.00</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.00</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX to PDF Converter using local process</xwiki.extension.name>
     <xwiki.extension.category>api</xwiki.extension.category>
