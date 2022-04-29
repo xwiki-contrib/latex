@@ -40,7 +40,7 @@ import org.xwiki.contrib.latex.pdf.docker.LaTeX2PDFConfiguration;
 @Singleton
 public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
 {
-    private static final String PREFIX = "latex.pdf.docker";
+    private static final String PREFIX = "latex.pdf.docker.";
 
     @Inject
     @Named("xwikiproperties")

@@ -40,7 +40,7 @@ import org.xwiki.contrib.latex.pdf.process.LaTeX2PDFConfiguration;
 @Singleton
 public class DefaultLaTeX2PDFConfiguration implements LaTeX2PDFConfiguration
 {
-    private static final String PREFIX = "latex.pdf.process";
+    private static final String PREFIX = "latex.pdf.process.";
 
     private static final String DEFAULT_COMMAND = "pdflatex -shell-escape index.tex";
 
