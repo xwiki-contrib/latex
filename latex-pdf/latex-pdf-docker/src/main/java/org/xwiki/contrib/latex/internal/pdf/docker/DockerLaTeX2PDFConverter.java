@@ -33,7 +33,9 @@ import org.xwiki.contrib.latex.pdf.LaTeX2PDFException;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.RemoveContainerCmd;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.HostConfig;
@@ -106,8 +108,8 @@ public class DockerLaTeX2PDFConverter implements LaTeX2PDFConverter
         //   docker run -v <local dir>:/data blang/latex:ubuntu <cmd>
         CreateContainerResponse container = null;
         String logs;
-        try {
-            container = dockerClient.createContainerCmd(this.configuration.getDockerImageName())
+        try (CreateContainerCmd command = dockerClient.createContainerCmd(this.configuration.getDockerImageName())) {
+            container = command
                 .withCmd(this.configuration.getDockerCommands())
                 .withHostConfig(HostConfig.newHostConfig()
                     .withBinds(
@@ -137,7 +139,9 @@ public class DockerLaTeX2PDFConverter implements LaTeX2PDFConverter
             // Remove the container. Note that we cannot use autoremove since we need to get the logs and that works
             // only if the container is still running.
             if (container != null) {
-                dockerClient.removeContainerCmd(container.getId()).exec();
+                try (RemoveContainerCmd command = dockerClient.removeContainerCmd(container.getId())) {
+                    command.exec();
+                }
             }
         }
 
