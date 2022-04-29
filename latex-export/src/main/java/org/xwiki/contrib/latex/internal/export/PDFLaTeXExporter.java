@@ -86,7 +86,7 @@ public class PDFLaTeXExporter extends AbstractLaTeXExporter
         if (result.getPDFFile() == null) {
             String message = String.format("Error when generating the PDF file in [%s].", unzippedLaTeXDirectory);
             if (result.getLogs() != null) {
-                message = String.format("%s Compilation logs: [\n%s\n]", result.getLogs());
+                message = String.format("%s Compilation logs: [%n%s%n]", message, result.getLogs());
             }
             throw new LaTeX2PDFException(message);
         }

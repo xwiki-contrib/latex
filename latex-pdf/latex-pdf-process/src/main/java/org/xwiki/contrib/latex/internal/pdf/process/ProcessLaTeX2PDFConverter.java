@@ -115,8 +115,8 @@ public class ProcessLaTeX2PDFConverter implements LaTeX2PDFConverter
             // Since we don't force an exit value with executor.setExitValue() the call to execute() will throw an
             // Exception if the exit code is non-zero. We catch the exception here to provide additional information
             // and pass it upstream.
-            throw new LaTeX2PDFException(String.format("Failed to execute command [%s] in [%s]. Logs: [%s]", command,
-                workingDirectory, outputStream), e);
+            throw new LaTeX2PDFException(String.format("Failed to execute command [%s] in [%s]. Logs: [%n%s%n]",
+                command, workingDirectory, outputStream), e);
         }
 
         // For debugging information, log the output of the command's execution.
