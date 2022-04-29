@@ -219,7 +219,7 @@ public class DefaultLaTeXResourceConverter implements LaTeXResourceConverter
         ResourceReference convertedReference = toReference(reference, path);
 
         // Store attachment content
-        if (!this.stored.contains(path)) {
+        if (attachment != null && !this.stored.contains(path)) {
             try (InputStream inputStream = attachment.getContentInputStream(xcontext)) {
                 store(path, inputStream);
             } catch (Exception e) {
