@@ -25,6 +25,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.phase.Initializable;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.CompositeBlock;
@@ -39,15 +40,28 @@ import org.xwiki.rendering.block.CompositeBlock;
 @Component
 @Singleton
 @Named(LaTeX2PDFExportUIExtension.ID)
-public class LaTeX2PDFExportUIExtension extends AbstractLaTeXExportUIExtension
+public class LaTeX2PDFExportUIExtension extends AbstractLaTeXExportUIExtension implements Initializable
 {
     /**
      * The ID of this UI extension.
      */
     public static final String ID = "latex2pdfexport";
 
+    /**
+     * Cache the status of whether docker is available or not for performance reasons. Indeed this UIExtension is
+     * called at each page load and needs to be ultra fast. This means that if docker is not available when XWiki is
+     * stared and then made available later on, XWiki will need to be restarted to be able to use it.
+     */
+    private boolean isDockerAvailable;
+
     @Inject
     private Provider<LaTeX2PDFConverter> converterProvider;
+
+    @Override
+    public void initialize()
+    {
+        this.isDockerAvailable = this.converterProvider.get().isReady();
+    }
 
     @Override
     public String getId()
@@ -71,7 +85,7 @@ public class LaTeX2PDFExportUIExtension extends AbstractLaTeXExportUIExtension
     public Block execute()
     {
         Block result;
-        if (this.converterProvider.get().isReady()) {
+        if (this.isDockerAvailable) {
             result = super.execute();
         } else {
             // If the converter is not ready, don't display the export to PDF button!
