@@ -19,6 +19,8 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -45,7 +47,14 @@ public class DefaultFigureTool implements FigureTool
     @Override
     public boolean isTable(Block figureBlock)
     {
-        return this.figureTypeRecognizer.isTable((FigureBlock) figureBlock);
+        boolean isTable;
+        String figureTypeParameter = figureBlock.getParameter("data-xwiki-rendering-figure-type");
+        if (figureTypeParameter != null) {
+            isTable = Objects.equals(figureTypeParameter, "table");
+        } else {
+            isTable = this.figureTypeRecognizer.isTable((FigureBlock) figureBlock);
+        }
+        return isTable;
     }
 
     @Override

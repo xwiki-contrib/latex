@@ -31,7 +31,7 @@
   <name>LaTeX - Syntax</name>
   <description>LaTeX 1.0 Syntax Renderer</description>
   <properties>
-    <xwiki.jacoco.instructionRatio>0.81</xwiki.jacoco.instructionRatio>
+    <xwiki.jacoco.instructionRatio>0.92</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX Syntax 1.0</xwiki.extension.name>
     <!-- List it as a rendering syntax related module -->
