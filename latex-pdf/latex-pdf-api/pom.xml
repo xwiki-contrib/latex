@@ -29,7 +29,7 @@
   </parent>
   <artifactId>latex-pdf-api</artifactId>
   <name>LaTeX - PDF - API</name>
-  <description>API to converts from LaTeX to PDF</description>
+  <description>API to convert from LaTeX to PDF</description>
   <properties>
     <xwiki.jacoco.instructionRatio>1.00</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->

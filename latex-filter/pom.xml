@@ -29,7 +29,7 @@
   </parent>
   <artifactId>latex-filter</artifactId>
   <name>LaTeX - Filter</name>
-  <description>LaTeX Output Filter</description>
+  <description>Perform the LaTeX export by generating the XDOM for each page to export and calling the LaTeX Renderer</description>
   <properties>
     <xwiki.jacoco.instructionRatio>0.70</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
@@ -37,7 +37,6 @@
     <!-- List it as a module containing a filter -->
     <xwiki.extension.category>filter</xwiki.extension.category>
     <checkstyle.suppressions.location>${basedir}/src/checkstyle/checkstyle-suppressions.xml</checkstyle.suppressions.location>
-
     <!-- Components -->
     <xwiki.extension.components>
       org.xwiki.filter.output.OutputFilterStreamFactory/latex

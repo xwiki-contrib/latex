@@ -36,7 +36,6 @@
     <xwiki.extension.name>LaTeX Syntax 1.0</xwiki.extension.name>
     <!-- List it as a rendering syntax related module -->
     <xwiki.extension.category>syntax</xwiki.extension.category>
-
     <!-- Components -->
     <xwiki.extension.components>
       org.xwiki.rendering.renderer.BlockRenderer/latex/1.0

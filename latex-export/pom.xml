@@ -29,7 +29,7 @@
   </parent>
   <artifactId>latex-export</artifactId>
   <name>LaTeX - Export</name>
-  <description>Entry point to export to LaTeX</description>
+  <description>Inserts buttons to export to LaTeX in the Export UI (internally using the Output Filter to trigger the export)</description>
   <properties>
     <xwiki.jacoco.instructionRatio>0.00</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->

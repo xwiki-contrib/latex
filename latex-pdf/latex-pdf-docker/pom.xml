@@ -29,7 +29,7 @@
   </parent>
   <artifactId>latex-pdf-docker</artifactId>
   <name>LaTeX - PDF - Docker</name>
-  <description>Converts from LaTeX to PDF using Docker</description>
+  <description>Convert LaTeX files to PDF, using Docker</description>
   <properties>
     <xwiki.jacoco.instructionRatio>0.78</xwiki.jacoco.instructionRatio>
     <!-- Name to display by the Extension Manager -->
