@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.xwiki.contrib.latex</groupId>
     <artifactId>latex-pdf</artifactId>
-    <version>1.20</version>
+    <version>1.21-SNAPSHOT</version>
   </parent>
   <artifactId>latex-pdf-process</artifactId>
   <name>LaTeX - PDF - Process</name>
