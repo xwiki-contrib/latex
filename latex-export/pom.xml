@@ -73,6 +73,19 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
+      <!-- Force the version to be more recent than 4.3.0 since our Unzipper class works with Plexus Archiver >= 4.4.0.
+           Specifically it works with a version of Plexus Archiver that doesn't use the old Plexus component classes -->
+      <version>4.6.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

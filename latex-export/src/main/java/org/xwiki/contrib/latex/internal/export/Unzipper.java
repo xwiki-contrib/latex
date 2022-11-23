@@ -45,10 +45,6 @@ public final class Unzipper
     {
         createDirectory(targetDirectory);
         try {
-            // Note: starting with v4.4.0 Plexus Archiver moved to SLF4J and thus all unzipping logs will go through
-            // XWiki SLF4J configuration. XWiki upgraded from v4.3.0 to 4.4.0 in XWiki 14.6RC1. This means that when
-            // using this extension on XWiki < 14.6RC1 there'll be no logs by default. However, that's not a big problem
-            // since an exception will be thrown with details.
             ZipUnArchiver unArchiver = new ZipUnArchiver();
             unArchiver.setSourceFile(source);
             unArchiver.setDestDirectory(targetDirectory);
