@@ -51,10 +51,10 @@ public interface FigureTool
     boolean isFigureCaptionLast(Block figureCaptionBlock);
 
     /**
-     * Returns the element type to use for the current caption. By default, "table" or "figure" are returned but
-     * extensions can allow for different environments. Note that the parameters supported by other environments might
-     * need different parameters (see {@link #getFigureParameter(FigureBlock)}), or might not support captions in their
-     * content (see {@link #displayFigureCaption(FigureCaptionBlock)}).
+     * Returns the environment to use for the current caption. By default, "table" or "figure" are returned but
+     * extensions can allow for different environments. Note that different environments mights require different
+     * parameters (see {@link #getFigureParameter(FigureBlock)}), or might not support captions in their content (see
+     * {@link #displayFigureCaption(FigureCaptionBlock)}).
      *
      * @param figureBlock the figure block for which to get the environment name
      * @return the name of the environment (e.g., "figure", "block", or another value in case of customization by an
@@ -70,7 +70,8 @@ public interface FigureTool
     /**
      * Return the figure parameter for a figure block. The figure parameter must be synchronized with the returned
      * figure environment (see {@link #getFigureEnvironment(Block)}. For instance, for the figure environments "figure"
-     * or "table", the default parameters is {@code "h"}, resulting in the following latex.
+     * or "table", the default parameters is {@code "h"} (setting the figure location to "here"), resulting in the
+     * following latex.
      * <pre>
      * \begin{figure}[h]
      * % Figure content.
