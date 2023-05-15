@@ -19,8 +19,14 @@
  */
 package org.xwiki.contrib.latex.internal;
 
+import java.util.Collections;
+
 import org.xwiki.component.annotation.Role;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.FigureBlock;
+import org.xwiki.rendering.block.FigureCaptionBlock;
+import org.xwiki.rendering.block.GroupBlock;
+import org.xwiki.rendering.block.WordBlock;
 
 /**
  * Provides useful Figure-related tools for use in the LaTeX templates.
@@ -42,4 +48,36 @@ public interface FigureTool
      * @return true if the figure caption macro is the last content inside the figure macro content or false otherwise
      */
     boolean isFigureCaptionLast(Block figureCaptionBlock);
+
+    /**
+     * @param figureBlock the figure block for which to get the environment name
+     * @return the name of the environment (e.g., "figure", "block", or another value in case of customization by an
+     *     extension)
+     * @since 1.21
+     */
+    default String getFigureEnvironment(Block figureBlock)
+    {
+        return isTable(figureBlock) ? "table" : "figure";
+    }
+
+    /**
+     * @param figureBlock the figure block for which to generate the parameters
+     * @return the parameter of the figure (i.e., {@code "h"} by default, but can be overridden by extension)
+     * @since 1.21
+     */
+    default Block getFigureParameter(FigureBlock figureBlock)
+    {
+        return new GroupBlock(Collections.singletonList(new WordBlock("h")));
+    }
+
+    /**
+     * @param figureCaptionBlock the figure caption block to test
+     * @return {@code true} when the figure caption can be displayed (the default implementation always return
+     *     {@code true}, but this can be overridden by extension)
+     * @since 1.21
+     */
+    default boolean displayFigureCaption(FigureCaptionBlock figureCaptionBlock)
+    {
+        return true;
+    }
 }

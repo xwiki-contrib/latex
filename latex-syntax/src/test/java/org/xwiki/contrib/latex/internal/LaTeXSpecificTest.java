@@ -43,6 +43,6 @@ public class LaTeXSpecificTest
         MockSetup.setUp(componentManager);
 
         componentManager.registerComponent(MockWikiModel.getComponentDescriptor());
-        componentManager.registerMockComponent(SkinExtension.class, "ssfx");
+        componentManager.registerMockComponent(SkinExtension.class, "ssrx");
     }
 }
