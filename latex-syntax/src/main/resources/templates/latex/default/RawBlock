@@ -1,11 +1,12 @@
 #if ($latex.block.syntax.type.id == 'tex' || $latex.block.syntax.type.id == 'latex')
   ## Since there's no info if the RawBlock is inline or not, we need to check if it's inside an inline MacroMarkerBlock
   ## or not...
+  ## TODO: LATEX-140 - Generalize inline detection to more cases than MacroMarkerBlock.
   #if ("$!latex.block.parent.class.simpleName" == 'MacroMarkerBlock')
     #if (!$latex.block.parent.isInline())
 
 
     #end
-    ${latex.block.rawContent}##
   #end
+  ${latex.block.rawContent}##
 #end
