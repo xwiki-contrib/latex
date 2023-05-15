@@ -27,6 +27,7 @@ import org.xwiki.rendering.block.FigureBlock;
 import org.xwiki.rendering.block.FigureCaptionBlock;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.WordBlock;
+import org.xwiki.stability.Unstable;
 
 /**
  * Provides useful Figure-related tools for use in the LaTeX templates.
@@ -50,32 +51,55 @@ public interface FigureTool
     boolean isFigureCaptionLast(Block figureCaptionBlock);
 
     /**
+     * Returns the element type to use for the current caption. By default, "table" or "figure" are returned but
+     * extensions can allow for different environments. Note that the parameters supported by other environments might
+     * need different parameters (see {@link #getFigureParameter(FigureBlock)}), or might not support captions in their
+     * content (see {@link #displayFigureCaption(FigureCaptionBlock)}).
+     *
      * @param figureBlock the figure block for which to get the environment name
      * @return the name of the environment (e.g., "figure", "block", or another value in case of customization by an
      *     extension)
      * @since 1.21
      */
+    @Unstable
     default String getFigureEnvironment(Block figureBlock)
     {
         return isTable(figureBlock) ? "table" : "figure";
     }
 
     /**
+     * Return the figure parameter for a figure block. The figure parameter must be synchronized with the returned
+     * figure environment (see {@link #getFigureEnvironment(Block)}. For instance, for the figure environments "figure"
+     * or "table", the default parameters is {@code "h"}, resulting in the following latex.
+     * <pre>
+     * \begin{figure}[h]
+     * % Figure content.
+     * \end{figure}
+     * </pre>
+     *
      * @param figureBlock the figure block for which to generate the parameters
      * @return the parameter of the figure (i.e., {@code "h"} by default, but can be overridden by extension)
      * @since 1.21
      */
+    @Unstable
     default Block getFigureParameter(FigureBlock figureBlock)
     {
         return new GroupBlock(Collections.singletonList(new WordBlock("h")));
     }
 
     /**
+     * Allow to control whether the current {@code FigureCaptionBlock} should be displayed. This is useful when the
+     * parent {@code FigureBlock} environment (see {@link #getFigureEnvironment(Block)}) does not support the use of
+     * {@code \caption{...}} in its contents. This can be the case if the parent environment is initialized with
+     * {@code \newtheorem}. Note that by default, only "figure" and "table" environments are returned by
+     * {@link #getFigureEnvironment(Block)}, both supporting the use of {@code \caption{...}} in their contents.
+     *
      * @param figureCaptionBlock the figure caption block to test
      * @return {@code true} when the figure caption can be displayed (the default implementation always return
      *     {@code true}, but this can be overridden by extension)
      * @since 1.21
      */
+    @Unstable
     default boolean displayFigureCaption(FigureCaptionBlock figureCaptionBlock)
     {
         return true;

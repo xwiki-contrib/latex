@@ -6,7 +6,7 @@
 ## We limit the parameter value to plain text to avoid introducing content not supported inside the parameters.
 #set ($plainTextDescendants = $latex.tool.getPlainTextDescendants($latex.tool.figureTool.getFigureParameter($figureBlock)))
 #set ($figureParameter = $stringtool.trim($latex.processor.process($plainTextDescendants)))
-#if ("$figureParameter" != '')
+#if ("$!figureParameter" != '')
   #set ($figureParameter = "[${figureParameter}]")
 #end
 \begin{$environmentName}$figureParameter
