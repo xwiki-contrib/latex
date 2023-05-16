@@ -52,8 +52,8 @@ public interface FigureTool
     /**
      * Returns the environment to use for the current caption. By default, {@code table} or {@code figure} are returned
      * but extensions can allow for different environments. Note that different environments mights require different
-     * parameters (see {@link #getFigureParameter(FigureBlock)}), or might not support captions in their content (see
-     * {@link #displayFigureCaption(FigureCaptionBlock)}).
+     * parameters (see {@link #getFigureEnvironmentParameter(FigureBlock)}), or might not support captions in their
+     * content (see {@link #displayFigureCaption(FigureCaptionBlock)}).
      *
      * @param figureBlock the figure block for which to get the environment name
      * @return the name of the environment (e.g., "figure", "block", or another value in case of customization by an
@@ -80,7 +80,7 @@ public interface FigureTool
      * @return the parameter of the figure (i.e., {@code "h"} by default, but can be overridden by extension)
      * @since 1.21
      */
-    default Block getFigureParameter(FigureBlock figureBlock)
+    default Block getFigureEnvironmentParameter(FigureBlock figureBlock)
     {
         return new GroupBlock(Collections.singletonList(new WordBlock("h")));
     }
