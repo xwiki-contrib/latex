@@ -1,15 +1,17 @@
 #set ($figureCaptionBlock = $latex.block)
-#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
-## If the caption is last then add a NL before the caption so that the caption is on a new line
-#if ($latex.tool.figureTool.isFigureCaptionLast($figureCaptionBlock))
-
+#if ($latex.tool.figureTool.displayFigureCaption($figureCaptionBlock))
+  #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
+  ## If the caption is last then add a NL before the caption so that the caption is on a new line
+  #if ($latex.tool.figureTool.isFigureCaptionLast($figureCaptionBlock))
+  
+  #end
+  ## Always add a plain text caption to be on the safe side if the content contains anything fragile.
+  \caption[$latex.processor.process($latex.tool.getPlainTextDescendants($figureCaptionBlock))]{##
+  $latex.processor.process($figureCaptionBlock.getChildren())##
+  }##
+  ## If the caption is first then add a NL after the caption so that next element is on a new line
+  #if (!$latex.tool.figureTool.isFigureCaptionLast($figureCaptionBlock))
+  
+  #end
+  #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())
 #end
-## Always add a plain text caption to be on the safe side if the content contains anything fragile.
-\caption[$latex.processor.process($latex.tool.getPlainTextDescendants($figureCaptionBlock))]{##
-$latex.processor.process($figureCaptionBlock.getChildren())##
-}##
-## If the caption is first then add a NL after the caption so that next element is on a new line
-#if (!$latex.tool.figureTool.isFigureCaptionLast($figureCaptionBlock))
-
-#end
-#set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())

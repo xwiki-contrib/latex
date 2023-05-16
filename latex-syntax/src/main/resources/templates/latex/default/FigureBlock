@@ -2,13 +2,15 @@
 #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
 
 
-#if ($latex.tool.figureTool.isTable($figureBlock))
-\begin{table}[h]
-$latex.processor.process($latex.block.getChildren())
-\end{table}##
-#else
-\begin{figure}[h]
-$latex.processor.process($latex.block.getChildren())
-\end{figure}##
+#set ($environmentName = $latex.tool.escape($latex.tool.figureTool.getFigureEnvironment($figureBlock)))
+## We limit the parameter value to plain text to avoid introducing content not supported inside the parameters.
+#set ($environmentParameter = $latex.tool.figureTool.getFigureEnvironmentParameter($figureBlock))
+#set ($plainTextDescendants = $latex.tool.getPlainTextDescendants($environmentParameter))
+#set ($figureEnvironmentParameter = $stringtool.trim($latex.processor.process($plainTextDescendants)))
+#if ("$!figureEnvironmentParameter" != '')
+  #set ($figureEnvironmentParameter = "[${figureEnvironmentParameter}]")
 #end
+\begin{$environmentName}$figureEnvironmentParameter
+$latex.processor.process($latex.block.getChildren())
+\end{$environmentName}##
 #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())
