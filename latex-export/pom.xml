@@ -85,6 +85,11 @@
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-utils</artifactId>
         </exclusion>
+        <!-- Exclude as v4.6.3 draws v1.22 of commons compress while XWiki 13.10 draws version 1.21. -->
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-compress</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
