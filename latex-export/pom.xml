@@ -73,10 +73,17 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <!-- Force the version to be more recent than 4.3.0 since our Unzipper class works with Plexus Archiver >= 4.4.0.
-           Specifically it works with a version of Plexus Archiver that doesn't use the old Plexus component classes -->
-      <version>4.6.3</version>
+      <!-- For security reasons, force using a recent Plexus version/ -->
+      <version>4.8.0</version>
       <exclusions>
+        <exclusion>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-compress</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
@@ -84,11 +91,6 @@
         <exclusion>
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-utils</artifactId>
-        </exclusion>
-        <!-- Exclude as v4.6.3 draws v1.22 of commons compress while XWiki 13.10 draws version 1.21. -->
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-compress</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
