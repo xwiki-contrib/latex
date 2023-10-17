@@ -36,6 +36,10 @@
 \usepackage{hyperref}
 %% For the container macro
 \usepackage{multicol}
+%% For supporting footnotes located in figure macros and inside tables
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
 ## Allows extensions to contribute some additional packages after default ones
 #set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.usepackage.after'))
 #foreach ($uix in $uixs)
