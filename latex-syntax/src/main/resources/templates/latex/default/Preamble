@@ -1,5 +1,5 @@
 ## Allows extensions to contribute some content at the beginning of the preamble
-#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.before'))
+#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.before', {'sortByParameter' : 'order'}))
 #if ($uixs)
   #foreach ($uix in $uixs)
     $services.rendering.render($uix.execute(), 'latex/1.0')
@@ -41,7 +41,7 @@
 \makesavenoteenv{tabular}
 \makesavenoteenv{table}
 ## Allows extensions to contribute some additional packages after default ones
-#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.usepackage.after'))
+#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.usepackage.after', {'sortByParameter' : 'order'}))
 #foreach ($uix in $uixs)
   $services.rendering.render($uix.execute(), 'latex/1.0')
 #end
@@ -138,7 +138,7 @@ ${SP}${SP}\fi}
 \MakeOuterQuote{"}##
 ##
 ## Allows extensions to contribute some content at the end of the preamble
-#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.after'))
+#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.Preamble.after', {'sortByParameter' : 'order'}))
 #if ($uixs)
 
   #foreach ($uix in $uixs)

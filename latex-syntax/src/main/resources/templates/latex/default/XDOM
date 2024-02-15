@@ -1,5 +1,5 @@
 ## Allows extensions to do something at the beginning
-#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.XDOM.before'))
+#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.XDOM.before', {'sortByParameter' : 'order'}))
 #foreach ($uix in $uixs)
   $services.rendering.render($uix.execute(), 'latex/1.0')
 #end
@@ -14,7 +14,7 @@ $latex.processor.render('Preamble')
 \begin{document}$latex.processor.process($latex.block.getChildren())
 
 ## Allows extensions to do something at the end
-#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.XDOM.after'))
+#set ($uixs = $services.uix.getExtensions('org.xwiki.contrib.latex.XDOM.after', {'sortByParameter' : 'order'}))
 #foreach ($uix in $uixs)
   $services.rendering.render($uix.execute(), 'latex/1.0')
 #end

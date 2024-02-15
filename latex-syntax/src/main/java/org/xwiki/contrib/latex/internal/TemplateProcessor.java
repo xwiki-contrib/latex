@@ -176,7 +176,7 @@ public class TemplateProcessor
     private Optional<String> renderUIXs(String templateName, String suffix)
     {
         // The XDOM template case is particular, the after UIXP needs to be located before "\end{document}" which closes
-        // the latex document. To do so, the UIXP of XDOM are directly integrated in the template in Velocity.
+        // the LaTeX document. To do so, the UIXPs of XDOM are directly integrated in the template in Velocity.
         Optional<String> result;
         if (!templateName.equals("XDOM")) {
             // Get the extensions sorted by their "order" parameter.

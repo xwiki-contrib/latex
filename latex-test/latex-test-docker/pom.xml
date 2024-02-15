@@ -38,6 +38,24 @@
     <xwiki.surefire.captureconsole.skip>true</xwiki.surefire.captureconsole.skip>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>org.xwiki.contrib.latex</groupId>
+      <artifactId>latex-export</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-archiver</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-macro-raw</artifactId>
+      <version>${rendering.version}</version>
+      <scope>runtime</scope>
+    </dependency>
     <!-- ================================
          Test only dependencies
          ================================ -->
@@ -76,9 +94,6 @@
           <includes>
             <include>**/AllIT.java</include>
           </includes>
-          <systemProperties>
-            <xwiki.test.ui.dependencies>org.xwiki.contrib.latex:latex-export</xwiki.test.ui.dependencies>
-          </systemProperties>
         </configuration>
       </plugin>
     </plugins>

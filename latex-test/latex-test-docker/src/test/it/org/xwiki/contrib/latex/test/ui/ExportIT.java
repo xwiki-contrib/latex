@@ -85,6 +85,28 @@ class ExportIT
         // Verify that the content can use $xcontext.action and $request query string parameters.
         String content = "Hello **world** {{velocity}}$xcontext.action $request.name{{/velocity}}";
         setup.createPage("LaTeX", "WebHome", content, "Sample Page for LaTeX export");
+
+        // Register some LaTeX UIXs for the Preamble template to verify that end users can customize it and that it
+        // works
+        setup.addObject("LaTeX", "WebHome", "XWiki.UIExtensionClass",
+            "extensionPointId", "org.xwiki.contrib.latex.Preamble.before",
+            "name", "uix test 1",
+            "scope", "wiki",
+            "content", "{{raw syntax=\"latex/1.0\"}}% Before Preamble UIX test{{/raw}}"
+        );
+        setup.addObject("LaTeX", "WebHome", "XWiki.UIExtensionClass",
+            "extensionPointId", "org.xwiki.contrib.latex.Preamble.usepackage.after",
+            "name", "uix test 2",
+            "scope", "wiki",
+            "content", "{{raw syntax=\"latex/1.0\"}}% After Preamble usepackage UIX test{{/raw}}"
+        );
+        setup.addObject("LaTeX", "WebHome", "XWiki.UIExtensionClass",
+            "extensionPointId", "org.xwiki.contrib.latex.Preamble.after",
+            "name", "uix test 3",
+            "scope", "wiki",
+            "content", "{{raw syntax=\"latex/1.0\"}}% After Preamble UIX test{{/raw}}"
+        );
+
         setup.gotoPage("LaTeX", "WebHome", "view", "name=Vincent");
         ViewPage viewPage = new ViewPage();
 
@@ -123,7 +145,23 @@ class ExportIT
             new File("target/latex.zip"));
 
         // Unzip
-        FileTestUtils.unzip(new File("target/latex.zip"), new File("target/latex"));
+        File latexOutputDirectory = new File("target/latex");
+        FileTestUtils.unzip(new File("target/latex.zip"), latexOutputDirectory);
+
+        // Verify that the exported page is there and contains the injected UIXs.
+        File mainDirectory = new File(new File(new File(latexOutputDirectory, "pages"), "xwiki"), "LaTeX");
+        assertTrue(mainDirectory.exists());
+        assertEquals(1, mainDirectory.listFiles().length);
+        String webHomeContent = FileUtils.readFileToString(mainDirectory.listFiles()[0], "UTF-8");
+        assertThat(webHomeContent, containsString("\\documentclass{article}\n\n\n\n"
+            + "% Before Preamble UIX test\n\n"
+            + "%% Language and font encodings\n"));
+        assertThat(webHomeContent, containsString("\\makesavenoteenv{table}\n\n\n"
+            + "% After Preamble usepackage UIX test\n\n"
+            + "%% Message macro environments"));
+        assertThat(webHomeContent, containsString("\\MakeOuterQuote{\"}\n\n\n"
+            + "% After Preamble UIX test\n\n\n"
+            + "\\begin{document}"));
 
         // Convert the LaTeX results into PDF by using the Docker "blang/latex:ubuntu" image.
         // docker run --rm -i --user="$(id -u):$(id -g)" --net=none -v "$PWD":/data blang/latex:ubuntu
@@ -144,7 +182,8 @@ class ExportIT
         }
 
         // Assert the generated PDF
-        assertTrue(getPDFContent(new File("target/latex/index.pdf")).contains("Hello world latexexport Vincent"));
+        assertThat(getPDFContent(new File("target/latex/index.pdf")),
+            containsString("Hello world latexexport Vincent"));
     }
 
     @Test
