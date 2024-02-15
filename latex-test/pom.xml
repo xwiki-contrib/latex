@@ -28,7 +28,7 @@
     <version>1.24-SNAPSHOT</version>
   </parent>
   <artifactId>latex-test</artifactId>
-  <version>1.23</version>
+  <version>1.24-SNAPSHOT</version>
   <name>LaTeX - Tests - Parent POM</name>
   <description>Tests for the LaTeX Extension</description>
   <packaging>pom</packaging>
