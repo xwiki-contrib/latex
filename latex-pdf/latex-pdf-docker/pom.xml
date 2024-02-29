@@ -35,7 +35,7 @@
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX to PDF Converter using Docker</xwiki.extension.name>
     <xwiki.extension.category>api</xwiki.extension.category>
-    <dockerJava.version>3.2.13</dockerJava.version>
+    <dockerJava.version>3.3.6</dockerJava.version>
     <!-- Old names of this module used for retro compatibility when resolving dependencies of old extensions -->
     <xwiki.extension.features>org.xwiki.contrib.latex:latex-pdf</xwiki.extension.features>
   </properties>
