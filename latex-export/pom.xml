@@ -74,7 +74,7 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
       <!-- For security reasons, force using a recent Plexus version/ -->
-      <version>4.8.0</version>
+      <version>4.9.2</version>
       <exclusions>
         <exclusion>
           <groupId>commons-io</groupId>
