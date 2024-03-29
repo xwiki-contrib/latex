@@ -37,7 +37,7 @@
 \usepackage{hyperref}
 %% For the container macro
 \usepackage{multicol}
-%% For supporting footnotes located in figure macros and inside tables
+%% For supporting footnotes located in figures and inside tables
 \usepackage{footnote}
 \makesavenoteenv{tabular}
 \makesavenoteenv{table}
