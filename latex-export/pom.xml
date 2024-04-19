@@ -73,7 +73,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <!-- For security reasons, force using a recent Plexus version/ -->
+      <!-- For security reasons, force using a recent Plexus version -->
       <version>4.8.0</version>
       <exclusions>
         <exclusion>

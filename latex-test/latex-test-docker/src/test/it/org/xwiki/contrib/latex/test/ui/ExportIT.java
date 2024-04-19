@@ -37,10 +37,8 @@ import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.utility.MountableFile;
-import org.xwiki.contrib.latex.test.po.LaTeXExportOptions;
 import org.xwiki.contrib.latex.test.po.LaTeXExportProgress;
-import org.xwiki.contrib.latex.test.po.LaTeXFormatPane;
-import org.xwiki.flamingo.skin.test.po.ExportModal;
+import org.xwiki.flamingo.skin.test.po.ExportTreeModal;
 import org.xwiki.test.docker.internal.junit5.FileTestUtils;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.integration.junit.LogCaptureConfiguration;
@@ -110,22 +108,16 @@ class ExportIT
         setup.gotoPage("LaTeX", "WebHome", "view", "name=Vincent");
         ViewPage viewPage = new ViewPage();
 
-        // Modal created before the opening to avoid fade effect. (see BaseModal)
-        ExportModal exportModal = new ExportModal();
+        // Open the export modal
+        ExportTreeModal exportTreeModal = ExportTreeModal.open(viewPage, "Export as LaTeX");
 
-        viewPage.clickMoreActionsSubMenuEntry("tmExport");
-        exportModal.openOtherFormatPane();
-        LaTeXFormatPane laTeXFormatPane = new LaTeXFormatPane();
-        assertTrue(laTeXFormatPane.isTreeAvailable());
-        assertTrue(laTeXFormatPane.isExportAsLaTeXButtonAvailable());
-
-        // Verify that the current page is selected
-        TreeElement treeElement = laTeXFormatPane.getTreeElement();
+        // Verify there's a tree listed
+        TreeElement treeElement = exportTreeModal.getPageTree();
         List<TreeNodeElement> topLevelNodes = treeElement.getTopLevelNodes();
         assertEquals(1, topLevelNodes.size());
 
-        LaTeXExportOptions leo = laTeXFormatPane.clickExportAsLaTeXButton();
-        leo.clickExportButton();
+        // Perform the export
+        exportTreeModal.export();
 
         // We're now supposed to be on the progress bar template. We need to wait till we get the success message to
         // know if the export was successful. We also verify that the link is correct.
@@ -193,22 +185,16 @@ class ExportIT
         setup.gotoPage("LaTeX", "WebHome", "view", "name=Vincent");
         ViewPage viewPage = new ViewPage();
 
-        // Modal created before the opening to avoid fade effect. (see BaseModal)
-        ExportModal exportModal = new ExportModal();
+        // Open the export modal
+        ExportTreeModal exportTreeModal = ExportTreeModal.open(viewPage, "Export as PDF (LaTeX)");
 
-        viewPage.clickMoreActionsSubMenuEntry("tmExport");
-        exportModal.openOtherFormatPane();
-        LaTeXFormatPane laTeXFormatPane = new LaTeXFormatPane();
-        assertTrue(laTeXFormatPane.isTreeAvailable());
-        assertTrue(laTeXFormatPane.isExportAsPDFButtonAvailable());
-
-        // Verify that the current page is selected
-        TreeElement treeElement = laTeXFormatPane.getTreeElement();
+        // Verify there's a tree listed
+        TreeElement treeElement = exportTreeModal.getPageTree();
         List<TreeNodeElement> topLevelNodes = treeElement.getTopLevelNodes();
         assertEquals(1, topLevelNodes.size());
 
-        LaTeXExportOptions leo = laTeXFormatPane.clickExportAsPDFButton();
-        leo.clickExportButton();
+        // Perform the export
+        exportTreeModal.export();
 
         // We're now supposed to be on the progress bar template. We need to wait till we get the success message to
         // know if the export was successful. We also verify that the link is correct.

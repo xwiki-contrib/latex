@@ -31,8 +31,11 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.mockito.stubbing.Answer;
+import org.xwiki.contrib.figure.FigureStyle;
+import org.xwiki.contrib.figure.internal.FigureTypesConfiguration;
 import org.xwiki.localization.LocalizationContext;
 import org.xwiki.script.ScriptContextManager;
+import org.xwiki.skinx.SkinExtension;
 import org.xwiki.template.Template;
 import org.xwiki.template.TemplateContent;
 import org.xwiki.template.TemplateManager;
@@ -44,6 +47,7 @@ import org.xwiki.velocity.tools.EscapeTool;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -58,6 +62,12 @@ public class MockSetup
 {
     public static void setUp(MockitoComponentManager componentManager) throws Exception
     {
+        // Mocks needed for the Figure macro
+        componentManager.registerMockComponent(SkinExtension.class, "ssx");
+        FigureTypesConfiguration figureTypesConfiguration =
+            componentManager.registerMockComponent(FigureTypesConfiguration.class);
+        when(figureTypesConfiguration.getFigureStyle(anyString())).thenReturn(FigureStyle.BLOCK);
+
         // Mock the TemplateManager in order to not depend on oldcore. We implement a TemplateManager
         // using a Velocity Engine.
         TemplateManager templateManager = componentManager.registerMockComponent(TemplateManager.class);

@@ -35,7 +35,6 @@
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>LaTeX to PDF Converter using Docker</xwiki.extension.name>
     <xwiki.extension.category>api</xwiki.extension.category>
-    <dockerJava.version>3.2.13</dockerJava.version>
     <!-- Old names of this module used for retro compatibility when resolving dependencies of old extensions -->
     <xwiki.extension.features>org.xwiki.contrib.latex:latex-pdf</xwiki.extension.features>
   </properties>
@@ -48,23 +47,6 @@
     <dependency>
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java-core</artifactId>
-      <version>${dockerJava.version}</version>
-      <exclusions>
-        <!-- Exclude dependencies since the version of XWiki specified in the platform parent POM can provide older
-             versions than the ones defined in docker-java -->
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-annotations</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-compress</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -81,7 +63,6 @@
     <dependency>
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java-transport-httpclient5</artifactId>
-      <version>${dockerJava.version}</version>
     </dependency>
     <!-- Test Dependencies -->
     <dependency>

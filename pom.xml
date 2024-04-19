@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.xwiki.contrib</groupId>
     <artifactId>parent-platform</artifactId>
-    <version>13.10</version>
+    <version>14.10</version>
   </parent>
   <groupId>org.xwiki.contrib.latex</groupId>
   <artifactId>latex</artifactId>
@@ -37,6 +37,7 @@
   <properties>
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
     <xwiki.issueManagement.jira.id>LATEX</xwiki.issueManagement.jira.id>
+    <dockerJava.version>3.3.6</dockerJava.version>
   </properties>
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/latex.git</connection>
@@ -54,6 +55,40 @@
       <name>Thomas Mortagne</name>
     </developer>
   </developers>
+  <!-- Override some dependency versions brought by XWiki 14.10 parent -->
+  <dependencyManagement>
+    <dependencies>
+      <!-- Needed for docker-java-transport-httpclient5 to work properly. The version brought by XWiki 14.10 parent
+           doesn't work with it (too old) -->
+      <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>jna</artifactId>
+        <version>5.13.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.docker-java</groupId>
+        <artifactId>docker-java-core</artifactId>
+        <version>${dockerJava.version}</version>
+        <exclusions>
+          <!-- Exclude dependencies since the version of XWiki specified in the platform parent POM can provide older
+               versions than the ones defined in docker-java -->
+          <exclusion>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk18on</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.github.docker-java</groupId>
+        <artifactId>docker-java-transport-httpclient5</artifactId>
+        <version>${dockerJava.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <modules>
     <!-- Sorted Alphabetically -->
     <module>latex-export</module>
@@ -72,12 +107,26 @@
   <build>
     <pluginManagement>
       <plugins>
+        <!-- Use a more recent version of Spoon to avoid URL classloader issue with Java 17. We need to build with
+             Java 17 since SonarQube requires it now -->
+        <plugin>
+          <groupId>fr.inria.gforge.spoon</groupId>
+          <artifactId>spoon-maven-plugin</artifactId>
+          <version>3.8.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>fr.inria.gforge.spoon</groupId>
+              <artifactId>spoon-core</artifactId>
+              <version>10.4.2</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        <!-- Make sure we can build with Java 17 (needed for SonarCloud) -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
+          <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <!-- TODO: Remove when the parent depends on a version of XWiki >= 14.0 (Java 11) -->
-            <source>8</source>
+            <argLine>@{argLine} -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${project.build.directory} --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.util.concurrent=ALL-UNNAMED</argLine>
           </configuration>
         </plugin>
       </plugins>

@@ -1,6 +1,8 @@
 .runTransformations:macro
 .#-----------------------------------------------------
 .input|xwiki/2.1
+.# Image figure with FigureCaption at the end and with
+.# an id macro.
 .#-----------------------------------------------------
 {{figure}}
 image:image.png

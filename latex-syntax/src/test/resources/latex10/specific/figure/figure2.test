@@ -1,6 +1,7 @@
 .runTransformations:macro
 .#-----------------------------------------------------
 .input|xwiki/2.1
+.# Table figure with FigureCaption at the beginning.
 .#-----------------------------------------------------
 {{figure}}
 {{figureCaption}}

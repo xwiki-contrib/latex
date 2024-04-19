@@ -74,9 +74,9 @@
       <version>${platform.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-macro-figure</artifactId>
-      <version>${rendering.version}</version>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>figure-macro-api</artifactId>
+      <version>15.5-SNAPSHOT</version>
     </dependency>
     <!-- Test Dependencies -->
     <dependency>
@@ -117,12 +117,6 @@
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-formula-macro</artifactId>
-      <version>${platform.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-rendering-macro-container</artifactId>
       <version>${platform.version}</version>
       <scope>test</scope>
@@ -139,5 +133,25 @@
       <artifactId>javax.servlet-api</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Needed to test FigureBlock/FigureCaptionBlock handling through the usage of the figure macro (we cannot easily
+         emit these blocks otherwise -->
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>figure-macro</artifactId>
+      <version>15.5-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <!--dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-wiki-default</artifactId>
+      <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-environment-standard</artifactId>
+      <version>${commons.version}</version>
+      <scope>test</scope>
+    </dependency-->
   </dependencies>
 </project>
