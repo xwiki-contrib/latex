@@ -32,6 +32,6 @@ node('docker') {
         sonar = true
         // Force Java 17 even though we depend on XS requiring only Java11 because we run SonarQube and this requires
         // Java 17.
-        javaTool = 'java11'
+        javaTool = 'java17'
     }
 }
