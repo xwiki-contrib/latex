@@ -37,6 +37,7 @@ import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.utility.MountableFile;
+import org.xwiki.contrib.latex.test.po.LaTeXExportOptions;
 import org.xwiki.contrib.latex.test.po.LaTeXExportProgress;
 import org.xwiki.flamingo.skin.test.po.ExportTreeModal;
 import org.xwiki.test.docker.internal.junit5.FileTestUtils;
@@ -118,6 +119,10 @@ class ExportIT
 
         // Perform the export
         exportTreeModal.export();
+
+        // We're now on the LaTeX export options
+        LaTeXExportOptions exportOptions = new LaTeXExportOptions();
+        exportOptions.clickExportButton();
 
         // We're now supposed to be on the progress bar template. We need to wait till we get the success message to
         // know if the export was successful. We also verify that the link is correct.
