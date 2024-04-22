@@ -47,14 +47,38 @@ public class LaTeXExportUIExtension extends AbstractLaTeXExportUIExtension
     }
 
     @Override
+    protected String getLabelKey()
+    {
+        return "latex.export.format.label";
+    }
+
+    @Override
+    protected String getHintKey()
+    {
+        return "latex.export.format.hint";
+    }
+
+    @Override
+    protected String getIcon()
+    {
+        return "file-text";
+    }
+
+    @Override
+    protected String getCategory()
+    {
+        return "other";
+    }
+
+    @Override
     protected String getQueryString()
     {
         return null;
     }
 
     @Override
-    protected String getButtonLabelTranslationKey()
+    protected boolean isEnabled()
     {
-        return "latex.export.button.label";
+        return true;
     }
 }

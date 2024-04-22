@@ -19,6 +19,9 @@
  */
 package org.xwiki.contrib.latex.internal.export;
 
+import java.util.Collections;
+import java.util.Map;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -27,12 +30,10 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.phase.Initializable;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFConverter;
-import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.CompositeBlock;
 
 /**
- * Inject a button in the standard export menu UI to export to PDF (i.e. convert the LaTeX results to PDF
- * automatically), but only if Docker is available.
+ * Inject a PDF (LaTeX) export format in the standard export menu UI to export to PDF (i.e. convert the LaTeX results
+ * to PDF automatically), but only if Docker is available.
  * 
  * @version $Id$
  * @since 1.10
@@ -64,9 +65,45 @@ public class LaTeX2PDFExportUIExtension extends AbstractLaTeXExportUIExtension i
     }
 
     @Override
+    public Map<String, String> getParameters()
+    {
+        // Speed up this UIX execution if docker is not available (ie don't execute getParameters() from the parent
+        // class.
+        if (this.isDockerAvailable) {
+            return super.getParameters();
+        } else {
+            return Collections.emptyMap();
+        }
+    }
+
+    @Override
     public String getId()
     {
         return ID;
+    }
+
+    @Override
+    protected String getLabelKey()
+    {
+        return "latex.exportToPDF.format.label";
+    }
+
+    @Override
+    protected String getHintKey()
+    {
+        return "latex.exportToPDF.format.hint";
+    }
+
+    @Override
+    protected String getIcon()
+    {
+        return "file-pdf";
+    }
+
+    @Override
+    protected String getCategory()
+    {
+        return "office";
     }
 
     @Override
@@ -76,21 +113,8 @@ public class LaTeX2PDFExportUIExtension extends AbstractLaTeXExportUIExtension i
     }
 
     @Override
-    protected String getButtonLabelTranslationKey()
+    protected boolean isEnabled()
     {
-        return "latex.exportToPDF.button.label";
-    }
-
-    @Override
-    public Block execute()
-    {
-        Block result;
-        if (this.isDockerAvailable) {
-            result = super.execute();
-        } else {
-            // If the converter is not ready, don't display the export to PDF button!
-            result = new CompositeBlock();
-        }
-        return result;
+        return this.isDockerAvailable;
     }
 }

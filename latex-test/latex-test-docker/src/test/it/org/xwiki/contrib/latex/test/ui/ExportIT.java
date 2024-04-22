@@ -110,17 +110,9 @@ class ExportIT
         ViewPage viewPage = new ViewPage();
 
         // Open the export modal
-        ExportTreeModal exportTreeModal = ExportTreeModal.open(viewPage, "Export as LaTeX");
+        ExportTreeModal.open(viewPage, "LaTeX");
 
-        // Verify there's a tree listed
-        TreeElement treeElement = exportTreeModal.getPageTree();
-        List<TreeNodeElement> topLevelNodes = treeElement.getTopLevelNodes();
-        assertEquals(1, topLevelNodes.size());
-
-        // Perform the export
-        exportTreeModal.export();
-
-        // We're now on the LaTeX export options
+        // We're on the LaTeX export options (since LaTeX export is not yet multipage)
         LaTeXExportOptions exportOptions = new LaTeXExportOptions();
         exportOptions.clickExportButton();
 
@@ -191,17 +183,9 @@ class ExportIT
         ViewPage viewPage = new ViewPage();
 
         // Open the export modal
-        ExportTreeModal exportTreeModal = ExportTreeModal.open(viewPage, "Export as PDF (LaTeX)");
+        ExportTreeModal.open(viewPage, "PDF (LaTeX)");
 
-        // Verify there's a tree listed
-        TreeElement treeElement = exportTreeModal.getPageTree();
-        List<TreeNodeElement> topLevelNodes = treeElement.getTopLevelNodes();
-        assertEquals(1, topLevelNodes.size());
-
-        // Perform the export
-        exportTreeModal.export();
-
-        // We're now on the LaTeX export options
+        // We're on the LaTeX export options (since LaTeX export is not yet multipage)
         LaTeXExportOptions exportOptions = new LaTeXExportOptions();
         exportOptions.clickExportButton();
 

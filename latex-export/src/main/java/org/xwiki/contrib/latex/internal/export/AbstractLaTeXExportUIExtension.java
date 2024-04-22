@@ -19,8 +19,6 @@
  */
 package org.xwiki.contrib.latex.internal.export;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,15 +29,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.bridge.DocumentAccessBridge;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.LinkBlock;
-import org.xwiki.rendering.listener.reference.ResourceReference;
-import org.xwiki.rendering.listener.reference.ResourceType;
+import org.xwiki.rendering.block.CompositeBlock;
 import org.xwiki.uiextension.UIExtension;
 
 import com.xpn.xwiki.XWikiContext;
 
 /**
- * Inject a button in the standard export menu UI.
+ * Inject a LaTeX export format in the standard export menu UI.
  * 
  * @version $Id$
  * @since 1.5
@@ -58,35 +54,49 @@ public abstract class AbstractLaTeXExportUIExtension implements UIExtension
     @Override
     public String getExtensionPointId()
     {
-        return "org.xwiki.plaftorm.menu.export.buttons";
+        return "org.xwiki.platform.template.exportFormats";
     }
 
     @Override
     public Map<String, String> getParameters()
     {
-        return Collections.emptyMap();
-    }
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("label", this.localizationManager.getTranslationPlain(getLabelKey()));
+        parameters.put("hint", getHintKey());
+        parameters.put("icon", getIcon());
+        parameters.put("category", getCategory());
+        parameters.put("multipage", Boolean.FALSE.toString());
+        parameters.put("filterHiddenPages", Boolean.TRUE.toString());
+        parameters.put("excludeNestedPagesByDefault", Boolean.TRUE.toString());
+        parameters.put("enabled", Boolean.toString(isEnabled()));
 
-    @Override
-    public Block execute()
-    {
         // Note: make sure to keep any existing query string since the user could need that to render its doc properly.
         String queryString = addToQueryString(this.xcontextProvider.get().getRequest().getQueryString(),
             getQueryString());
         String path = this.bridge.getDocumentURL(this.bridge.getCurrentDocumentReference(),
             LaTeXExportResourceReferenceHandler.ACTION_STRING, queryString, null);
-        ResourceReference linkReference = new ResourceReference(path, ResourceType.PATH);
+        parameters.put("url", path);
 
-        Map<String, String> linkParameters = new HashMap<>();
-        linkParameters.put("class", "btn btn-primary");
-
-        Block buttonLabelBlocks = this.localizationManager.getTranslation(getButtonLabelTranslationKey()).render();
-        return new LinkBlock(Arrays.asList(buttonLabelBlocks), linkReference, false, linkParameters);
+        return parameters;
     }
+
+    @Override
+    public Block execute()
+    {
+        return new CompositeBlock();
+    }
+
+    protected abstract String getLabelKey();
+
+    protected abstract String getHintKey();
+
+    protected abstract String getIcon();
+
+    protected abstract String getCategory();
 
     protected abstract String getQueryString();
 
-    protected abstract String getButtonLabelTranslationKey();
+    protected abstract boolean isEnabled();
 
     private String addToQueryString(String originalQueryString, String newPart)
     {
