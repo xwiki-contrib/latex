@@ -39,6 +39,7 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.utility.MountableFile;
 import org.xwiki.contrib.latex.test.po.LaTeXExportOptions;
 import org.xwiki.contrib.latex.test.po.LaTeXExportProgress;
+import org.xwiki.flamingo.skin.test.po.ExportModal;
 import org.xwiki.flamingo.skin.test.po.ExportTreeModal;
 import org.xwiki.test.docker.internal.junit5.FileTestUtils;
 import org.xwiki.test.docker.junit5.UITest;
@@ -110,7 +111,8 @@ class ExportIT
         ViewPage viewPage = new ViewPage();
 
         // Open the export modal
-        ExportTreeModal.open(viewPage, "LaTeX");
+        ExportModal exportModal = ExportModal.open(viewPage);
+        exportModal.exportAs("LaTeX");
 
         // We're on the LaTeX export options (since LaTeX export is not yet multipage)
         LaTeXExportOptions exportOptions = new LaTeXExportOptions();
@@ -183,7 +185,8 @@ class ExportIT
         ViewPage viewPage = new ViewPage();
 
         // Open the export modal
-        ExportTreeModal.open(viewPage, "PDF (LaTeX)");
+        ExportModal exportModal = ExportModal.open(viewPage);
+        exportModal.exportAs("PDF (LaTeX)");
 
         // We're on the LaTeX export options (since LaTeX export is not yet multipage)
         LaTeXExportOptions exportOptions = new LaTeXExportOptions();
