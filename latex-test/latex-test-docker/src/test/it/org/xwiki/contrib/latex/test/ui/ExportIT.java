@@ -21,7 +21,6 @@ package org.xwiki.contrib.latex.test.ui;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -40,14 +39,11 @@ import org.testcontainers.utility.MountableFile;
 import org.xwiki.contrib.latex.test.po.LaTeXExportOptions;
 import org.xwiki.contrib.latex.test.po.LaTeXExportProgress;
 import org.xwiki.flamingo.skin.test.po.ExportModal;
-import org.xwiki.flamingo.skin.test.po.ExportTreeModal;
 import org.xwiki.test.docker.internal.junit5.FileTestUtils;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.integration.junit.LogCaptureConfiguration;
 import org.xwiki.test.ui.TestUtils;
 import org.xwiki.test.ui.po.ViewPage;
-import org.xwiki.tree.test.po.TreeElement;
-import org.xwiki.tree.test.po.TreeNodeElement;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
