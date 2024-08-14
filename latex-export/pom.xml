@@ -70,12 +70,27 @@
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
     </dependency>
+    <!-- Force a more recent version of snappy since the one triggered by plexus-archiver 4.8.0 is vulnerable -->
+    <!-- TODO: remove when upgrading to a more recent version of plexus-archiver -->
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+      <version>0.5</version>
+    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <!-- For security reasons, force using a recent Plexus version -->
+      <!--
+        For security reasons, force using a recent plexus-archiver version.
+        We can do that because, while there is a dependency management for plexus-archiver in the xwiki-commons root pom,
+        it's not actually included in the XWiki WAR.
+      -->
       <version>4.8.0</version>
       <exclusions>
+        <!--
+         Exclude dependencies which are included in XWiki WAR but with lower versions than what Plexus Archiver
+         officially requires (luckily Plexus Archiver still works with them).
+        -->
         <exclusion>
           <groupId>commons-io</groupId>
           <artifactId>commons-io</artifactId>
