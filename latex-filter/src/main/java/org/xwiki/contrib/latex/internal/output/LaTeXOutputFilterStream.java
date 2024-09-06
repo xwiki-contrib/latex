@@ -102,7 +102,7 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     private ScriptContextManager scriptContextManager;
 
     @Inject
-    private Provider<LaTeXResourceConverter>resourceConverterProvider;
+    private Provider<LaTeXResourceConverter> resourceConverterProvider;
 
     @Inject
     private JobProgressManager progressManager;
