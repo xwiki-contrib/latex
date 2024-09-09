@@ -196,8 +196,6 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
     {
         this.progressManager.startStep(this, "Generate the LaTeX Index");
 
-        checkPushContext();
-
         String indexContent = this.indexGenerator.generate();
         try (InputStream inputStream = IOUtils.toInputStream(indexContent, "UTF-8")) {
             ZipUtils.store("index.tex", inputStream, this.zipStream);
@@ -223,13 +221,12 @@ public class LaTeXOutputFilterStream extends AbstractBeanOutputFilterStream<LaTe
             this.contentListener.setWrappedListener(this.xdomGenerator);
             initializeZipStream();
         }
+        checkPushContext();
     }
 
     private void end() throws IOException
     {
         if (this.xdomGenerator != null) {
-            checkPushContext();
-
             this.progressManager.startStep(this, "Convert document to LaTeX");
             XDOM xdom = this.xdomGenerator.getXDOM();
             this.xdomGenerator = null;

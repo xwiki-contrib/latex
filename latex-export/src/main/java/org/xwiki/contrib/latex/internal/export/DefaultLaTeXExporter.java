@@ -28,7 +28,6 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.filter.output.DefaultOutputStreamOutputTarget;
 import org.xwiki.model.reference.DocumentReference;
-import org.xwiki.rendering.block.XDOM;
 
 import com.xpn.xwiki.XWikiContext;
 
@@ -42,14 +41,14 @@ import com.xpn.xwiki.XWikiContext;
 public class DefaultLaTeXExporter extends AbstractLaTeXExporter
 {
     @Override
-    protected File performExport(DocumentReference documentReference, XDOM xdom,
-        Map<String, Object> exportOptions, XWikiContext xcontext) throws Exception
+    protected File performExport(DocumentReference documentReference, Map<String, Object> exportOptions,
+        XWikiContext xcontext) throws Exception
     {
         File outputDir = generateTemporaryDirectory();
         File latexZip = new File(outputDir, ZIPFILENAME);
         try (FileOutputStream fos = new FileOutputStream(latexZip)) {
             exportOptions.put(TARGET_PROPERTY, new DefaultOutputStreamOutputTarget(fos, true));
-            performExport(documentReference, xdom, exportOptions);
+            performExportInternal(documentReference, exportOptions, xcontext);
         }
         return latexZip;
     }

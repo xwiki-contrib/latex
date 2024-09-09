@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
@@ -38,6 +39,7 @@ import org.xwiki.rendering.listener.reference.ResourceReference;
  * @version $Id$
  */
 @Component
+@Named("noop")
 @Singleton
 public class NoOpLaTeXResourceConverter implements LaTeXResourceConverter
 {

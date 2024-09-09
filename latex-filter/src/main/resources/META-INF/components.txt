@@ -1,4 +1,4 @@
-900:org.xwiki.contrib.latex.internal.output.DefaultLaTeXResourceConverter
+org.xwiki.contrib.latex.internal.output.DefaultLaTeXResourceConverter
 org.xwiki.contrib.latex.internal.output.IndexGenerator
 org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStream
 org.xwiki.contrib.latex.internal.output.LaTeXOutputFilterStreamFactory

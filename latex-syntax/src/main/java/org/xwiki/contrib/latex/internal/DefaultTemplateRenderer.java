@@ -80,7 +80,8 @@ public class DefaultTemplateRenderer implements TemplateRenderer
     private VelocityMacroFilter filter;
 
     @Inject
-    private Provider<LaTeXResourceConverter> resourceConverterProvider;
+    @Named("noop")
+    private Provider<LaTeXResourceConverter> noOpResourceConverterProvider;
 
     @Inject
     private UIExtensionManager uiExtensionManager;
@@ -145,14 +146,22 @@ public class DefaultTemplateRenderer implements TemplateRenderer
 
         // If there's no resource converter in the latex binding then set up a no op one so that there's always the
         // binding available (as it's used in the LaTeX templates).
-        if (!latexBinding.containsKey(LATEX_BINDING_RESOURCE_CONVERTER)) {
-            latexBinding.put(LATEX_BINDING_RESOURCE_CONVERTER, this.resourceConverterProvider.get());
-        }
+        setupResourceConverter(latexBinding);
 
         // Note: we don't put the SP binding inside the latex binding since we want to keep the way we use it as short
         // as possible. For example in Velocity: $SP vs $latex.SP.
         scriptContext.setAttribute("SP", " ", ScriptContext.ENGINE_SCOPE);
 
         return processor;
+    }
+
+    private void setupResourceConverter(Map<String, Object> latexBinding)
+    {
+        // Look for the Resource Converter to use in the Script Context. If the latex-filter is installed, it'll have
+        // set up a configured Resource Converter to use in the Script Context.
+        // If not, use a noop implementation that doesn't do anything.
+        if (!latexBinding.containsKey(LATEX_BINDING_RESOURCE_CONVERTER)) {
+            latexBinding.put(LATEX_BINDING_RESOURCE_CONVERTER, this.noOpResourceConverterProvider.get());
+        }
     }
 }

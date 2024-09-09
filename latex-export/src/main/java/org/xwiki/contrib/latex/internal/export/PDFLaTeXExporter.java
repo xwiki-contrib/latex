@@ -34,7 +34,6 @@ import org.xwiki.contrib.latex.pdf.LaTeX2PDFException;
 import org.xwiki.contrib.latex.pdf.LaTeX2PDFResult;
 import org.xwiki.filter.output.DefaultOutputStreamOutputTarget;
 import org.xwiki.model.reference.DocumentReference;
-import org.xwiki.rendering.block.XDOM;
 
 import com.xpn.xwiki.XWikiContext;
 
@@ -54,22 +53,22 @@ public class PDFLaTeXExporter extends AbstractLaTeXExporter
     private Provider<LaTeX2PDFConverter> converterProvider;
 
     @Override
-    protected File performExport(DocumentReference documentReference, XDOM xdom,
-        Map<String, Object> exportOptions, XWikiContext xcontext) throws Exception
+    protected File performExport(DocumentReference documentReference, Map<String, Object> exportOptions,
+        XWikiContext xcontext) throws Exception
     {
         return this.progressManager.call(
-            () -> performExportInternal(documentReference, xdom, exportOptions), 3, this);
+            () -> performPDFExportInternal(documentReference, exportOptions, xcontext), 3, this);
     }
 
-    private File performExportInternal(DocumentReference documentReference, XDOM xdom,
-        Map<String, Object> exportOptions) throws Exception
+    private File performPDFExportInternal(DocumentReference documentReference, Map<String, Object> exportOptions,
+        XWikiContext xcontex) throws Exception
     {
         // Step 1: Generate the latex zip
         File outputDir = generateTemporaryDirectory();
         File latexZip = new File(outputDir, ZIPFILENAME);
         try (FileOutputStream fos = new FileOutputStream(latexZip)) {
             exportOptions.put(TARGET_PROPERTY, new DefaultOutputStreamOutputTarget(fos, true));
-            performExport(documentReference, xdom, exportOptions);
+            performExportInternal(documentReference, exportOptions, xcontex);
         }
         // Step 2: Unzip latex zip
         this.progressManager.startStep(this, "Unzip the LaTex zip");

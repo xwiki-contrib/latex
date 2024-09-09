@@ -95,6 +95,40 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
     private File exportInternal(DocumentReference documentReference, Map<String, Object> exportOptions,
         XWikiContext xcontext) throws Exception
     {
+        this.progressManager.startStep(this, "Perform the export");
+        File file = performExport(documentReference, exportOptions, xcontext);
+        this.progressManager.endStep(this);
+
+        return file;
+    }
+
+    protected abstract File performExport(DocumentReference documentReference,
+        Map<String, Object> exportOptions, XWikiContext xcontext) throws Exception;
+
+    protected void performExportInternal(DocumentReference documentReference, Map<String, Object> properties,
+        XWikiContext xcontext) throws Exception
+    {
+        try (OutputFilterStream streamFilter = this.factory.createOutputFilterStream(properties)) {
+            LaTeXOutputFilter filter = (LaTeXOutputFilter) streamFilter.getFilter();
+
+            List<SpaceReference> spaces = documentReference.getSpaceReferences();
+
+            filter.beginWiki(documentReference.getWikiReference().getName(), FilterEventParameters.EMPTY);
+            for (SpaceReference spaceElement : spaces) {
+                filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
+            }
+            filter.beginWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
+            getXDOM(documentReference, xcontext).traverse((Listener) filter);
+            filter.endWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
+            for (SpaceReference spaceElement : spaces) {
+                filter.endWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
+            }
+            filter.endWiki(documentReference.getWikiReference().getName(), FilterEventParameters.EMPTY);
+        }
+    }
+
+    private XDOM getXDOM(DocumentReference documentReference, XWikiContext xcontext) throws Exception
+    {
         // Get document
         this.progressManager.startStep(this, "Get the document to export");
         XWikiDocument document = xcontext.getWiki().getDocument(documentReference, xcontext);
@@ -112,36 +146,7 @@ public abstract class AbstractLaTeXExporter implements LaTeXExporter
         XDOM xdom = this.documentDisplayer.display(document, displayParameters);
         this.progressManager.endStep(this);
 
-        this.progressManager.startStep(this, "Perform the export");
-        File file = performExport(documentReference, xdom, exportOptions, xcontext);
-        this.progressManager.endStep(this);
-
-        return file;
-    }
-
-    protected abstract File performExport(DocumentReference documentReference, XDOM xdom,
-        Map<String, Object> exportOptions, XWikiContext xcontext) throws Exception;
-
-    protected void performExport(DocumentReference documentReference, XDOM xdom, Map<String, Object> properties)
-        throws Exception
-    {
-        try (OutputFilterStream streamFilter = this.factory.createOutputFilterStream(properties)) {
-            LaTeXOutputFilter filter = (LaTeXOutputFilter) streamFilter.getFilter();
-
-            List<SpaceReference> spaces = documentReference.getSpaceReferences();
-
-            filter.beginWiki(documentReference.getWikiReference().getName(), FilterEventParameters.EMPTY);
-            for (SpaceReference spaceElement : spaces) {
-                filter.beginWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
-            }
-            filter.beginWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
-            xdom.traverse((Listener) filter);
-            filter.endWikiDocument(documentReference.getName(), FilterEventParameters.EMPTY);
-            for (SpaceReference spaceElement : spaces) {
-                filter.endWikiSpace(spaceElement.getName(), FilterEventParameters.EMPTY);
-            }
-            filter.endWiki(documentReference.getWikiReference().getName(), FilterEventParameters.EMPTY);
-        }
+        return xdom;
     }
 
     /**
