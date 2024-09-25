@@ -25,7 +25,8 @@
   \textsubscript{${latex.processor.process($latex.block.getChildren())}}##
 #elseif ($format == 'SUPERSCRIPT')
   \textsuperscript{${latex.processor.process($latex.block.getChildren())}}##
-#else
+## Note: sr-only is a bootstrap class used by XWiki to indicate that the content should be hidden
+#elseif (!$class.contains('sr-only'))
   $latex.processor.process($latex.block.getChildren())##
 #end
 #if ($class.equals('small'))
