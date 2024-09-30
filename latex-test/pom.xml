@@ -25,10 +25,10 @@
   <parent>
     <groupId>org.xwiki.contrib.latex</groupId>
     <artifactId>latex</artifactId>
-    <version>1.25.3-SNAPSHOT</version>
+    <version>1.25.3</version>
   </parent>
   <artifactId>latex-test</artifactId>
-  <version>1.25.3-SNAPSHOT</version>
+  <version>1.25.3</version>
   <name>LaTeX - Tests - Parent POM</name>
   <description>Tests for the LaTeX Extension</description>
   <packaging>pom</packaging>
