@@ -137,7 +137,7 @@ ${{{regex:.*\\begin\{document\}}}}
 
 The sandbox is a part of your wiki that you can freely modify. It's meant to let you practice editing. You will discover how page editing works and create new pages. Simply click on \textbf{Edit} to get started!
 
-\begin{xwikiinfo}
+\begin{xwikiinfo}{}
 Don't worry about overwriting or losing stuff when editing the page, you can always roll back to the first version of the page from the "History" tab at the bottom of the page.
 \end{xwikiinfo}
 
@@ -322,7 +322,7 @@ Macros allow you to make wiki content look better and to add additional features
 
 This macro allows you to draw users' attention to a specific piece of information:
 
-\begin{xwikiwarning}
+\begin{xwikiwarning}{}
 Hello World
 \end{xwikiwarning}
 

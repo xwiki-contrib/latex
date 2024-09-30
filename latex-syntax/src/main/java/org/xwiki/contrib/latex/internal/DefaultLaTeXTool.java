@@ -38,8 +38,10 @@ import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.FigureBlock;
 import org.xwiki.rendering.block.IdBlock;
 import org.xwiki.rendering.block.MacroMarkerBlock;
+import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
+import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.renderer.reference.link.LinkLabelGenerator;
 import org.xwiki.script.ScriptContextManager;
@@ -227,5 +229,14 @@ public class DefaultLaTeXTool implements LaTeXTool, Initializable
     public List<Block> getPlainTextDescendants(Block block)
     {
         return this.plainTextBlockFilter.getPlainTextDescendants(block);
+    }
+
+    @Override
+    public Block getDescendantMetaDataBlockWithParameterName(Block currentBlock, String parameterName)
+    {
+        Block firstBlock = currentBlock.getFirstBlock(block -> MetaDataBlock.class.isAssignableFrom(block.getClass())
+            && parameterName.equals(((MetaDataBlock) block).getMetaData().getMetaData(MetaData.PARAMETER_NAME)),
+            Block.Axes.DESCENDANT);
+        return firstBlock;
     }
 }

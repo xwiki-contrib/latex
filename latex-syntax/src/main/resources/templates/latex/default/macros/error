@@ -1,12 +1,22 @@
-#if (!$latex.block.isInline())
+#set ($macroBlock = $latex.block)
+#if (!$macroBlock.isInline())
 
 
-\begin{xwikierror}
+\begin{xwikierror}{$!macroBlock.getParameter('title')}
 #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').push(true))
+## Find the MetaData Block that contains the title and remove it. Note that the structure of the message macros has
+## changed between XWiki 14.10 and 16.7.x versions and thus we need to look for a structure that's common between the 2
+## versions and that's the MetaData block...
+#if ("$!macroBlock.getParameter('title')" != '')
+  #set ($titleBlock = $latex.tool.getDescendantMetaDataBlockWithParameterName($macroBlock, 'title'))
+  #if ($titleBlock)
+    #set ($discard = $titleBlock.parent.removeBlock($titleBlock))
+  #end
+#end
 ## We skip the GroupBlock to make the output nicer since it's not needed to output a varwidth env
-$latex.processor.process($latex.block.children.get(0).children)
+$latex.processor.process($macroBlock.children.get(0).children)
 #set ($discard = $latex.tool.getStack('isInContainerAcceptingStandalone').pop())
 \end{xwikierror}##
 #else
-\xwikierrorinline{$latex.processor.process($latex.block.getChildren())}##
+\xwikierrorinline{$latex.processor.process($macroBlock.getChildren())}##
 #end

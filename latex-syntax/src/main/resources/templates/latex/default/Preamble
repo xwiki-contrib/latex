@@ -48,26 +48,26 @@
 
 %% Message macro environments
 
-\newenvironment{xwikimessage}[1]
-${SP}${SP}{\par\begin{mdframed}[linewidth=2pt,linecolor=#1]%
+\newenvironment{xwikimessage}[2]
+${SP}${SP}{\par\begin{mdframed}[linewidth=2pt,linecolor=#1,frametitle=#2]%
 ${SP}${SP}${SP}${SP}\begin{list}{}{\leftmargin=1cm
 #foreach ($i in [1..19])${SP}#end\labelwidth=\leftmargin}\item[\Large\ding{43}]}
 ${SP}${SP}{\end{list}\end{mdframed}\par}
 
-\newenvironment{xwikierror}
-${SP}${SP}{\begin{xwikimessage}{red}}
+\newenvironment{xwikierror}[1]
+${SP}${SP}{\begin{xwikimessage}{red}{#1}}
 ${SP}${SP}{\end{xwikimessage}}
 
-\newenvironment{xwikiwarning}
-${SP}${SP}{\begin{xwikimessage}{yellow}}
+\newenvironment{xwikiwarning}[1]
+${SP}${SP}{\begin{xwikimessage}{yellow}{#1}}
 ${SP}${SP}{\end{xwikimessage}}
 
-\newenvironment{xwikiinfo}
-${SP}${SP}{\begin{xwikimessage}{blue}}
+\newenvironment{xwikiinfo}[1]
+${SP}${SP}{\begin{xwikimessage}{blue}{#1}}
 ${SP}${SP}{\end{xwikimessage}}
 
-\newenvironment{xwikisuccess}
-${SP}${SP}{\begin{xwikimessage}{green}}
+\newenvironment{xwikisuccess}[1]
+${SP}${SP}{\begin{xwikimessage}{green}{#1}}
 ${SP}${SP}{\end{xwikimessage}}
 
 \newcommand{\xwikiinfoinline}[1] {

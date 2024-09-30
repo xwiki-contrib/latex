@@ -13,6 +13,10 @@ hello
 world
 {{/info}}
 
+{{info title="title"}}
+hello
+{{/info}}
+
 {{warning}}hello **world**{{/warning}}
 
 {{error}}hello **world**{{/error}}
@@ -25,25 +29,29 @@ world
 .#-----------------------------------------------------
 ${{{regex:.*\\begin\{document\}}}}
 
-\begin{xwikiinfo}
+\begin{xwikiinfo}{}
 hello \textbf{world}
 \end{xwikiinfo}
 
-\begin{xwikiinfo}
+\begin{xwikiinfo}{}
 hello
 
 world
 \end{xwikiinfo}
 
-\begin{xwikiwarning}
+\begin{xwikiinfo}{title}
+hello
+\end{xwikiinfo}
+
+\begin{xwikiwarning}{}
 hello \textbf{world}
 \end{xwikiwarning}
 
-\begin{xwikierror}
+\begin{xwikierror}{}
 hello \textbf{world}
 \end{xwikierror}
 
-\begin{xwikisuccess}
+\begin{xwikisuccess}{}
 hello \textbf{world}
 \end{xwikisuccess}
 

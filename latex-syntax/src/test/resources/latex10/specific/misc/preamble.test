@@ -44,26 +44,26 @@
 
 %% Message macro environments
 
-\newenvironment{xwikimessage}[1]
-  {\par\begin{mdframed}[linewidth=2pt,linecolor=#1]%
+\newenvironment{xwikimessage}[2]
+  {\par\begin{mdframed}[linewidth=2pt,linecolor=#1,frametitle=#2]%
     \begin{list}{}{\leftmargin=1cm
                    \labelwidth=\leftmargin}\item[\Large\ding{43}]}
   {\end{list}\end{mdframed}\par}
 
-\newenvironment{xwikierror}
-  {\begin{xwikimessage}{red}}
+\newenvironment{xwikierror}[1]
+  {\begin{xwikimessage}{red}{#1}}
   {\end{xwikimessage}}
 
-\newenvironment{xwikiwarning}
-  {\begin{xwikimessage}{yellow}}
+\newenvironment{xwikiwarning}[1]
+  {\begin{xwikimessage}{yellow}{#1}}
   {\end{xwikimessage}}
 
-\newenvironment{xwikiinfo}
-  {\begin{xwikimessage}{blue}}
+\newenvironment{xwikiinfo}[1]
+  {\begin{xwikimessage}{blue}{#1}}
   {\end{xwikimessage}}
 
-\newenvironment{xwikisuccess}
-  {\begin{xwikimessage}{green}}
+\newenvironment{xwikisuccess}[1]
+  {\begin{xwikimessage}{green}{#1}}
   {\end{xwikimessage}}
 
 \newcommand{\xwikiinfoinline}[1] {

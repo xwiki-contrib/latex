@@ -116,4 +116,12 @@ public interface LaTeXTool
      * @since 1.17
      */
     List<Block> getPlainTextDescendants(Block block);
+
+    /**
+     * @param currentBlock the current block under which to find MetaDataBlock matching the passed parameter name
+     * @param parameterName the "parameter-name" value inside the MetaData object
+     * @return the matching block or null if none is found
+     * @since 1.25.3
+     */
+    Block getDescendantMetaDataBlockWithParameterName(Block currentBlock, String parameterName);
 }
