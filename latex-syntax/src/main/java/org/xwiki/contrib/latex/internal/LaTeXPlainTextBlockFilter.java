@@ -41,7 +41,7 @@ import org.xwiki.rendering.renderer.reference.link.LinkLabelGenerator;
 
 /**
  * Specialized plain text block filter for the LaTeX plugin.
- *
+ * <p>
  * Compared to the generic one, it replaces newlines by spaces and removes generated figure, table and heading numbers.
  * Further, it inserts spaces between content that was formerly in different blocks such that, e.g., two paragraphs
  * are separated by a space. This shouldn't be used as a filter directly but instead the provided method
