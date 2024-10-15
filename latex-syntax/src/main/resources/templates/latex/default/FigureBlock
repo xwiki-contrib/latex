@@ -10,6 +10,11 @@
 #if ("$!figureEnvironmentParameter" != '')
   #set ($figureEnvironmentParameter = "[${figureEnvironmentParameter}]")
 #end
+## The following code supports different types of environments:
+## - "figure" environment, in this case $figureEnvironmentParameter represents the figure placement string (H, b, etc)
+## - custom environment defined in the Preamble (possibly added there through the "Preamble after" UIXP). In this case,
+##   $figureEnvironmentParameter can represent anything. For example, the Figure LaTeX and Numbered Content Extensions
+##   use it as the caption (by overriding the DefaultFigureTool component).
 \begin{$environmentName}$figureEnvironmentParameter
 $latex.processor.process($latex.block.getChildren())
 \end{$environmentName}##
