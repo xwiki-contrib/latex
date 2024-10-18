@@ -22,9 +22,13 @@ package org.xwiki.contrib.latex.internal;
 import org.junit.runner.RunWith;
 import org.xwiki.rendering.test.MockWikiModel;
 import org.xwiki.rendering.test.integration.RenderingTestSuite;
+import org.xwiki.security.authorization.ContextualAuthorizationManager;
+import org.xwiki.security.authorization.Right;
 import org.xwiki.skinx.SkinExtension;
 import org.xwiki.test.annotation.AllComponents;
 import org.xwiki.test.mockito.MockitoComponentManager;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Run all specific tests found in {@code *.test} files located in the classpath. These {@code *.test} files must follow
@@ -44,5 +48,10 @@ public class LaTeXSpecificTest
 
         componentManager.registerComponent(MockWikiModel.getComponentDescriptor());
         componentManager.registerMockComponent(SkinExtension.class, "ssfx");
+
+        // Setup for the Raw macro execution
+        ContextualAuthorizationManager contextualAuthorizationManager =
+            componentManager.registerMockComponent(ContextualAuthorizationManager.class);
+        when(contextualAuthorizationManager.hasAccess(Right.SCRIPT)).thenReturn(true);
     }
 }

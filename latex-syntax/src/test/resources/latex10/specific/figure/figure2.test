@@ -5,7 +5,7 @@
 .#-----------------------------------------------------
 {{figure}}
 {{figureCaption}}
-Table **caption**
+Table caption
 {{/figureCaption}}
 
 |a|b
@@ -16,7 +16,7 @@ Table **caption**
 ${{{regex:.*\\begin\{document\}}}}
 
 \begin{table}[h]
-\caption[Table caption]{Table \textbf{caption}}
+\caption[Table caption]{Table caption}
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline

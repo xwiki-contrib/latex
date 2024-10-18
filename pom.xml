@@ -29,7 +29,7 @@
   </parent>
   <groupId>org.xwiki.contrib.latex</groupId>
   <artifactId>latex</artifactId>
-  <version>1.25.4-SNAPSHOT</version>
+  <version>1.26-SNAPSHOT</version>
   <name>LaTeX - Parent POM</name>
   <description>Parent POM for LaTeX modules</description>
   <url>http://extensions.xwiki.org/xwiki/bin/view/Extension/LaTeX/</url>

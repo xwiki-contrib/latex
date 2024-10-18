@@ -111,11 +111,11 @@ public interface LaTeXTool
     boolean isIdBlockInline(IdBlock idBLock);
 
     /**
-     * @param block the block for which we should get plain text descendants
-     * @return all descendants of the block that represent plain text (i.e., word, special character or space)
-     * @since 1.17
+     * @param block the block for which we should get descendants converted to inline
+     * @return all descendants of the block that can be converted to inline content
+     * @since 1.26
      */
-    List<Block> getPlainTextDescendants(Block block);
+    List<Block> getInlineDescendants(Block block);
 
     /**
      * @param currentBlock the current block under which to find MetaDataBlock matching the passed parameter name

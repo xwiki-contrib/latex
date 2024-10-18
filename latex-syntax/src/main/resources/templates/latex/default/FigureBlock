@@ -3,9 +3,11 @@
 
 
 #set ($environmentName = $latex.tool.escape($latex.tool.figureTool.getFigureEnvironment($figureBlock)))
-## We limit the parameter value to plain text to avoid introducing content not supported inside the parameters.
+## We limit the parameter value to inline content to avoid introducing content not supported inside the parameters.
+## Note: getInlineDescendants() doesn't ensure that the conversion to LaTeX will result in some valid content as
+## an environment parameter (that will depend on then environment and what it supports).
 #set ($environmentParameter = $latex.tool.figureTool.getFigureEnvironmentParameter($figureBlock))
-#set ($plainTextDescendants = $latex.tool.getPlainTextDescendants($environmentParameter))
+#set ($plainTextDescendants = $latex.tool.getInlineDescendants($environmentParameter))
 #set ($figureEnvironmentParameter = $stringtool.trim($latex.processor.process($plainTextDescendants)))
 #if ("$!figureEnvironmentParameter" != '')
   #set ($figureEnvironmentParameter = "[${figureEnvironmentParameter}]")

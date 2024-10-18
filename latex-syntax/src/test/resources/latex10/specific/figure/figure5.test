@@ -1,14 +1,28 @@
 .runTransformations:macro
-.#-----------------------------------------------------
+.#---------------------------------------------------------------------------
 .input|xwiki/2.1
-.# Test a caption with several paragraphs and lists.
-.#-----------------------------------------------------
+.# Test a caption with several type of blocks:
+.# * paragraphs: should be made inline and separated by spaces
+.# * inline macro: should be kept
+.# * standalone macro: should be removed
+.# * formatting: should be kept
+.# * links: should be kept
+.# * list: should be converted to inline content
+.# * raw block in LaTeX: should be kept
+.# * raw block not in LaTeX: should be removed
+.#---------------------------------------------------------------------------
 {{figure}}
 image:image.png
 
 {{figureCaption}}{{id name="test"/}}Image **caption**.
 
-With several paragraphs.
+{{raw syntax="latex/1.0"}}Raw content kept.{{/raw}}
+
+{{raw syntax="html/4.01"}}Raw content removed.{{/raw}}
+
+With [[//several//>>https://xwiki.org]] paragraphs {{info}}and an inline macro.{{/info}}
+
+{{info}}standalone macro{{/info}}
 
 * And a
 * list!
@@ -23,9 +37,15 @@ ${{{regex:.*\\begin\{document\}}}}
 \begin{center}
 \includegraphics{image.png}
 \end{center}
-\caption[Image caption. With several paragraphs. And a list!]{\label{test}Image \textbf{caption}.
+\caption[Image \textbf{caption}. Raw content kept. With \href{https://xwiki.org}{\textit{several}} paragraphs \xwikiinfoinline{and an inline macro.} And a list!]{\label{test}Image \textbf{caption}.
 
-With several paragraphs.
+Raw content kept.
+
+With \href{https://xwiki.org}{\textit{several}} paragraphs \xwikiinfoinline{and an inline macro.}
+
+\begin{xwikiinfo}{}
+standalone macro
+\end{xwikiinfo}
 
 \begin{itemize}
  \item And a

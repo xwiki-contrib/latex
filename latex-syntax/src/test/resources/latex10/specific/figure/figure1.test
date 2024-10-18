@@ -7,7 +7,7 @@
 {{figure}}
 image:image.png
 
-{{figureCaption}}{{id name="test"/}}Image **caption**{{/figureCaption}}
+{{figureCaption}}{{id name="test"/}}Image caption{{/figureCaption}}
 {{/figure}}
 .#-----------------------------------------------------
 .expect|latex/1.0
@@ -18,7 +18,7 @@ ${{{regex:.*\\begin\{document\}}}}
 \begin{center}
 \includegraphics{image.png}
 \end{center}
-\caption[Image caption]{\label{test}Image \textbf{caption}}
+\caption[Image caption]{\label{test}Image caption}
 \end{figure}
 
 \end{document}

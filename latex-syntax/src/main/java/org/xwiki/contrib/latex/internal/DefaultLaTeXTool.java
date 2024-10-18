@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Stack;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
@@ -42,8 +41,6 @@ import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.listener.MetaData;
-import org.xwiki.rendering.parser.Parser;
-import org.xwiki.rendering.renderer.reference.link.LinkLabelGenerator;
 import org.xwiki.script.ScriptContextManager;
 
 /**
@@ -92,33 +89,16 @@ public class DefaultLaTeXTool implements LaTeXTool, Initializable
     private IdBlockManager idBlockManager;
 
     /**
-     * A parser that knows how to parse plain text; this is used to transform link labels into plain text.
+     * Inline content filter to extract text content of, e.g., figure captions.
      *
      * @since 1.17
      */
-    @Inject
-    @Named("plain/1.0")
-    private Parser plainTextParser;
-
-    /**
-     * Generate link label.
-     *
-     * @since 1.17
-     */
-    @Inject
-    private LinkLabelGenerator linkLabelGenerator;
-
-    /**
-     * Plain text filter to extract text content of, e.g., figure captions.
-     *
-     * @since 1.17
-     */
-    private LaTeXPlainTextBlockFilter plainTextBlockFilter;
+    private LaTeXInlineBlockFilter inlineBlockFilter;
 
     @Override
     public void initialize() throws InitializationException
     {
-        this.plainTextBlockFilter = new LaTeXPlainTextBlockFilter(this.plainTextParser, this.linkLabelGenerator);
+        this.inlineBlockFilter = new LaTeXInlineBlockFilter();
     }
 
     @Override
@@ -226,17 +206,16 @@ public class DefaultLaTeXTool implements LaTeXTool, Initializable
     }
 
     @Override
-    public List<Block> getPlainTextDescendants(Block block)
+    public List<Block> getInlineDescendants(Block block)
     {
-        return this.plainTextBlockFilter.getPlainTextDescendants(block);
+        return this.inlineBlockFilter.getInlineDescendants(block);
     }
 
     @Override
     public Block getDescendantMetaDataBlockWithParameterName(Block currentBlock, String parameterName)
     {
-        Block firstBlock = currentBlock.getFirstBlock(block -> MetaDataBlock.class.isAssignableFrom(block.getClass())
+        return currentBlock.getFirstBlock(block -> MetaDataBlock.class.isAssignableFrom(block.getClass())
             && parameterName.equals(((MetaDataBlock) block).getMetaData().getMetaData(MetaData.PARAMETER_NAME)),
             Block.Axes.DESCENDANT);
-        return firstBlock;
     }
 }
