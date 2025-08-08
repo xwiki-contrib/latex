@@ -40,6 +40,9 @@
     <xwiki.extension.components>
       org.xwiki.rendering.renderer.BlockRenderer/latex/1.0
     </xwiki.extension.components>
+
+    <!-- Needed for unit tests. TODO: remove when upgrading to XWiki 17.6.0+ -->
+    <xwiki.enforcer.enforce-commons-lang3.skip>true</xwiki.enforcer.enforce-commons-lang3.skip>
   </properties>
   <dependencies>
     <dependency>
@@ -78,6 +81,7 @@
       <artifactId>figure-macro-api</artifactId>
       <version>15.4.3</version>
     </dependency>
+
     <!-- Test Dependencies -->
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
@@ -153,6 +157,12 @@
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-security-authentication-api</artifactId>
       <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- TODO: remove when upgrading to XWiki 17.6.0+ -->
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
