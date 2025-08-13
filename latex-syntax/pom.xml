@@ -76,7 +76,7 @@
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>figure-macro-api</artifactId>
-      <version>15.4.3</version>
+      <version>15.4.4</version>
     </dependency>
 
     <!-- Test Dependencies -->
