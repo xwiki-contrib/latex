@@ -41,9 +41,6 @@
     <xwiki.extension.components>
       org.xwiki.filter.output.OutputFilterStreamFactory/latex
     </xwiki.extension.components>
-
-    <!-- Needed for unit tests. TODO: remove when upgrading to XWiki 17.6.0+ -->
-    <xwiki.enforcer.enforce-commons-lang3.skip>true</xwiki.enforcer.enforce-commons-lang3.skip>
   </properties>
   <dependencies>
     <dependency>
@@ -93,12 +90,6 @@
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-syntax-event</artifactId>
       <version>${rendering.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- TODO: remove when upgrading to XWiki 17.6.0+ -->
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
