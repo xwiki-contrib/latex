@@ -106,7 +106,7 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- Use a more recent version of Spoon to avoid URL classloader issue with Java 17. We need to build with
+        <!-- Use a more recent version of Spoon to avoid URL classloader issues with Java 17. We need to build with
              Java 17 since SonarQube requires it now -->
         <plugin>
           <groupId>fr.inria.gforge.spoon</groupId>
