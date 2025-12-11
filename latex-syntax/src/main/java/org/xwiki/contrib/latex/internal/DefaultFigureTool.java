@@ -61,8 +61,8 @@ public class DefaultFigureTool implements FigureTool
     public boolean isFigureCaptionLast(Block figureCaptionBlock)
     {
         // Several cases are possible:
-        // - The figureCaptionBlock's parent is a MMB and the MMB next sibling doesn't exist
-        // - The figureCaptionBlock's parent is not a MMB and the figureCaptionBlock's next sibling doesn't exist
+        // - The figureCaptionBlock's parent is an MMB, and the MMB next sibling doesn't exist
+        // - The figureCaptionBlock's parent is not an MMB, and the figureCaptionBlock's next sibling doesn't exist
         // - The figureCaptionBlock's parent could be a MetaDataBlock, in which case it should be ignored and its
         //   parent checked instead.
         //
