@@ -83,13 +83,13 @@
       <!--
         For security reasons, force using a recent plexus-archiver version.
         We can do that because, while there is a dependency management for plexus-archiver in the xwiki-commons root pom,
-        it's not actually included in the XWiki WAR.
+        it's not included in the XWiki WAR.
       -->
       <version>4.8.0</version>
       <exclusions>
         <!--
          Exclude dependencies which are included in XWiki WAR but with lower versions than what Plexus Archiver
-         officially requires (luckily Plexus Archiver still works with them).
+         officially requires (luckily, Plexus Archiver still works with them).
         -->
         <exclusion>
           <groupId>commons-io</groupId>
