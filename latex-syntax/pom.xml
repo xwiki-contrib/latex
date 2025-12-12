@@ -139,7 +139,7 @@
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>figure-macro</artifactId>
-      <version>15.4.3</version>
+      <version>15.4.4</version>
       <scope>test</scope>
     </dependency>
     <!-- Used to write more easily the integration tests when testing behaviors of RawBlock conversion to LaTeX -->
