@@ -36,7 +36,7 @@
   <properties>
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
     <xwiki.issueManagement.jira.id>LATEX</xwiki.issueManagement.jira.id>
-    <dockerJava.version>3.3.6</dockerJava.version>
+    <dockerJava.version>3.7.0</dockerJava.version>
   </properties>
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/latex.git</connection>
