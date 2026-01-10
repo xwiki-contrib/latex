@@ -85,7 +85,7 @@
         We can do that because, while there is a dependency management for plexus-archiver in the xwiki-commons root pom,
         it's not included in the XWiki WAR.
       -->
-      <version>4.8.0</version>
+      <version>4.11.0</version>
       <exclusions>
         <!--
          Exclude dependencies which are included in XWiki WAR but with lower versions than what Plexus Archiver
