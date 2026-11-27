@@ -64,6 +64,16 @@
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java-transport-httpclient5</artifactId>
     </dependency>
+    <!-- Starting with version 5.2 org.apache.httpcomponents.client5:httpclient5 uses the HttpVersionPolicy class from
+      org.apache.httpcomponents.core5:httpcore5-h2. The problem is that docker-java-transport-httpclient5 3.2.x excludes
+      httpcore5-h2, which leads to a NoClassDefFoundError. Same workaround as XWiki's PDF Export: add an explicit
+      dependency to httpclient5 (depending on httpcore5-h2 is not enough since Extension Manager still favors the
+      exclude). This is not needed anymore with docker-java 3.3+ (XWiki 15.10.14+).
+      TODO: Remove this dependency when upgrading the parent to a version of XWiki using docker-java 3.3+ -->
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+    </dependency>
     <!-- Test Dependencies -->
     <dependency>
       <groupId>org.xwiki.commons</groupId>

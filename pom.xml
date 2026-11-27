@@ -36,7 +36,6 @@
   <properties>
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
     <xwiki.issueManagement.jira.id>LATEX</xwiki.issueManagement.jira.id>
-    <dockerJava.version>3.3.6</dockerJava.version>
   </properties>
   <scm>
     <connection>scm:git:git://github.com/xwiki-contrib/latex.git</connection>
@@ -54,40 +53,6 @@
       <name>Thomas Mortagne</name>
     </developer>
   </developers>
-  <!-- Override some dependency versions brought by XWiki 14.10 parent -->
-  <dependencyManagement>
-    <dependencies>
-      <!-- Needed for docker-java-transport-httpclient5 to work properly. The version brought by XWiki 14.10 parent
-           doesn't work with it (too old) -->
-      <dependency>
-        <groupId>net.java.dev.jna</groupId>
-        <artifactId>jna</artifactId>
-        <version>5.13.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.docker-java</groupId>
-        <artifactId>docker-java-core</artifactId>
-        <version>${dockerJava.version}</version>
-        <exclusions>
-          <!-- Exclude dependencies since the version of XWiki specified in the platform parent POM can provide older
-               versions than the ones defined in docker-java -->
-          <exclusion>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk18on</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.github.docker-java</groupId>
-        <artifactId>docker-java-transport-httpclient5</artifactId>
-        <version>${dockerJava.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <modules>
     <!-- Sorted Alphabetically -->
     <module>latex-export</module>
